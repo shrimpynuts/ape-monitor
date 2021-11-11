@@ -9,5 +9,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const resp = await fetch(
     `https://api.opensea.io/api/v1/assets?owner=${ownerAddress}&order_direction=desc&offset=0&limit=50`,
   )
-  res.status(200).json(await resp.json())
+  const { assets } = await resp.json()
+  const byCollection = assets.reduce((acc: any, asset: any) => {
+    if (acc[asset.collection.slug]) {
+      acc[asset.collection.slug].assets.push(asset)
+    } else {
+      acc[asset.collection.slug] = { ...asset.collection, assets: [asset] }
+    }
+
+    return acc
+  }, {})
+  res.status(200).json(byCollection)
 }

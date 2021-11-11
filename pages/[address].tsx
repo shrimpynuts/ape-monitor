@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast'
 
 import Navbar from '../components/navbar'
 
-const AddressPage: NextPage = ({ assets }: any) => {
+const AddressPage: NextPage = ({ assets, address }: any) => {
   return (
     <div className="max-w-screen-xl m-auto pb-4 md:pb-12">
       <Head>
@@ -15,12 +15,12 @@ const AddressPage: NextPage = ({ assets }: any) => {
       </Head>
       <Toaster />
       <Navbar />
-      You have {assets.length} assets.
-      <div className="flex space-x-2">
+      You have {assets.length} assets. Address: {address}.
+      <div className="flex space-x-2 flex-wrap space-y-2  ">
         {assets.map((asset: any, i: number) => {
           return (
             <div key={i}>
-              <img src={asset.image_thumbnail_url} width={40} height={40} />
+              <img src={asset.image_thumbnail_url} width="40" height="40" />
             </div>
           )
         })}
@@ -37,12 +37,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const getOpenseaAssets = async () => {
     const resp = await fetch(`${server}/api/opensea/${params?.address}`)
-    return resp.json()
+    const { assets } = await resp.json()
+    return assets
   }
+
   const assets = await getOpenseaAssets()
-  return {
-    props: assets,
-  }
+  return { props: { assets, address: params?.address } }
 }
 
 export default AddressPage

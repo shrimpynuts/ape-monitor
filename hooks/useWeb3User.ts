@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react'
 import { createContainer } from 'unstated-next'
-import { Web3Provider, JsonRpcProvider, BaseProvider } from '@ethersproject/providers'
+import { Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
 
-import { ethers, Contract } from 'ethers'
+import { ethers } from 'ethers'
 import { useWallet } from 'use-wallet'
 
-import SquidArena from '../artifacts/contracts/SquidArena.sol/SquidArena.json'
-import { CONTRACT_ADDRESS, NETWORK_NAME } from '../ethers/config'
+import { CONTRACT_ADDRESS } from '../ethers/config'
 
 const Web3UserState = () => {
   const wallet = useWallet()
@@ -14,7 +13,6 @@ const Web3UserState = () => {
 
   const [ensName, setEnsName] = useState<null | string>(null) // If the user has an ENS name, it gets set here.
   const [provider, setProvider] = useState<Web3Provider | JsonRpcProvider | null>(null) // Ethers provider
-  const [contract, setContract] = useState<Contract | null>(null) // Token contract
 
   useEffect(() => {
     if (account) {
@@ -27,10 +25,6 @@ const Web3UserState = () => {
 
       if (!CONTRACT_ADDRESS) return console.error('Could not find contract address')
 
-      // Create contract
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, SquidArena.abi, provider)
-      setContract(contract)
-
       let ensName
       if (networkName === 'main') {
         ensName = await provider.lookupAddress(address)
@@ -39,7 +33,7 @@ const Web3UserState = () => {
     }
   }, [account, ethereum, networkName])
 
-  return { wallet, ensName, provider, contract }
+  return { wallet, ensName, provider }
 }
 
 const web3UserContainer = createContainer(Web3UserState)

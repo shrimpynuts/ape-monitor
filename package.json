@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "compile": "npx hardhat compile"
+    "lint": "next lint"
   },
   "dependencies": {
     "@chainlink/contracts": "^0.2.2",

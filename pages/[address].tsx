@@ -17,7 +17,7 @@ const AddressPage: NextPage = ({ assetsByCollection, address }: any) => {
       <Toaster />
       <Navbar />
       <div className="flex flex-col space-y-4">
-        <h4 className="text-lg ">You have {Object.keys(assetsByCollection).length} collections.</h4>
+        <h4 className="text-lg ">{Object.keys(assetsByCollection).length} collections.</h4>
         <h4 className="text-lg ">Address: {address}.</h4>
       </div>
       <div className="flex flex-col space-x-2 flex-wrap space-y-2 mt-8 ">

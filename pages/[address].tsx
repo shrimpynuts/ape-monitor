@@ -32,7 +32,7 @@ const AddressPage: NextPage = ({ assetsByCollection, address }: any) => {
                 <span>{collection.name}</span>
               </div>
               <div className="flex space-x-4">
-                <span className={`${change > 0 ? 'text-green-500' : 'text-red-500'}`}>{change}Ξ</span>
+                <span className={`${change > 0 ? 'text-green-500' : 'text-red-500'}`}>{change.toFixed(3)}Ξ</span>
                 <span>{collection.stats.floor_price}Ξ</span>
                 <span>{(collection.assets.length * collection.stats.floor_price).toFixed(3)}Ξ</span>
               </div>

@@ -9,6 +9,7 @@ import AddressPill from './addressPill'
 import Button from './button'
 import ConnectModal from './connectWalletModal'
 import Searchbar from '../components/searchbar'
+import DarkModeToggle from './darkModeToggle'
 
 /**
  * Navigation bar that enables connect/disconnect from Web3.
@@ -83,6 +84,7 @@ const Navbar = () => {
         ) : (
           <Button onClick={() => setConnectModalIsOpen(true)}>Connect Wallet</Button>
         )}
+        <DarkModeToggle />
       </div>
     </nav>
   )

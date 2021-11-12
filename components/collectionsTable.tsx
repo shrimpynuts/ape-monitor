@@ -153,7 +153,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
           {
             Header: 'Name',
             accessor: 'name',
-            width: 500,
+            width: 300,
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
               <div className="flex space-x-2">
                 <img src={row.original.image_url} className="h-8 w-8" />
@@ -164,7 +164,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
           {
             Header: '# Owned',
             accessor: 'assets.length',
-            width: 100,
+            width: 80,
             disableFilters: true,
           },
           {
@@ -213,7 +213,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
           {
             Header: 'Volume',
             accessor: 'stats.one_day_volume',
-            Cell: ({ cell: { value } }: CellProps<object>) => <div>{fixedNumber(value)}</div>,
+            Cell: ({ cell: { value } }: CellProps<object>) => <div>{fixedNumber(value)}Ξ</div>,
             disableFilters: true,
             width: 100,
           },
@@ -227,6 +227,39 @@ function CollectionsTable({ collections }: { collections: any[] }) {
           {
             Header: 'Sales',
             accessor: 'stats.one_day_sales',
+            Cell: ({ cell: { value } }: CellProps<object>) => <div>{value}</div>,
+            disableFilters: true,
+            width: 100,
+          },
+        ],
+      },
+      {
+        Header: 'Total Stats',
+        columns: [
+          {
+            Header: 'Floor Price',
+            accessor: 'stats.floor_price',
+            Cell: ({ cell: { value } }: CellProps<object>) => <div>{fixedNumber(value)}Ξ</div>,
+            disableFilters: true,
+            width: 100,
+          },
+          {
+            Header: 'Volume',
+            accessor: 'stats.total_volume',
+            Cell: ({ cell: { value } }: CellProps<object>) => <div>{fixedNumber(value)}Ξ</div>,
+            disableFilters: true,
+            width: 100,
+          },
+          {
+            Header: 'Supply',
+            accessor: 'stats.total_supply',
+            Cell: ({ cell: { value } }: CellProps<object>) => <div>{value}</div>,
+            disableFilters: true,
+            width: 100,
+          },
+          {
+            Header: 'Sales',
+            accessor: 'stats.total_sales',
             Cell: ({ cell: { value } }: CellProps<object>) => <div>{value}</div>,
             disableFilters: true,
             width: 100,

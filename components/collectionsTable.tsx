@@ -52,7 +52,7 @@ const DefaultColumnFilter = ({
   return (
     <input
       ref={inputRef}
-      className="px-8 py-2 rounded-sm w-64 bg-gray-100 dark:bg-gray-700"
+      className="px-8 py-2 rounded-sm w-64 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-700"
       value={filterValue || ''}
       onChange={(e) => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
@@ -114,7 +114,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                 <tr>
                   {headerGroups.map((headerGroup, i) => (
                     <th
-                      className="flex px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider"
+                      className="flex px-6 text-left border-b border-gray-200 dark:border-gray-700 divide-x divide-gray-200 dark:divide-gray-700 text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider"
                       {...headerGroup.getHeaderGroupProps()}
                       style={{}}
                       key={i}
@@ -122,7 +122,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                       {headerGroup.headers.map((c, ii) => {
                         const column = c as unknown as TableColumn<Data>
                         return (
-                          <div {...column.getHeaderProps(column.getSortByToggleProps())} key={ii}>
+                          <div className="p-2" {...column.getHeaderProps(column.getSortByToggleProps())} key={ii}>
                             {column.render('Header')}
                             <div {...column} />
                             <div className="my-1">{column.canFilter ? column.render('Filter') : null}</div>
@@ -138,10 +138,15 @@ const Table: FC<Props> = ({ columns, data }) => {
                 {rows.map((row, i) => {
                   prepareRow(row)
                   return (
-                    <tr className="flex" {...row.getRowProps()} style={{}} key={i}>
+                    <tr
+                      className="flex px-6 divide-x divide-gray-200 dark:divide-gray-700"
+                      {...row.getRowProps()}
+                      style={{}}
+                      key={i}
+                    >
                       {row.cells.map((cell, ii) => {
                         return (
-                          <td className="px-6 py-4 whitespace-nowrap" {...cell.getCellProps()} key={ii}>
+                          <td className="px-6 py-4 whitespace-nowrap " {...cell.getCellProps()} key={ii}>
                             {cell.render('Cell')}
                           </td>
                         )
@@ -171,7 +176,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
             width: 300,
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
               <div className="flex space-x-2">
-                <img src={row.original.image_url} className="h-8 w-8" />
+                <img src={row.original.image_url} className="h-8 w-8 rounded-lg" />
                 <span>{value}</span>
               </div>
             ),

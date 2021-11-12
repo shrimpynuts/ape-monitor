@@ -220,7 +220,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
           {
             Header: 'Change',
             accessor: 'stats.one_day_change',
-            Cell: ({ cell: { value } }: CellProps<object>) => <DeltaDisplay delta={value} denomination="Ξ" />,
+            Cell: ({ cell: { value } }: CellProps<object>) => <DeltaDisplay delta={value} denomination="%" />,
             disableFilters: true,
             width: 100,
           },

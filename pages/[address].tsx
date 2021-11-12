@@ -30,7 +30,7 @@ const AddressPage: NextPage = ({
           <h4 className="text-lg ">{collections.length} collections</h4>
           <h4 className="text-lg ">{totalAssetsOwned} NFTs</h4>
           <h4 className="text-lg ">
-            Total value: {fixedNumber(totalValue)}Ξ <DeltaDisplay delta={totalOneDayChange} denomination="Ξ" />
+            Total value: {fixedNumber(totalValue)}Ξ <DeltaDisplay delta={totalOneDayChange} denomination="%" />
           </h4>
         </div>
       </div>

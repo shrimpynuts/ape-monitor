@@ -23,6 +23,7 @@ const AddressPage: NextPage = ({ assetsByCollection, address }: any) => {
       <div className="flex flex-col space-x-2 flex-wrap space-y-2 mt-8 ">
         {Object.keys(assetsByCollection).map((collectionSlug: any, i: number) => {
           const collection = assetsByCollection[collectionSlug]
+          const change = collection.stats.one_day_change
           return (
             <div key={i} className="flex space-x-4 justify-between">
               <div className="flex space-x-4">
@@ -31,6 +32,7 @@ const AddressPage: NextPage = ({ assetsByCollection, address }: any) => {
                 <span>{collection.name}</span>
               </div>
               <div className="flex space-x-4">
+                <span className={`${change > 0 ? 'text-green-500' : 'text-red-500'}`}>{change}Ξ</span>
                 <span>{collection.stats.floor_price}Ξ</span>
                 <span>{(collection.assets.length * collection.stats.floor_price).toFixed(3)}Ξ</span>
               </div>

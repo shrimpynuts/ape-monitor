@@ -35,7 +35,7 @@ const AddressPage: NextPage = ({
           <h4 className="text-lg ">{middleEllipses(address, 4, 6, 4)}</h4>
         </div>
 
-        <div className="flex space-x-4">
+        <div className="flex space-x-2 items-center">
           <h4 className="text-lg ">{totalAssetsOwned} NFTs</h4>
           <h4 className="text-lg ">Total Value: {fixedNumber(totalValue)}Ξ</h4>
           <DeltaDisplay delta={totalOneDayChange} denomination="%" />

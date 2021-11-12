@@ -18,6 +18,7 @@ const AddressPage: NextPage = ({
   address,
   totalStats: { totalOneDayChange, totalValue, totalAssetsOwned },
 }: any) => {
+  console.log({ collections })
   return (
     <div className="max-w-screen-xl m-auto pb-4 md:pb-12">
       <Head>
@@ -62,6 +63,8 @@ const AddressPage: NextPage = ({
                   <DeltaDisplay delta={change} denomination="Ξ" />
                   <span>{fixedNumber(collection.stats.floor_price)}Ξ</span>
                   <span>{fixedNumber(numOwned * collection.stats.floor_price)}Ξ</span>
+                  <span>{collection.stats.total_supply}</span>
+                  <span>{fixedNumber(collection.stats.total_volume)}Ξ</span>
                 </div>
               </div>
             )

@@ -14,5 +14,5 @@ export function middleEllipses(str: string, cutoffDecimals: number, begginingDec
 }
 
 export function fixedNumber(n: number) {
-  return n.toFixed(3)
+  return n ? n.toFixed(3) : 0
 }

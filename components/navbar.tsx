@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import classnames from 'classnames'
 import { utils } from 'ethers'
+import Link from 'next/link'
 import { LogoutIcon } from '@heroicons/react/solid'
 
 import useWeb3Container from '../hooks/useWeb3User'
 import AddressPill from './addressPill'
 import Button from './button'
 import ConnectModal from './connectWalletModal'
+import Searchbar from '../components/searchbar'
 
 /**
  * Navigation bar that enables connect/disconnect from Web3.
@@ -25,13 +27,17 @@ const Navbar = () => {
   const formattedETH = parseFloat(formatUnits(balance)).toFixed(2)
 
   return (
-    <nav className="flex justify-between w-full px-4 py-8">
+    <nav className="flex justify-between w-full px-4 py-8 items-center">
       {/* Logo */}
-      <div className="w-8 h-8 bg-black rounded-full border dark:border-white text-white flex justify-center items-center text-xs">
-        W3
-      </div>
+
+      <Link href="/">
+        <div className="w-8 h-8 cursor-pointer bg-black rounded-full border dark:border-white text-white flex justify-center items-center text-xs">
+          W3
+        </div>
+      </Link>
 
       <ConnectModal setIsOpen={setConnectModalIsOpen} isOpen={connectModalIsOpen} />
+      <Searchbar />
 
       {/* Connect to web3, dark mode toggle */}
       <div className="flex items-center space-x-2">

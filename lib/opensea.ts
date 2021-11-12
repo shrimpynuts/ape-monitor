@@ -35,9 +35,15 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
   const byCollection = assets.reduce((acc: any, asset: any) => {
     const slug = asset.collection.slug
     if (acc[slug]) {
+      // Remove collection data before adding to array
+      delete asset.collection
       acc[slug].assets.push(asset)
     } else {
-      acc[slug] = { ...asset.collection, assets: [asset] }
+      // Store collection data
+      const collectionData = asset.collection
+      // Remove collection data before adding to array
+      delete asset.collection
+      acc[slug] = { ...collectionData, assets: [asset] }
     }
     return acc
   }, {})

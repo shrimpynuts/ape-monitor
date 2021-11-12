@@ -1,15 +1,10 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import { useWallet } from 'use-wallet'
 import { Toaster } from 'react-hot-toast'
 
 import Navbar from '../components/navbar'
 
 const Home: NextPage = () => {
-  const wallet = useWallet()
-  const { status, networkName } = wallet
-
   return (
     <div className="max-w-screen-xl m-auto pb-4 md:pb-12">
       <Head>

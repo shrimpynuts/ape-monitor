@@ -26,8 +26,10 @@ const AddressPage: NextPage = ({ assetsByCollection, address }: any) => {
           return (
             <div key={i} className="flex space-x-4">
               <img src={collection.image_url} width="40" height="40" />
-              <span>{collection.assets.length}</span>
+              <span>{collection.assets.length}x</span>
               <span>{collection.name}</span>
+              <span>{collection.stats.floor_price}Ξ</span>
+              <span>{(collection.assets.length * collection.stats.floor_price).toFixed(3)}Ξ</span>
             </div>
           )
         })}

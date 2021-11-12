@@ -164,11 +164,10 @@ const Table: FC<Props> = ({ columns, data }) => {
 }
 
 function CollectionsTable({ collections }: { collections: any[] }) {
-  console.log({ collections })
   const columns = useMemo(
     () => [
       {
-        Header: 'Collection',
+        Header: `Collections (${collections.length})`,
         columns: [
           {
             Header: 'Name',

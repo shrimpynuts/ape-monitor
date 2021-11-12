@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { Toaster } from 'react-hot-toast'
+import Davatar from '@davatar/react'
 
 import Navbar from '../components/navbar'
 import { middleEllipses, fixedNumber } from '../lib/util'
@@ -24,14 +25,20 @@ const AddressPage: NextPage = ({
       <Navbar />
 
       {/* Display profile details */}
-      <div className="flex flex-col space-y-4 mx-4 shadow overflow-hidden sm:rounded-lg px-6 py-2 text-gray-500 dark:text-gray-100 dark:bg-gray-800">
-        <h4 className="text-lg ">Address: {middleEllipses(address, 4, 6, 4)}</h4>
+      <div className="flex flex-col px-6 py-4 space-y-4 mx-4 shadow overflow-hidden sm:rounded-lg text-gray-500 dark:text-gray-100 dark:bg-gray-800">
+        <div className="flex space-x-2 items-center">
+          <Davatar
+            size={20}
+            address={address}
+            generatedAvatarType="jazzicon" // optional, 'jazzicon' or 'blockies'
+          />
+          <h4 className="text-lg ">{middleEllipses(address, 4, 6, 4)}</h4>
+        </div>
+
         <div className="flex space-x-4">
-          <h4 className="text-lg ">{collections.length} collections</h4>
           <h4 className="text-lg ">{totalAssetsOwned} NFTs</h4>
-          <h4 className="text-lg ">
-            Total value: {fixedNumber(totalValue)}Ξ <DeltaDisplay delta={totalOneDayChange} denomination="%" />
-          </h4>
+          <h4 className="text-lg ">Total Value: {fixedNumber(totalValue)}Ξ</h4>
+          <DeltaDisplay delta={totalOneDayChange} denomination="%" />
         </div>
       </div>
 

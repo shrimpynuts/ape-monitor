@@ -146,7 +146,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                     >
                       {row.cells.map((cell, ii) => {
                         return (
-                          <td className="px-6 py-4 whitespace-nowrap " {...cell.getCellProps()} key={ii}>
+                          <td className="px-6 py-2 whitespace-nowrap " {...cell.getCellProps()} key={ii}>
                             {cell.render('Cell')}
                           </td>
                         )

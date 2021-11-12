@@ -5,13 +5,8 @@ import { Toaster } from 'react-hot-toast'
 
 import Navbar from '../components/navbar'
 import { middleEllipses, fixedNumber } from '../lib/util'
-
-const DeltaDisplay = ({ delta, denomination }: { delta: number; denomination: string }) => {
-  const color = delta === 0 ? 'text-white' : delta > 0 ? 'text-green-500' : 'text-red-500'
-  const charge = delta > 0 ? '+' : ''
-  const deltaString = `${charge}${fixedNumber(delta)}${denomination}`
-  return <span className={`${color}`}>{delta === 0 ? '--' : `${deltaString}`}</span>
-}
+import CollectionsTable from '../components/collectionsTable'
+import DeltaDisplay from '../components/deltaDisplay'
 
 const AddressPage: NextPage = ({
   collections,
@@ -38,6 +33,9 @@ const AddressPage: NextPage = ({
         </div>
       </div>
       <div className="flex flex-col flex-wrap space-y-2 mt-8 mx-4">
+        <CollectionsTable collections={collections} />
+      </div>
+      {/* <div className="flex flex-col flex-wrap space-y-2 mt-8 mx-4">
         {collections
           .sort((collectionA: any, collectionB: any) => {
             return collectionB.stats.floor_price - collectionA.stats.floor_price
@@ -68,7 +66,7 @@ const AddressPage: NextPage = ({
               </div>
             )
           })}
-      </div>
+      </div> */}
     </div>
   )
 }

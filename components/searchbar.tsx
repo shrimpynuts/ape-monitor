@@ -17,7 +17,7 @@ export default function Searchbar() {
     if (web3.utils.isAddress(searchQuery)) {
       router.replace(href)
     } else {
-      window.alert(`${searchQuery} is not valid address`)
+      window.alert(`Address (${searchQuery}) is not valid.`)
     }
   }
 
@@ -46,7 +46,7 @@ export default function Searchbar() {
         type="text"
         className="text-black focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md
         dark:text-white dark:bg-gray-800 dark:border-gray-700"
-        placeholder="Enter an Ethereum address..."
+        placeholder="[ / ] Enter an Ethereum address..."
       />
     </div>
   )

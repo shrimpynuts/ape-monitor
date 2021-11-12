@@ -52,7 +52,7 @@ const DefaultColumnFilter = ({
   return (
     <input
       ref={inputRef}
-      className="px-8 py-2 rounded-sm w-64 bg-gray-200"
+      className="px-8 py-2 rounded-sm w-64 bg-gray-200 dark:bg-gray-700"
       value={filterValue || ''}
       onChange={(e) => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
@@ -109,12 +109,12 @@ const Table: FC<Props> = ({ columns, data }) => {
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
           <div className="shadow overflow-hidden sm:rounded-lg">
-            <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table {...getTableProps()} className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
                   {headerGroups.map((headerGroup, i) => (
                     <th
-                      className="flex px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="flex px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider"
                       {...headerGroup.getHeaderGroupProps()}
                       style={{}}
                       key={i}
@@ -134,7 +134,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                   ))}
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200 text-gray-500">
+              <tbody className="bg-white divide-y divide-gray-200 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
                 {rows.map((row, i) => {
                   prepareRow(row)
                   return (

@@ -5,11 +5,20 @@ export const getCollectionsForOwner = async (ownerAddress: string) => {
 }
 
 export const getAssetsForOwner = async (ownerAddress: string) => {
-  const resp = await fetch(
-    `https://api.opensea.io/api/v1/assets?owner=${ownerAddress}&order_direction=desc&offset=0&limit=50`,
-  )
-  const { assets } = await resp.json()
-  return assets
+  let totalAssets: any[] = []
+  // Infinite loop until all assets are fetched
+  while (1) {
+    // Fetch with address and the current offset set to the number of already fetched assets
+    const resp = await fetch(
+      `https://api.opensea.io/api/v1/assets?owner=${ownerAddress}&order_direction=desc&offset=${totalAssets.length}&limit=50`,
+    )
+    const { assets } = await resp.json()
+    totalAssets = [...totalAssets, ...assets]
+
+    // If we get less than the limit of 50 assets, we know we've fetched everything
+    if (assets.length < 50) break
+  }
+  return totalAssets
 }
 
 export const getCollectionStats = async (slug: string) => {

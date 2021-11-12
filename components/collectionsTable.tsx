@@ -52,7 +52,7 @@ const DefaultColumnFilter = ({
   return (
     <input
       ref={inputRef}
-      className="px-8 py-2 rounded-sm w-64 bg-gray-200 dark:bg-gray-700"
+      className="px-8 py-2 rounded-sm w-64 bg-gray-100 dark:bg-gray-700"
       value={filterValue || ''}
       onChange={(e) => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely

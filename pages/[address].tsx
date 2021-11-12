@@ -24,7 +24,7 @@ const AddressPage: NextPage = ({
       <Navbar />
 
       {/* Display profile details */}
-      <div className="flex flex-col space-y-4 mx-4">
+      <div className="flex flex-col space-y-4 mx-4 shadow overflow-hidden sm:rounded-lg p-6 text-gray-500 dark:text-gray-100 dark:bg-gray-800">
         <h4 className="text-lg ">Address: {middleEllipses(address, 4, 6, 4)}</h4>
         <div className="flex space-x-4">
           <h4 className="text-lg ">{collections.length} collections</h4>

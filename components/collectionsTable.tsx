@@ -177,7 +177,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
                 </a>
                 {row.original.external_url && (
                   <a href={row.original.external_url} target="_blank" rel="noreferrer">
-                    <GlobeAltIcon className="h-4 w-4" />
+                    <GlobeAltIcon className="h-5 w-5" />
                   </a>
                 )}
                 {row.original.twitter_username && (

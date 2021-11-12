@@ -52,7 +52,7 @@ const DefaultColumnFilter = ({
   return (
     <input
       ref={inputRef}
-      className="px-8 w-64 my-1"
+      className="px-8 py-2 rounded-sm w-64 bg-gray-200"
       value={filterValue || ''}
       onChange={(e) => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
@@ -105,39 +105,54 @@ const Table: FC<Props> = ({ columns, data }) => {
   ) as TableInstance<object>
   // Render the UI for your table
   return (
-    <div {...getTableProps()}>
-      <div>
-        {headerGroups.map((headerGroup, i) => (
-          <div {...headerGroup.getHeaderGroupProps()} key={i}>
-            {headerGroup.headers.map((c, ii) => {
-              const column = c as unknown as TableColumn<Data>
-              return (
-                <div {...column.getHeaderProps(column.getSortByToggleProps())} key={ii}>
-                  {column.render('Header')}
-                  <div {...column} />
-                  <div className="my-2">{column.canFilter ? column.render('Filter') : null}</div>
-                  <ResizerComponent {...column.getResizerProps()} />
-                </div>
-              )
-            })}
+    <div className="flex flex-col">
+      <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+          <div className="shadow overflow-hidden sm:rounded-lg">
+            <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  {headerGroups.map((headerGroup, i) => (
+                    <th
+                      className="flex px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      {...headerGroup.getHeaderGroupProps()}
+                      style={{}}
+                      key={i}
+                    >
+                      {headerGroup.headers.map((c, ii) => {
+                        const column = c as unknown as TableColumn<Data>
+                        return (
+                          <div {...column.getHeaderProps(column.getSortByToggleProps())} key={ii}>
+                            {column.render('Header')}
+                            <div {...column} />
+                            <div className="my-1">{column.canFilter ? column.render('Filter') : null}</div>
+                            <ResizerComponent {...column.getResizerProps()} />
+                          </div>
+                        )
+                      })}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200 text-gray-500">
+                {rows.map((row, i) => {
+                  prepareRow(row)
+                  return (
+                    <tr className="flex" {...row.getRowProps()} style={{}} key={i}>
+                      {row.cells.map((cell, ii) => {
+                        return (
+                          <td className="px-6 py-4 whitespace-nowrap" {...cell.getCellProps()} key={ii}>
+                            {cell.render('Cell')}
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
           </div>
-        ))}
-      </div>
-      <div>
-        {rows.map((row, i) => {
-          prepareRow(row)
-          return (
-            <div {...row.getRowProps()} key={i}>
-              {row.cells.map((cell, ii) => {
-                return (
-                  <div {...cell.getCellProps()} key={ii}>
-                    {cell.render('Cell')}
-                  </div>
-                )
-              })}
-            </div>
-          )
-        })}
+        </div>
       </div>
     </div>
   )

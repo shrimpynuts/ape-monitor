@@ -25,7 +25,6 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
   // Group all assets by collection slug
   const byCollection = assets.reduce((acc: any, asset: any) => {
     const slug = asset.collection.slug
-    console.log({ slug })
     if (acc[slug]) {
       acc[slug].assets.push(asset)
     } else {
@@ -41,4 +40,6 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
       byCollection[collectionSlug] = { ...byCollection[collectionSlug], stats }
     }),
   )
+
+  return Object.values(byCollection)
 }

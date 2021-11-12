@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getCollectionsForOwner } from '../../../lib/opensea'
+import { getAssetsGroupedByCollectionForOwner } from '../../../lib/opensea'
 
 /**
  * Fetches the collections of the given address using the Opensea API.
@@ -8,6 +8,6 @@ import { getCollectionsForOwner } from '../../../lib/opensea'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { address: ownerAddress } = req.query
   if (typeof ownerAddress !== 'string') return res.status(400).json({ error: 'ownerAddress must be given' })
-  const collections = await getCollectionsForOwner(ownerAddress)
+  const collections = await getAssetsGroupedByCollectionForOwner(ownerAddress)
   res.status(200).json({ collections })
 }

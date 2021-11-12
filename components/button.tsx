@@ -18,7 +18,7 @@ interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const Button: React.FC<IButtonProps> = ({
   size = 'sm',
   bgColor = 'indigo-500',
-  darkBgColor = 'gray-500',
+  darkBgColor = 'gray-600',
   darkBgHoverColor = 'gray-600',
   bgHoverColor = 'indigo-600',
   textColor = 'white',

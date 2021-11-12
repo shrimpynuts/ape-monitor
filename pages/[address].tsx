@@ -22,6 +22,8 @@ const AddressPage: NextPage = ({
       </Head>
       <Toaster />
       <Navbar />
+
+      {/* Display profile details */}
       <div className="flex flex-col space-y-4 mx-4">
         <h4 className="text-lg ">Address: {middleEllipses(address, 4, 6, 4)}</h4>
         <div className="flex space-x-4">
@@ -32,41 +34,11 @@ const AddressPage: NextPage = ({
           </h4>
         </div>
       </div>
+
+      {/* Display collections data */}
       <div className="flex flex-col flex-wrap space-y-2 mt-8 mx-4">
         <CollectionsTable collections={collections} />
       </div>
-      {/* <div className="flex flex-col flex-wrap space-y-2 mt-8 mx-4">
-        {collections
-          .sort((collectionA: any, collectionB: any) => {
-            return collectionB.stats.floor_price - collectionA.stats.floor_price
-          })
-          .map((collection: any, i: number) => {
-            const change = collection.stats.one_day_change
-            const numOwned = collection.assets.length
-            // console.log({ [collection.slug]: collection.stats })
-            return (
-              <div key={i} className="flex space-x-4 justify-between w-full items-center">
-                <div className="flex space-x-4">
-                  <img src={collection.image_url} className="h-8 w-8" />
-                  <span>{numOwned}x</span>
-                  <span>{collection.name}</span>
-                </div>
-                <div className="flex space-x-4">
-                  <span className="self-center">
-                    <a href={`https://opensea.io/collection/${collection.slug}`} target="_blank" rel="noreferrer">
-                      <img src="/opensea.png" width={18} />
-                    </a>
-                  </span>
-                  <DeltaDisplay delta={change} denomination="Ξ" />
-                  <span>{fixedNumber(collection.stats.floor_price)}Ξ</span>
-                  <span>{fixedNumber(numOwned * collection.stats.floor_price)}Ξ</span>
-                  <span>{collection.stats.total_supply}</span>
-                  <span>{fixedNumber(collection.stats.total_volume)}Ξ</span>
-                </div>
-              </div>
-            )
-          })}
-      </div> */}
     </div>
   )
 }

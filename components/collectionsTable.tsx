@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, FC } from 'react'
+import { useState, useEffect, useMemo, useRef, FC } from 'react'
 import {
   useTable,
   useFilters,
@@ -164,6 +164,13 @@ const Table: FC<Props> = ({ columns, data }) => {
 }
 
 function CollectionsTable({ collections }: { collections: any[] }) {
+  const timespans = [
+    { value: '24h', dataPrefix: 'one_day', display: '1 Day' },
+    { value: '7d', dataPrefix: 'seven_day', display: '7 Day' },
+    { value: '30d', dataPrefix: 'thirty_day', display: '30 Day' },
+  ]
+  const [currentTimespan, setCurrentTimespan] = useState(timespans[0])
+
   const columns = useMemo(
     () => [
       {
@@ -237,8 +244,8 @@ function CollectionsTable({ collections }: { collections: any[] }) {
             width: 150,
           },
           {
-            Header: '1 Day Change',
-            accessor: 'stats.one_day_change',
+            Header: `${currentTimespan.display} Change`,
+            accessor: `stats.${currentTimespan.dataPrefix}_change`,
             Cell: ({ cell: { value } }: CellProps<object>) => <DeltaDisplay delta={value} denomination="%" />,
             disableFilters: true,
             width: 150,
@@ -256,8 +263,8 @@ function CollectionsTable({ collections }: { collections: any[] }) {
             width: 150,
           },
           {
-            Header: '1 Day Volume',
-            accessor: 'stats.one_day_volume',
+            Header: `${currentTimespan.display} Volume`,
+            accessor: `stats.${currentTimespan.dataPrefix}_volume`,
             Cell: ({ cell: { value } }: CellProps<object>) => <div>{fixedNumber(value)}Ξ</div>,
             disableFilters: true,
             width: 150,
@@ -282,10 +289,31 @@ function CollectionsTable({ collections }: { collections: any[] }) {
         ],
       },
     ],
-    [],
+    [currentTimespan],
   )
 
-  return <Table columns={columns} data={collections} />
+  return (
+    <div>
+      <div>
+        <div className="flex mb-2 px-4 py-1 shadow rounded dark:bg-gray-800 w-min text-gray-500 dark:text-gray-100 ">
+          {timespans.map((timespan) => {
+            const { value } = timespan
+            return (
+              <button
+                className={`cursor-pointer shadow rounded px-4 ${
+                  currentTimespan.value === value && 'bg-gray-100 dark:bg-gray-700'
+                }`}
+                onClick={() => setCurrentTimespan(timespan)}
+              >
+                <span>{value}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+      <Table columns={columns} data={collections} />
+    </div>
+  )
 }
 
 export default CollectionsTable

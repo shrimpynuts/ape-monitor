@@ -18,7 +18,6 @@ const AddressPage: NextPage = ({
   address,
   totalStats: { totalOneDayChange, totalValue, totalAssetsOwned },
 }: any) => {
-  console.log({ collections })
   return (
     <div className="max-w-screen-xl m-auto pb-4 md:pb-12">
       <Head>

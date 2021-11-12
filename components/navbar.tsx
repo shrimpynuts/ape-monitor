@@ -10,6 +10,7 @@ import Button from './button'
 import ConnectModal from './connectWalletModal'
 import Searchbar from '../components/searchbar'
 import DarkModeToggle from './darkModeToggle'
+import Emoji from './emoji'
 
 /**
  * Navigation bar that enables connect/disconnect from Web3.
@@ -32,8 +33,8 @@ const Navbar = () => {
       {/* Logo */}
 
       <Link href="/">
-        <div className="w-8 h-8 cursor-pointer bg-black rounded-full border dark:border-white text-white flex justify-center items-center text-xs">
-          W3
+        <div className="ml-1">
+          <Emoji className="text-4xl cursor-pointer" label="logo" symbol="🦧" />
         </div>
       </Link>
 

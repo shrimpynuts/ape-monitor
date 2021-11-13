@@ -104,6 +104,11 @@ const Table: FC<Props> = ({ columns, data }) => {
     useResizeColumns,
     // TODO: Type the TableInstance<> (defines the type for a row)
   ) as TableInstance<any>
+
+  console.log({ data })
+
+  const [expandedRow, setExpandedRow] = useState<undefined | number>()
+
   // Render the UI for your table
   return (
     <div className="flex flex-col">
@@ -137,7 +142,6 @@ const Table: FC<Props> = ({ columns, data }) => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
                 {rows.map((row, i) => {
-                  const [isExpanded, setIsExpanded] = useState(false)
                   prepareRow(row)
                   return (
                     <>
@@ -149,9 +153,15 @@ const Table: FC<Props> = ({ columns, data }) => {
                       >
                         <span
                           className="absolute left-1 top-4 cursor-pointer"
-                          onClick={() => setIsExpanded(!isExpanded)}
+                          onClick={() => {
+                            setExpandedRow(expandedRow !== undefined ? undefined : i)
+                          }}
                         >
-                          {!isExpanded ? <PlusSmIcon className="h-4 w-4" /> : <MinusSmIcon className="h-4 w-4" />}
+                          {!(expandedRow === i) ? (
+                            <PlusSmIcon className="h-4 w-4" />
+                          ) : (
+                            <MinusSmIcon className="h-4 w-4" />
+                          )}
                         </span>
                         {row.cells.map((cell, ii) => {
                           return (
@@ -161,7 +171,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                           )
                         })}
                       </tr>
-                      {isExpanded && (
+                      {expandedRow === i && (
                         <div className="flex flex-col px-12 py-4 space-y-2">
                           {row.original.assets.map((asset: any, i: any) => {
                             return (

@@ -263,18 +263,16 @@ function CollectionsTable({ collections }: { collections: any[] }) {
         Header: 'Floor Price',
         columns: [
           {
-            Header: 'Total Floor Price',
+            Header: `Total Floor Price (with ${currentTimespan.display} Change)`,
             accessor: 'stats.floor_price',
-            Cell: ({ cell: { value } }: CellProps<object>) => <div>{fixedNumber(value)}Ξ</div>,
+            Cell: ({ cell: { value, row } }: CellProps<any>) => (
+              <div className="flex items-center justify-between space-x-2">
+                <span>{fixedNumber(value)}Ξ</span>
+                <DeltaDisplay delta={row.original.stats[`${currentTimespan.dataPrefix}_change`]} denomination="%" />
+              </div>
+            ),
             disableFilters: true,
-            width: 150,
-          },
-          {
-            Header: `${currentTimespan.display} Change`,
-            accessor: `stats.${currentTimespan.dataPrefix}_change`,
-            Cell: ({ cell: { value } }: CellProps<object>) => <DeltaDisplay delta={value} denomination="%" />,
-            disableFilters: true,
-            width: 150,
+            width: 200,
           },
         ],
       },
@@ -282,18 +280,16 @@ function CollectionsTable({ collections }: { collections: any[] }) {
         Header: 'Volume',
         columns: [
           {
-            Header: 'Total Volume',
+            Header: `Total Volume (with ${currentTimespan.display} Volume)`,
             accessor: 'stats.total_volume',
-            Cell: ({ cell: { value } }: CellProps<object>) => <div>{fixedNumber(value)}Ξ</div>,
+            Cell: ({ cell: { value, row } }: CellProps<any>) => (
+              <div className="flex items-center justify-between space-x-2">
+                <span>{fixedNumber(value)}Ξ</span>
+                <div>{fixedNumber(row.original.stats[`${currentTimespan.dataPrefix}_volume`])}Ξ</div>
+              </div>
+            ),
             disableFilters: true,
-            width: 150,
-          },
-          {
-            Header: `${currentTimespan.display} Volume`,
-            accessor: `stats.${currentTimespan.dataPrefix}_volume`,
-            Cell: ({ cell: { value } }: CellProps<object>) => <div>{fixedNumber(value)}Ξ</div>,
-            disableFilters: true,
-            width: 150,
+            width: 200,
           },
         ],
       },

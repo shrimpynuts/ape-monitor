@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { GetServerSideProps } from 'next'
 import type { NextPage } from 'next'
 import Head from 'next/head'
@@ -10,11 +11,15 @@ import CollectionsTable from '../components/collectionsTable'
 import DeltaDisplay from '../components/deltaDisplay'
 import Tooltip from '../components/tooltip'
 
+import useWeb3Container from '../hooks/useWeb3User'
+
 const AddressPage: NextPage = ({
   collections,
   address,
   totalStats: { oneDayChange, value, assetsOwned, costBasis },
 }: any) => {
+  const { ethPrice } = useWeb3Container.useContainer()
+
   return (
     <div className="max-w-screen-xl m-auto pb-4 md:pb-12">
       <Head>
@@ -36,18 +41,22 @@ const AddressPage: NextPage = ({
             />
             <h4 className="text-lg ">{middleEllipses(address, 4, 6, 4)}</h4>
           </div>
-          <h4 className="text-lg px-4 ">Total # of NFTs: {assetsOwned}</h4>
+          <h4 className="text-lg px-4 "># of NFTs: {assetsOwned}</h4>
           <h4 className="text-lg px-4 relative flex space-x-2 items-center ">
             <Tooltip text="Based on floor prices, discounting rarity" />
             <div className="flex space-x-2 items-center">
-              Total Value: {fixedNumber(value)}Ξ &nbsp;
+              Total Value: {fixedNumber(value)}Ξ &nbsp; {ethPrice && <div>(${fixedNumber(ethPrice * value, 0)}) </div>}
               <DeltaDisplay delta={oneDayChange} denomination="%" />
             </div>
           </h4>
           <h4 className="text-lg px-4 relative flex space-x-2 items-center ">
             <Tooltip text="May not be accurate due to mint costs" />
-            <div className="flex space-x-2 items-center">Total Cost Basis: {fixedNumber(costBasis)}Ξ</div>
+            <div className="flex space-x-2 items-center">
+              Total Cost Basis: {fixedNumber(costBasis)}Ξ &nbsp;{' '}
+              {ethPrice && <div>(${fixedNumber(costBasis * ethPrice, 0)}) </div>}
+            </div>
           </h4>
+          {ethPrice && <h4 className="text-lg px-4 ">ETH Price: ${ethPrice}</h4>}
         </div>
       </div>
 

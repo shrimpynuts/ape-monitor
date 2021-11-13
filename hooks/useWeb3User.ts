@@ -13,6 +13,7 @@ const Web3UserState = () => {
 
   const [ensName, setEnsName] = useState<null | string>(null) // If the user has an ENS name, it gets set here.
   const [provider, setProvider] = useState<Web3Provider | JsonRpcProvider | null>(null) // Ethers provider
+  const [ethPrice, setEthPrice] = useState<number>()
 
   useEffect(() => {
     if (account) {
@@ -29,11 +30,15 @@ const Web3UserState = () => {
       if (networkName === 'main') {
         ensName = await provider.lookupAddress(address)
         setEnsName(ensName)
+
+        var etherscanProvider = new ethers.providers.EtherscanProvider()
+        const price = await etherscanProvider.getEtherPrice()
+        setEthPrice(price)
       }
     }
   }, [account, ethereum, networkName])
 
-  return { wallet, ensName, provider }
+  return { wallet, ensName, provider, ethPrice }
 }
 
 const web3UserContainer = createContainer(Web3UserState)

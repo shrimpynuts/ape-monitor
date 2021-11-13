@@ -15,8 +15,8 @@ export function middleEllipses(str: string, cutoffDecimals: number, begginingDec
   return str
 }
 
-export function fixedNumber(n: number) {
-  return n ? parseFloat(n.toFixed(2)) : 0
+export function fixedNumber(n: number, decimalPoints?: number) {
+  return n ? parseFloat(n.toFixed(decimalPoints !== undefined ? decimalPoints : 2)) : 0
 }
 
 export function getCostBasis(collection: any) {

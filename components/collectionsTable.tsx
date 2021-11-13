@@ -260,7 +260,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
             Header: 'Links',
             accessor: 'slug',
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
-              <div className="flex space-x-2 items-center">
+              <div className="flex space-x-2 items-center h-full">
                 <a href={`https://opensea.io/collection/${value}`} target="_blank" rel="noreferrer">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path

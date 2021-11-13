@@ -13,6 +13,7 @@ import {
   useResizeColumns,
 } from 'react-table'
 import { PlusSmIcon, MinusSmIcon, GlobeAltIcon, ExternalLinkIcon } from '@heroicons/react/solid'
+import web3 from 'web3'
 
 import { fixedNumber } from '../lib/util'
 import DeltaDisplay from './deltaDisplay'
@@ -107,7 +108,7 @@ const Table: FC<Props> = ({ columns, data }) => {
 
   console.log({ data })
 
-  const [expandedRow, setExpandedRow] = useState<undefined | number>()
+  const [expandedRows, setExpandedRows] = useState<number[]>([])
 
   // Render the UI for your table
   return (
@@ -143,10 +144,11 @@ const Table: FC<Props> = ({ columns, data }) => {
               <tbody className="bg-white divide-y divide-gray-200 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
                 {rows.map((row, i) => {
                   prepareRow(row)
+                  const isExpanded = expandedRows.includes(i)
                   return (
                     <>
                       <tr
-                        className=" relative flex px-6 divide-x divide-gray-200 dark:divide-gray-700"
+                        className="relative flex px-6 divide-x divide-gray-200 dark:divide-gray-700"
                         {...row.getRowProps()}
                         style={{}}
                         key={i}
@@ -154,14 +156,16 @@ const Table: FC<Props> = ({ columns, data }) => {
                         <span
                           className="absolute left-1 top-4 cursor-pointer"
                           onClick={() => {
-                            setExpandedRow(expandedRow !== undefined ? undefined : i)
+                            // If this row is already expanded, filter it out from the state of expanded row indexes
+                            // Otherwise, add it to the state of expanded row indexes
+                            if (isExpanded) {
+                              setExpandedRows(expandedRows.filter((row) => row !== i))
+                            } else {
+                              setExpandedRows([...expandedRows, i])
+                            }
                           }}
                         >
-                          {!(expandedRow === i) ? (
-                            <PlusSmIcon className="h-4 w-4" />
-                          ) : (
-                            <MinusSmIcon className="h-4 w-4" />
-                          )}
+                          {!isExpanded ? <PlusSmIcon className="h-4 w-4" /> : <MinusSmIcon className="h-4 w-4" />}
                         </span>
                         {row.cells.map((cell, ii) => {
                           return (
@@ -171,21 +175,54 @@ const Table: FC<Props> = ({ columns, data }) => {
                           )
                         })}
                       </tr>
-                      {expandedRow === i && (
-                        <div className="flex flex-col px-12 py-4 space-y-2">
-                          {row.original.assets.map((asset: any, i: any) => {
-                            return (
-                              <div className="flex space-x-4 items-center">
-                                <img src={asset.image_thumbnail_url} className="h-8 rounded" />
-                                <span>{asset.name}</span>
+                      {isExpanded && (
+                        <table className="table-fixed min-w-full divide-y divide-gray-200 dark:divide-gray-700 ">
+                          <thead className="bg-gray-50 dark:bg-gray-800">
+                            <tr>
+                              <th className="flex px-6 text-left border-b border-gray-200 dark:border-gray-700 divide-x divide-gray-200 dark:divide-gray-700 text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
+                                <div className="p-2 w-1/2">Name</div>
+                                <div className="p-2 w-1/4">Cost Basis</div>
+                                <div className="p-2 w-1/4">Opensea</div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
+                            {row.original.assets.map((asset: any, i: any) => {
+                              return (
+                                <tr
+                                  className="relative flex px-6 divide-x divide-gray-200 dark:divide-gray-700"
+                                  key={i}
+                                >
+                                  <td className="w-1/2 px-2 py-2">
+                                    <div className="flex items-center space-x-4">
+                                      <img src={asset.image_thumbnail_url} className="h-8 rounded" />
+                                      <span>{asset.name}</span>
+                                    </div>
+                                  </td>
+                                  <td className="w-1/4 px-2 py-2">
+                                    {asset.last_sale ? (
+                                      <div>
+                                        {web3.utils.fromWei(asset.last_sale.total_price)}{' '}
+                                        {asset.last_sale.payment_token.symbol}
+                                      </div>
+                                    ) : (
+                                      <div>Minted</div>
+                                    )}
+                                  </td>
+                                  <td className="w-1/4 px-2 py-2">
+                                    <div className="flex items-center h-full">
+                                      <a href={asset.permalink} target="_blank" rel="noreferrer">
+                                        <ExternalLinkIcon className="h-4 w-4" />
+                                      </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                              )
+                            })}
 
-                                <a href={asset.permalink} target="_blank" rel="noreferrer">
-                                  <ExternalLinkIcon className="h-4 w-4" />
-                                </a>
-                              </div>
-                            )
-                          })}
-                        </div>
+                            <tr className=" relative flex px-6 divide-x divide-gray-200 dark:divide-gray-700"></tr>
+                          </tbody>
+                        </table>
                       )}
                     </>
                   )
@@ -215,7 +252,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
           {
             Header: 'Name',
             accessor: 'name',
-            width: 300,
+            width: 400,
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
               <div className="flex space-x-2">
                 <img src={row.original.image_url} className="h-8 w-8 rounded" />

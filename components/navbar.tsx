@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import classnames from 'classnames'
 import { utils } from 'ethers'
 import Link from 'next/link'
 import { LogoutIcon } from '@heroicons/react/solid'
+import { useRouter } from 'next/router'
 
 import useWeb3Container from '../hooks/useWeb3User'
 import AddressPill from './addressPill'
@@ -19,12 +20,22 @@ const Navbar = () => {
   const { wallet, ensName } = useWeb3Container.useContainer()
   const { status, reset, networkName, account, balance } = wallet
   const [connectModalIsOpen, setConnectModalIsOpen] = useState(false)
+  const router = useRouter()
 
   const { formatUnits } = utils
 
   const handleLogout = () => {
     reset()
   }
+
+  useEffect(() => {
+    if (wallet.account) {
+      const dev = process.env.NODE_ENV !== 'production'
+      const server = dev ? 'http://localhost:3000' : 'https://nft-monitor.vercel.app'
+      const href = `${server}/${wallet.account}`
+      router.replace(href)
+    }
+  }, [wallet])
 
   const formattedETH = parseFloat(formatUnits(balance)).toFixed(2)
 

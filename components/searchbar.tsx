@@ -44,7 +44,7 @@ export default function Searchbar() {
           setSearchQuery(e.target.value)
         }}
         type="text"
-        className="text-black focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md
+        className="text-black focus:ring-yellow-600 focus:border-yellow-600 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md
         dark:text-white dark:bg-gray-800 dark:border-gray-700"
         placeholder="[ / ] Enter an Ethereum address..."
       />

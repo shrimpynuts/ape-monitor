@@ -87,10 +87,11 @@ const Navbar = () => {
             <AddressPill address={account ? account : ''} ensName={ensName} balance={formattedETH} />
             <Button
               type="button"
-              className="transition-all duration-200  inline-flex items-center p-2 rounded-md shadow-sm bg-white text-white border border-solid border-gray-200 hover:bg-gray-100"
+              className="transition-all duration-200  inline-flex items-center p-2 rounded-md shadow-sm bg-white text-black border border-solid border-gray-200 hover:bg-gray-100 
+              dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700"
               onClick={handleLogout}
             >
-              <LogoutIcon fill="#000000" className="h-4 w-4" />
+              <LogoutIcon className="h-4 w-4 fill-current" />
             </Button>
           </div>
         ) : (

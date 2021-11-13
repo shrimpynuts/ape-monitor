@@ -18,7 +18,7 @@ const AddressPage: NextPage = ({
   return (
     <div className="max-w-screen-xl m-auto pb-4 md:pb-12">
       <Head>
-        <title>{middleEllipses(address, 4, 5, 2)}'s NFT Portfolio</title>
+        <title>{middleEllipses(address, 4, 5, 2)}&apos;s NFT Portfolio</title>
         <meta name="description" content="NFT Monitor tracks NFT portfolios on the Ethereum network." />
         <link rel="icon" href="/favicon.ico" />
       </Head>

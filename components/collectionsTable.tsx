@@ -53,7 +53,7 @@ const DefaultColumnFilter = ({
   return (
     <input
       ref={inputRef}
-      className="px-8 py-2 rounded-sm w-64 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-700"
+      className="px-8 py-2 rounded-sm w-64 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-700"
       value={filterValue || ''}
       onChange={(e) => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
@@ -114,12 +114,12 @@ const Table: FC<Props> = ({ columns, data }) => {
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
           <div className="shadow overflow-hidden sm:rounded-lg">
-            <table {...getTableProps()} className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-850">
+            <table {...getTableProps()} className="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
+              <thead className="bg-gray-100 dark:bg-gray-850">
                 <tr>
                   {headerGroups.map((headerGroup, i) => (
                     <th
-                      className="flex px-6 text-left border-b border-gray-200 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider"
+                      className="flex px-6 text-left border-b border-gray-300 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider"
                       {...headerGroup.getHeaderGroupProps()}
                       style={{}}
                       key={i}
@@ -139,7 +139,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                   ))}
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
+              <tbody className="bg-white divide-y divide-gray-300 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
                 {rows.map((row, i) => {
                   prepareRow(row)
                   const isExpanded = expandedRows.includes(i)
@@ -169,17 +169,17 @@ const Table: FC<Props> = ({ columns, data }) => {
                         })}
                       </tr>
                       {isExpanded && (
-                        <table className="table-fixed min-w-full divide-y divide-gray-200 dark:divide-gray-700 ">
-                          <thead className="bg-gray-50 dark:bg-gray-850">
+                        <table className="table-fixed min-w-full divide-y divide-gray-300 dark:divide-gray-700 ">
+                          <thead className="bg-gray-100 dark:bg-gray-850">
                             <tr>
-                              <th className="flex px-6 text-left border-b border-gray-200 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
+                              <th className="flex px-6 text-left border-b border-gray-300 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
                                 <div className="px-4 py-2 w-1/2">Name</div>
                                 <div className="px-4 py-2 w-1/4">Cost Basis</div>
                                 <div className="px-4 py-2 w-1/4">Opensea</div>
                               </th>
                             </tr>
                           </thead>
-                          <tbody className="bg-white divide-y divide-gray-200 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
+                          <tbody className="bg-gray-100 divide-y divide-gray-300 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
                             {row.original.assets.map((asset: any, i: any) => {
                               return (
                                 <tr className="relative flex px-6 " key={i}>
@@ -210,7 +210,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                               )
                             })}
 
-                            <tr className=" relative flex px-6 divide-x divide-gray-200 dark:divide-gray-700"></tr>
+                            <tr className=" relative flex px-6 divide-x divide-gray-300 dark:divide-gray-700"></tr>
                           </tbody>
                         </table>
                       )}
@@ -378,7 +378,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
             return (
               <button
                 key={i}
-                className={`cursor-pointer shadow rounded px-4 ${
+                className={`cursor-pointer shadow rounded px-4 hover:bg-gray-50 ${
                   currentTimespan.value === value && 'bg-gray-100 dark:bg-gray-700'
                 }`}
                 onClick={() => setCurrentTimespan(timespan)}

@@ -15,7 +15,7 @@ import {
 import { PlusSmIcon, MinusSmIcon, GlobeAltIcon, ExternalLinkIcon } from '@heroicons/react/solid'
 import web3 from 'web3'
 
-import { fixedNumber } from '../lib/util'
+import { fixedNumber, getCostBasis } from '../lib/util'
 import DeltaDisplay from './deltaDisplay'
 
 // https://codesandbox.io/s/react-table-typescript-xl7l4
@@ -244,7 +244,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
           {
             Header: 'Name',
             accessor: 'name',
-            width: 400,
+            width: 300,
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
               <div className="flex space-x-2">
                 <img src={row.original.image_url} className="h-8 w-8 rounded" />
@@ -305,23 +305,41 @@ function CollectionsTable({ collections }: { collections: any[] }) {
             Header: `Floor Price (with ${currentTimespan.display} Change)`,
             accessor: 'stats.floor_price',
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
-              <div className="flex items-center justify-between space-x-2">
+              <div className="flex items-center space-x-2">
                 <span>{fixedNumber(value)}Ξ</span>
                 <DeltaDisplay delta={row.original.stats[`${currentTimespan.dataPrefix}_change`]} denomination="%" />
               </div>
             ),
             disableFilters: true,
-            width: 200,
+            width: 170,
           },
           {
             Header: `Volume (with ${currentTimespan.display} Volume)`,
             accessor: 'stats.total_volume',
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
-              <div className="flex items-center justify-between space-x-2">
+              <div className="flex items-center space-x-2">
                 <span>{fixedNumber(value)}Ξ</span>
-                <div>{fixedNumber(row.original.stats[`${currentTimespan.dataPrefix}_volume`])}Ξ</div>
+                {row.original.stats[`${currentTimespan.dataPrefix}_volume`] > 0 && (
+                  <span className="text-green-600">
+                    +{fixedNumber(row.original.stats[`${currentTimespan.dataPrefix}_volume`])}Ξ
+                  </span>
+                )}
               </div>
             ),
+            disableFilters: true,
+            width: 170,
+          },
+          {
+            Header: `Cost Basis`,
+            accessor: 'assets',
+            Cell: ({ cell: { row } }: CellProps<any>) => {
+              const costBasis = getCostBasis(row.original)
+              return (
+                <div className="flex items-center justify-between space-x-2">
+                  <span>{`${fixedNumber(costBasis.total)} ${costBasis.symbol}`}</span>
+                </div>
+              )
+            },
             disableFilters: true,
             width: 200,
           },

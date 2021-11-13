@@ -1,3 +1,5 @@
+import web3 from 'web3'
+
 /**
  * Inserts middle ellipses into a given string
  * @param str The string to insert ellipses into
@@ -15,4 +17,23 @@ export function middleEllipses(str: string, cutoffDecimals: number, begginingDec
 
 export function fixedNumber(n: number) {
   return n ? parseFloat(n.toFixed(2)) : 0
+}
+
+export function getCostBasis(collection: any) {
+  return collection.assets?.reduce(
+    (acc: any, asset: any) => {
+      if (asset.last_sale) {
+        return {
+          total: acc.total + parseFloat(web3.utils.fromWei(asset.last_sale.total_price)),
+          symbol: asset.last_sale.payment_token.symbol,
+        }
+      } else {
+        return acc
+      }
+    },
+    {
+      total: 0,
+      symbol: '',
+    },
+  )
 }

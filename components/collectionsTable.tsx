@@ -12,7 +12,7 @@ import {
   useBlockLayout,
   useResizeColumns,
 } from 'react-table'
-import { GlobeAltIcon, ExternalLinkIcon } from '@heroicons/react/solid'
+import { PlusSmIcon, MinusSmIcon, GlobeAltIcon, ExternalLinkIcon } from '@heroicons/react/solid'
 
 import { fixedNumber } from '../lib/util'
 import DeltaDisplay from './deltaDisplay'
@@ -102,7 +102,8 @@ const Table: FC<Props> = ({ columns, data }) => {
     useSortBy,
     useBlockLayout,
     useResizeColumns,
-  ) as TableInstance<object>
+    // TODO: Type the TableInstance<> (defines the type for a row)
+  ) as TableInstance<any>
   // Render the UI for your table
   return (
     <div className="flex flex-col">
@@ -136,22 +137,47 @@ const Table: FC<Props> = ({ columns, data }) => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
                 {rows.map((row, i) => {
+                  const [isExpanded, setIsExpanded] = useState(false)
                   prepareRow(row)
                   return (
-                    <tr
-                      className="flex px-6 divide-x divide-gray-200 dark:divide-gray-700"
-                      {...row.getRowProps()}
-                      style={{}}
-                      key={i}
-                    >
-                      {row.cells.map((cell, ii) => {
-                        return (
-                          <td className="px-6 py-2 whitespace-nowrap " {...cell.getCellProps()} key={ii}>
-                            {cell.render('Cell')}
-                          </td>
-                        )
-                      })}
-                    </tr>
+                    <>
+                      <tr
+                        className=" relative flex px-6 divide-x divide-gray-200 dark:divide-gray-700"
+                        {...row.getRowProps()}
+                        style={{}}
+                        key={i}
+                      >
+                        <span
+                          className="absolute left-1 top-4 cursor-pointer"
+                          onClick={() => setIsExpanded(!isExpanded)}
+                        >
+                          {!isExpanded ? <PlusSmIcon className="h-4 w-4" /> : <MinusSmIcon className="h-4 w-4" />}
+                        </span>
+                        {row.cells.map((cell, ii) => {
+                          return (
+                            <td className="px-6 py-2 whitespace-nowrap " {...cell.getCellProps()} key={ii}>
+                              {cell.render('Cell')}
+                            </td>
+                          )
+                        })}
+                      </tr>
+                      {isExpanded && (
+                        <div className="flex flex-col px-12 py-4 space-y-2">
+                          {row.original.assets.map((asset: any, i: any) => {
+                            return (
+                              <div className="flex space-x-4 items-center">
+                                <img src={asset.image_thumbnail_url} className="h-8 rounded" />
+                                <span>{asset.name}</span>
+
+                                <a href={asset.permalink} target="_blank" rel="noreferrer">
+                                  <ExternalLinkIcon className="h-4 w-4" />
+                                </a>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </>
                   )
                 })}
               </tbody>
@@ -182,7 +208,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
             width: 300,
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
               <div className="flex space-x-2">
-                <img src={row.original.image_url} className="h-8 w-8 rounded-lg" />
+                <img src={row.original.image_url} className="h-8 w-8 rounded" />
                 <span>{value}</span>
               </div>
             ),
@@ -197,7 +223,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
             Header: 'Links',
             accessor: 'slug',
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
-              <div className="flex space-x-2">
+              <div className="flex space-x-2 items-center">
                 <a href={`https://opensea.io/collection/${value}`} target="_blank" rel="noreferrer">
                   <img src="/opensea.png" width={18} />
                 </a>

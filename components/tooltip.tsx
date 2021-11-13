@@ -10,7 +10,7 @@ export default function Tooltip({ text }: { text: string }) {
       </div>
       <span
         id="tooltip"
-        className="transition-all duration-200 absolute w-72 -top-10 max-h-12 rounded text-black dark:text-gray-900 text-sm dark:bg-gray-800 p-2 border dark:border-gray-700"
+        className="transition-all duration-200 absolute w-72 -top-10 max-h-12 rounded text-black dark:text-gray-900 bg-white text-sm dark:bg-gray-800 p-2 border dark:border-gray-700"
       >
         {text}
       </span>

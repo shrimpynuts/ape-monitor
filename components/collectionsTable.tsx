@@ -169,7 +169,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                         </span>
                         {row.cells.map((cell, ii) => {
                           return (
-                            <td className="px-6 py-2 whitespace-nowrap " {...cell.getCellProps()} key={ii}>
+                            <td className="px-4 py-2 whitespace-nowrap " {...cell.getCellProps()} key={ii}>
                               {cell.render('Cell')}
                             </td>
                           )
@@ -179,27 +179,24 @@ const Table: FC<Props> = ({ columns, data }) => {
                         <table className="table-fixed min-w-full divide-y divide-gray-200 dark:divide-gray-700 ">
                           <thead className="bg-gray-50 dark:bg-gray-800">
                             <tr>
-                              <th className="flex px-6 text-left border-b border-gray-200 dark:border-gray-700 divide-x divide-gray-200 dark:divide-gray-700 text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
-                                <div className="p-2 w-1/2">Name</div>
-                                <div className="p-2 w-1/4">Cost Basis</div>
-                                <div className="p-2 w-1/4">Opensea</div>
+                              <th className="flex px-6 text-left border-b border-gray-200 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
+                                <div className="px-4 py-2 w-1/2">Name</div>
+                                <div className="px-4 py-2 w-1/4">Cost Basis</div>
+                                <div className="px-4 py-2 w-1/4">Opensea</div>
                               </th>
                             </tr>
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
                             {row.original.assets.map((asset: any, i: any) => {
                               return (
-                                <tr
-                                  className="relative flex px-6 divide-x divide-gray-200 dark:divide-gray-700"
-                                  key={i}
-                                >
-                                  <td className="w-1/2 px-2 py-2">
+                                <tr className="relative flex px-6 " key={i}>
+                                  <td className="w-1/2 px-4 py-2">
                                     <div className="flex items-center space-x-4">
                                       <img src={asset.image_thumbnail_url} className="h-8 rounded" />
                                       <span>{asset.name}</span>
                                     </div>
                                   </td>
-                                  <td className="w-1/4 px-2 py-2">
+                                  <td className="w-1/4 px-4 py-2">
                                     {asset.last_sale ? (
                                       <div>
                                         {web3.utils.fromWei(asset.last_sale.total_price)}{' '}
@@ -209,7 +206,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                                       <div>Minted</div>
                                     )}
                                   </td>
-                                  <td className="w-1/4 px-2 py-2">
+                                  <td className="w-1/4 px-4 py-2">
                                     <div className="flex items-center h-full">
                                       <a href={asset.permalink} target="_blank" rel="noreferrer">
                                         <ExternalLinkIcon className="h-4 w-4" />

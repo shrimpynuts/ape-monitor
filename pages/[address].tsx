@@ -27,7 +27,7 @@ const AddressPage: NextPage = ({
 
       {/* Display profile details */}
       <div className="flex flex-col px-6 py-4 space-y-4 mx-4 shadow sm:rounded-lg bg-gray-50 dark:bg-gray-850 text-gray-500 dark:text-gray-100">
-        <div className="flex items-center divide-x divide-gray-200 dark:divide-gray-700">
+        <div className="flex flex-col md:flex-row md:items-center md:divide-x divide-gray-200 dark:divide-gray-700">
           <div className="flex text-lg px-4 space-x-2 items-center">
             <Davatar
               size={20}

@@ -8,6 +8,7 @@ import Navbar from '../components/navbar'
 import { middleEllipses, fixedNumber, getCostBasis } from '../lib/util'
 import CollectionsTable from '../components/collectionsTable'
 import DeltaDisplay from '../components/deltaDisplay'
+import Tooltip from '../components/tooltip'
 
 const AddressPage: NextPage = ({
   collections,
@@ -25,7 +26,7 @@ const AddressPage: NextPage = ({
       <Navbar />
 
       {/* Display profile details */}
-      <div className="flex flex-col px-6 py-4 space-y-4 mx-4 shadow overflow-hidden sm:rounded-lg bg-gray-50 dark:bg-gray-850 text-gray-500 dark:text-gray-100">
+      <div className="flex flex-col px-6 py-4 space-y-4 mx-4 shadow sm:rounded-lg bg-gray-50 dark:bg-gray-850 text-gray-500 dark:text-gray-100">
         <div className="flex items-center divide-x divide-gray-200 dark:divide-gray-700">
           <div className="flex text-lg px-4 space-x-2 items-center">
             <Davatar
@@ -36,11 +37,17 @@ const AddressPage: NextPage = ({
             <h4 className="text-lg ">{middleEllipses(address, 4, 6, 4)}</h4>
           </div>
           <h4 className="text-lg px-4 ">Total # of NFTs: {assetsOwned}</h4>
-          <h4 className="text-lg px-4 ">
-            Total Value: {fixedNumber(value)}Ξ &nbsp;
-            <DeltaDisplay delta={oneDayChange} denomination="%" />
+          <h4 className="text-lg px-4 relative flex space-x-2 items-center ">
+            <Tooltip text="Based on floor prices, discounting rarity" />
+            <div className="flex space-x-2 items-center">
+              Total Value: {fixedNumber(value)}Ξ &nbsp;
+              <DeltaDisplay delta={oneDayChange} denomination="%" />
+            </div>
           </h4>
-          <h4 className="text-lg px-4 ">Total Cost Basis: {fixedNumber(costBasis)}Ξ</h4>
+          <h4 className="text-lg px-4 relative flex space-x-2 items-center ">
+            <Tooltip text="May not be accurate due to mint costs" />
+            <div className="flex space-x-2 items-center">Total Cost Basis: {fixedNumber(costBasis)}Ξ</div>
+          </h4>
         </div>
       </div>
 

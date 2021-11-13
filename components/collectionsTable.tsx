@@ -147,7 +147,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                     <>
                       <tr className="relative flex px-6 " {...row.getRowProps()} style={{}} key={i}>
                         <span
-                          className="absolute left-1 top-4 cursor-pointer"
+                          className="absolute left-2 top-4 cursor-pointer"
                           onClick={() => {
                             // If this row is already expanded, filter it out from the state of expanded row indexes
                             // Otherwise, add it to the state of expanded row indexes
@@ -158,7 +158,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                             }
                           }}
                         >
-                          {!isExpanded ? <PlusSmIcon className="h-4 w-4" /> : <MinusSmIcon className="h-4 w-4" />}
+                          {!isExpanded ? <PlusSmIcon className="h-5 w-5" /> : <MinusSmIcon className="h-5 w-5" />}
                         </span>
                         {row.cells.map((cell, ii) => {
                           return (

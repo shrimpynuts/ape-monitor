@@ -244,9 +244,9 @@ function CollectionsTable({ collections }: { collections: any[] }) {
             accessor: 'name',
             width: 300,
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
-              <div className="flex space-x-2">
+              <div className="flex space-x-2 overflow-ellipsis">
                 <img src={row.original.image_url} className="h-8 w-8 rounded" />
-                <span>{value}</span>
+                <span className="overflow-ellipsis overflow-hidden">{value}</span>
               </div>
             ),
           },

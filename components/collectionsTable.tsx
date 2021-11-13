@@ -106,8 +106,6 @@ const Table: FC<Props> = ({ columns, data }) => {
     // TODO: Type the TableInstance<> (defines the type for a row)
   ) as TableInstance<any>
 
-  console.log({ data })
-
   const [expandedRows, setExpandedRows] = useState<number[]>([])
 
   // Render the UI for your table

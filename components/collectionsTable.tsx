@@ -351,7 +351,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
   return (
     <div>
       <div>
-        <div className="flex mb-2 px-4 py-1 shadow rounded dark:bg-gray-800 w-min text-gray-500 dark:text-gray-100 ">
+        <div className="flex mb-2 px-4 py-1 space-x-2 shadow rounded dark:bg-gray-800 w-min text-gray-500 dark:text-gray-100 ">
           {timespans.map((timespan, i) => {
             const { value } = timespan
             return (

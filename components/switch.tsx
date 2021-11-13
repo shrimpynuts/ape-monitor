@@ -23,7 +23,7 @@ const Toggle: React.FC<IProps> = ({ onClick }) => {
       checked={enabled}
       onChange={handleChange}
       className={classNames(
-        enabled ? 'bg-indigo-600' : 'bg-gray-600',
+        enabled ? 'bg-yellow-600' : 'bg-gray-600',
         'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200',
       )}
     >

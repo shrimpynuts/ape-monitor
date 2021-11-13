@@ -26,6 +26,11 @@ module.exports = {
         spinnerTimer: 'dash 5s linear infinite',
         rainbow: 'rainbow 5s linear infinite',
       },
+      colors: {
+        gray: {
+          850: '#192332',
+        },
+      },
     },
   },
   variants: {

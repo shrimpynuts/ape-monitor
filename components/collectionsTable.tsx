@@ -117,7 +117,7 @@ const Table: FC<Props> = ({ columns, data }) => {
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
           <div className="shadow overflow-hidden sm:rounded-lg">
             <table {...getTableProps()} className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-800">
+              <thead className="bg-gray-50 dark:bg-gray-850">
                 <tr>
                   {headerGroups.map((headerGroup, i) => (
                     <th
@@ -172,7 +172,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                       </tr>
                       {isExpanded && (
                         <table className="table-fixed min-w-full divide-y divide-gray-200 dark:divide-gray-700 ">
-                          <thead className="bg-gray-50 dark:bg-gray-800">
+                          <thead className="bg-gray-50 dark:bg-gray-850">
                             <tr>
                               <th className="flex px-6 text-left border-b border-gray-200 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
                                 <div className="px-4 py-2 w-1/2">Name</div>

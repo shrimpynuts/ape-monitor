@@ -29,7 +29,7 @@ const Navbar = () => {
   const formattedETH = parseFloat(formatUnits(balance)).toFixed(2)
 
   return (
-    <nav className="flex justify-between w-full px-4 py-8 items-center">
+    <nav className="flex justify-between w-full px-4 py-8 items-center space-x-4">
       {/* Logo */}
 
       <Link href="/">
@@ -83,7 +83,7 @@ const Navbar = () => {
             </Button>
           </div>
         ) : (
-          <Button onClick={() => setConnectModalIsOpen(true)}>Connect Wallet</Button>
+          <Button onClick={() => setConnectModalIsOpen(true)}>Connect</Button>
         )}
         <DarkModeToggle />
       </div>

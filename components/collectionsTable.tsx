@@ -121,7 +121,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                 <tr>
                   {headerGroups.map((headerGroup, i) => (
                     <th
-                      className="flex px-6 text-left border-b border-gray-200 dark:border-gray-700 divide-x divide-gray-200 dark:divide-gray-700 text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider"
+                      className="flex px-6 text-left border-b border-gray-200 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider"
                       {...headerGroup.getHeaderGroupProps()}
                       style={{}}
                       key={i}
@@ -147,12 +147,7 @@ const Table: FC<Props> = ({ columns, data }) => {
                   const isExpanded = expandedRows.includes(i)
                   return (
                     <>
-                      <tr
-                        className="relative flex px-6 divide-x divide-gray-200 dark:divide-gray-700"
-                        {...row.getRowProps()}
-                        style={{}}
-                        key={i}
-                      >
+                      <tr className="relative flex px-6 " {...row.getRowProps()} style={{}} key={i}>
                         <span
                           className="absolute left-1 top-4 cursor-pointer"
                           onClick={() => {
@@ -304,10 +299,10 @@ function CollectionsTable({ collections }: { collections: any[] }) {
         ],
       },
       {
-        Header: 'Floor Price',
+        Header: 'Stats',
         columns: [
           {
-            Header: `Total Floor Price (with ${currentTimespan.display} Change)`,
+            Header: `Floor Price (with ${currentTimespan.display} Change)`,
             accessor: 'stats.floor_price',
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
               <div className="flex items-center justify-between space-x-2">
@@ -318,13 +313,8 @@ function CollectionsTable({ collections }: { collections: any[] }) {
             disableFilters: true,
             width: 200,
           },
-        ],
-      },
-      {
-        Header: 'Volume',
-        columns: [
           {
-            Header: `Total Volume (with ${currentTimespan.display} Volume)`,
+            Header: `Volume (with ${currentTimespan.display} Volume)`,
             accessor: 'stats.total_volume',
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
               <div className="flex items-center justify-between space-x-2">

@@ -18,7 +18,6 @@ const AddressPage: NextPage = ({
   totalStats: { oneDayChange, value, assetsOwned, costBasis },
 }: any) => {
   const { ethPrice } = useWeb3Container.useContainer()
-  console.log({ collections })
 
   return (
     <div className="max-w-screen-xl m-auto pb-4 md:pb-12">

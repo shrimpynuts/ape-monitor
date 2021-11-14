@@ -58,6 +58,7 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
         onInput={(e: BaseSyntheticEvent) => {
           setSearchQuery(e.target.value)
         }}
+        autoComplete="off"
         type="text"
         autoCapitalize="none"
         className="text-black w-full shadow-sm focus:ring-yellow-600 focus:border-yellow-600 px-4 sm:text-sm border-gray-300 rounded-md

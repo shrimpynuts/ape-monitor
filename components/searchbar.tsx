@@ -13,9 +13,9 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
   // Keep a reference to the searchbar input element
   const inputEl = useRef<HTMLInputElement>(null)
 
-  const onEnterPress = () => {
-    // Only run handler if focused on the searchbar
-    if (document.activeElement === inputEl.current) {
+  const onEnterPress = (checkFocused?: boolean) => {
+    // Only run handler if focused on the searchbar unless checkFocused is false
+    if (document.activeElement === inputEl.current || checkFocused === false) {
       const dev = process.env.NODE_ENV !== 'production'
       const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
       const href = `${server}/${searchQuery}`
@@ -25,12 +25,14 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
       if (web3.utils.isAddress(searchQuery) || isENSDomain(searchQuery)) {
         return router.push(href)
       } else {
-        return toast.error(`${searchQuery} is not a valid Ethereum address.`)
+        return toast.error(
+          searchQuery ? 'Enter an Ethereum address or .eth domain' : `${searchQuery} is not a valid Ethereum address`,
+        )
       }
     }
   }
 
-  useKeyPress('Enter', onEnterPress)
+  useKeyPress('Enter', () => onEnterPress())
 
   useKeyPress('/', (e) => {
     inputEl.current && inputEl.current?.focus()
@@ -43,7 +45,7 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
   })
 
   return (
-    <div className="mt-1 mx-auto relative rounded-md shadow-sm">
+    <div className="relative mt-1 mx-auto rounded-md flex">
       <input
         ref={inputEl}
         autoFocus={autoFocus}
@@ -54,10 +56,20 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
           setSearchQuery(e.target.value)
         }}
         type="text"
-        className="text-black w-full focus:ring-yellow-600 focus:border-yellow-600 px-4 sm:text-sm border-gray-300 rounded-md
+        className="text-black w-full shadow-sm focus:ring-yellow-600 focus:border-yellow-600 px-4 sm:text-sm border-gray-300 rounded-md
         dark:text-white dark:bg-gray-800 dark:border-gray-700"
-        placeholder="[ / ] Enter an Ethereum address..."
+        placeholder="Enter an Ethereum address..."
       />
+      <button
+        className="absolute right-2 top-2 p-1 bg-gray-100 shadow-sm w-6 sm:text-sm 
+      border-gray-300 rounded-md dark:text-white dark:bg-gray-700 
+      border dark:border-gray-700  "
+        onClick={() => onEnterPress(false)}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M19,6a1,1,0,0,0-1,1v4a1,1,0,0,1-1,1H7.41l1.3-1.29A1,1,0,0,0,7.29,9.29l-3,3a1,1,0,0,0-.21.33,1,1,0,0,0,0,.76,1,1,0,0,0,.21.33l3,3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L7.41,14H17a3,3,0,0,0,3-3V7A1,1,0,0,0,19,6Z" />
+        </svg>
+      </button>
     </div>
   )
 }

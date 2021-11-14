@@ -41,7 +41,7 @@ const Home: NextPage = () => {
           <div className="w-full">
             <Searchbar autoFocus />
           </div>
-          <span className="my-2">OR</span>
+          <span className="my-2">or</span>
           <Button onClick={() => setModalIsOpen(true)}>Connect to Wallet</Button>
         </div>
         <img className="m-auto sm:w-full md:w-96" src={`/apes/ape${getRandomInt(8)}.gif`} />

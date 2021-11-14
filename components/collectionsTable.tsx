@@ -14,6 +14,7 @@ import {
 } from 'react-table'
 import { PlusSmIcon, MinusSmIcon, LinkIcon, ExternalLinkIcon } from '@heroicons/react/solid'
 import web3 from 'web3'
+import useMobileDetect from 'use-mobile-detect-hook'
 
 import { fixedNumber, getCostBasis } from '../lib/util'
 import DeltaDisplay from './deltaDisplay'
@@ -25,6 +26,7 @@ type Data = object
 type Props = {
   columns: Column<Data>[]
   data: Data[]
+  isMobile: boolean
 }
 
 interface TableColumn<D extends object = {}>
@@ -53,7 +55,7 @@ const DefaultColumnFilter = ({
   return (
     <input
       ref={inputRef}
-      className="px-8 py-2 rounded-sm w-64 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-700"
+      className="hidden md:block px-8 py-2 rounded-sm w-64 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-700"
       value={filterValue || ''}
       onChange={(e) => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
@@ -84,20 +86,22 @@ const ResizerComponent: FC = (props) => {
   )
 }
 
-const defaultColumn = {
-  minWidth: 20,
-  width: 200,
-  maxWidth: 500,
-  Filter: DefaultColumnFilter,
-}
-
-const Table: FC<Props> = ({ columns, data }) => {
+const Table: FC<Props> = ({ columns, data, isMobile }) => {
+  const defaultColumn = {
+    minWidth: 20,
+    width: isMobile ? 100 : 200,
+    maxWidth: isMobile ? 200 : 300,
+    Filter: DefaultColumnFilter,
+  }
   // Use the state and functions returned from useTable to build your UI
   const { getTableProps, headerGroups, rows, prepareRow } = useTable<Data>(
     {
       columns,
       defaultColumn,
       data,
+      initialState: {
+        hiddenColumns: isMobile ? ['slug'] : [],
+      },
     },
     useFilters,
     useSortBy,
@@ -110,8 +114,8 @@ const Table: FC<Props> = ({ columns, data }) => {
 
   // Render the UI for your table
   return (
-    <div className="flex flex-col">
-      <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div className="flex flex-col sm:rounded-lg">
+      <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 sm:rounded-lg">
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
           <div className="shadow overflow-hidden sm:rounded-lg">
             <table {...getTableProps()} className="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
@@ -227,8 +231,12 @@ const Table: FC<Props> = ({ columns, data }) => {
 }
 
 function CollectionsTable({ collections }: { collections: any[] }) {
+  // Detect if window is mobile
+  const detectMobile = useMobileDetect()
+  const isMobile = detectMobile.isMobile()
+
   const timespans = [
-    { value: '24h', dataPrefix: 'one_day', display: '1 Day' },
+    { value: '24h', dataPrefix: 'one_day', display: '24hr' },
     { value: '7d', dataPrefix: 'seven_day', display: '7 Day' },
     { value: '30d', dataPrefix: 'thirty_day', display: '30 Day' },
   ]
@@ -242,7 +250,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
           {
             Header: 'Name',
             accessor: 'name',
-            width: 300,
+            width: isMobile ? 200 : 300,
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
               <div className="flex space-x-2 overflow-ellipsis">
                 <img src={row.original.image_url} className="h-8 w-8 rounded" />
@@ -251,9 +259,9 @@ function CollectionsTable({ collections }: { collections: any[] }) {
             ),
           },
           {
-            Header: '# Owned',
+            Header: isMobile ? '#' : '# Owned',
             accessor: 'assets.length',
-            width: 80,
+            width: isMobile ? '20' : 80,
             disableFilters: true,
           },
           {
@@ -354,8 +362,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
           {
             Header: 'Activity',
             accessor: 'slug',
-            width: 20,
-            id: 2,
+            id: 'activity',
             Cell: ({ cell: { value } }: CellProps<object>) => (
               <a href={`https://opensea.io/collection/${value}?tab=activity`} target="_blank" rel="noreferrer">
                 <ExternalLinkIcon className="h-4 w-4" />
@@ -366,30 +373,28 @@ function CollectionsTable({ collections }: { collections: any[] }) {
         ],
       },
     ],
-    [currentTimespan],
+    [currentTimespan, isMobile],
   )
 
   return (
-    <div>
-      <div>
-        <div className="flex my-2 px-4 py-1 space-x-2 shadow rounded dark:bg-gray-800 w-min text-gray-500 dark:text-gray-100 ">
-          {timespans.map((timespan, i) => {
-            const { value } = timespan
-            return (
-              <button
-                key={i}
-                className={`cursor-pointer shadow rounded px-4 hover:bg-gray-50 ${
-                  currentTimespan.value === value && 'bg-gray-100 dark:bg-gray-700'
-                }`}
-                onClick={() => setCurrentTimespan(timespan)}
-              >
-                <span>{value}</span>
-              </button>
-            )
-          })}
-        </div>
+    <div className="w-full">
+      <div className="flex my-2 px-4 py-1 space-x-2 shadow rounded dark:bg-gray-800 w-min text-gray-500 dark:text-gray-100 ">
+        {timespans.map((timespan, i) => {
+          const { value } = timespan
+          return (
+            <button
+              key={i}
+              className={`cursor-pointer shadow rounded px-4 hover:bg-gray-50 ${
+                currentTimespan.value === value && 'bg-gray-100 dark:bg-gray-700'
+              }`}
+              onClick={() => setCurrentTimespan(timespan)}
+            >
+              <span>{value}</span>
+            </button>
+          )
+        })}
       </div>
-      <Table columns={columns} data={collections} />
+      <Table columns={columns} data={collections} isMobile={isMobile} />
     </div>
   )
 }

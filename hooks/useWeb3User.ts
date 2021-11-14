@@ -20,7 +20,6 @@ const Web3UserState = () => {
     async function fetchEtherPrice() {
       var etherscanProvider = new ethers.providers.EtherscanProvider()
       const price = await etherscanProvider.getEtherPrice()
-      console.log({ price })
       setEthPrice(price)
     }
 

@@ -101,7 +101,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const networkAddress = isENSDomain(address) ? await getNetworkAddress(address) : address
   if (!networkAddress) return error()
   const { collections } = await getOpenseaData(networkAddress)
-  const ensDomain = isENSDomain(address) ? address : undefined
+  const ensDomain = isENSDomain(address) ? address : null
 
   const totalStats = collections.reduce(
     (acc: any, collection: any) => {

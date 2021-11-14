@@ -34,16 +34,27 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
   // Group all assets by collection slug
   const byCollection = assets.reduce((acc: any, asset: any) => {
     const slug = asset.collection.slug
+
+    // Prune the asset for data
+    const prunedAsset = {
+      last_sale: asset.last_sale,
+      image_thumbnail_url: asset.image_thumbnail_url,
+      name: asset.name,
+      permalink: asset.permalink,
+      traits: asset.traits,
+      external_link: asset.external_link,
+      token_metadata: asset.token_metadata,
+      listing_date: asset.listing_date,
+      top_bid: asset.top_bid,
+      description: asset.description,
+    }
+
     if (acc[slug]) {
-      // Remove collection data before adding to array
-      delete asset.collection
-      acc[slug].assets.push(asset)
+      acc[slug].assets.push(prunedAsset)
     } else {
       // Store collection data
       const collectionData = asset.collection
-      // Remove collection data before adding to array
-      delete asset.collection
-      acc[slug] = { ...collectionData, assets: [asset] }
+      acc[slug] = { ...collectionData, assets: [prunedAsset] }
     }
     return acc
   }, {})

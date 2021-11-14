@@ -18,6 +18,7 @@ const AddressPage: NextPage = ({
   totalStats: { oneDayChange, value, assetsOwned, costBasis },
 }: any) => {
   const { ethPrice } = useWeb3Container.useContainer()
+  console.log({ collections })
 
   return (
     <div className="max-w-screen-xl m-auto pb-4 md:pb-12">
@@ -92,10 +93,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     (acc: any, collection: any) => {
       const numOwned = collection.assets.length
       const { total: singleCostBasis } = getCostBasis(collection)
+      const singleValue = collection.stats ? collection.assets.length * collection.stats.floor_price : 0
+      const singleOneDayChange = collection.stats ? numOwned * collection.stats.one_day_change : 0
       return {
         assetsOwned: acc.assetsOwned + numOwned,
-        value: acc.value + collection.stats ? collection.assets.length * collection.stats.floor_price : 0,
-        oneDayChange: acc.oneDayChange + collection.stats ? numOwned * collection.stats.one_day_change : 0,
+        value: acc.value + singleValue,
+        oneDayChange: acc.oneDayChange + singleOneDayChange,
         costBasis: acc.costBasis + singleCostBasis,
       }
     },

@@ -43,7 +43,7 @@ const Navbar = ({ displaySearchbar = true, displayConnectButton = true, customSt
     if (status === 'connected' && wallet.account) {
       const dev = process.env.NODE_ENV !== 'production'
       const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
-      const href = `${server}/${wallet.account}`
+      const href = `${server}/${ensName ? ensName : wallet.account}`
       router.push(href)
     }
   }, [status])

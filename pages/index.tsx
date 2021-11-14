@@ -23,7 +23,7 @@ const Home: NextPage = () => {
       <Toaster />
       <Navbar displaySearchbar={false} displayConnectButton={false} customState={{ modalIsOpen, setModalIsOpen }} />
       <div className="px-4 w-full">
-        <div className="flex flex-col items-center w-full md:mx-auto md:w-96 my-8 space-x-4">
+        <div className="flex flex-col items-center w-full md:mx-auto md:w-96 my-8">
           <div className="w-full">
             <Searchbar autoFocus />
           </div>

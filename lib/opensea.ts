@@ -35,7 +35,7 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
   const byCollection = assets.reduce((acc: any, asset: any) => {
     const slug = asset.collection.slug
 
-    // Prune the asset for data
+    // Prune the asset data
     const prunedAsset = {
       last_sale: asset.last_sale,
       image_thumbnail_url: asset.image_thumbnail_url,
@@ -54,7 +54,18 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
     } else {
       // Store collection data
       const collectionData = asset.collection
-      acc[slug] = { ...collectionData, assets: [prunedAsset] }
+
+      // Prune collection data
+      const prunedCollection = {
+        name: collectionData.name,
+        stats: collectionData.stats,
+        slug: collectionData.slug,
+        image_url: collectionData.image_url,
+        twitter_username: collectionData.twitter_username,
+        discord_url: collectionData.discord_url,
+        external_url: collectionData.external_url,
+      }
+      acc[slug] = { ...prunedCollection, assets: [prunedAsset] }
     }
     return acc
   }, {})

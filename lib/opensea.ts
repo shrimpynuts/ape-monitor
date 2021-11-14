@@ -21,15 +21,16 @@ export const getAssetsForOwner = async (ownerAddress: string) => {
   return totalAssets
 }
 
-export const getCollectionStats = async (slug: string) => {
-  const resp = await fetch(`https://api.opensea.io/api/v1/collection/${slug}/stats`)
-  const { stats } = await resp.json()
-  return stats
+export const getCollectionStats = (slug: string) => {
+  return fetch(`https://api.opensea.io/api/v1/collection/${slug}/stats`)
 }
 
 export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string) => {
+  console.time(`getAssetsForOwner for ${ownerAddress}`)
+
   // Get all assets for the given address
   const assets = await getAssetsForOwner(ownerAddress)
+  console.timeEnd(`getAssetsForOwner for ${ownerAddress}`)
 
   // Group all assets by collection slug
   const byCollection = assets.reduce((acc: any, asset: any) => {
@@ -70,13 +71,19 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
     return acc
   }, {})
 
+  console.time(`all getCollectionStats for ${ownerAddress}`)
   // Add stats to byCollections object
-  await Promise.all(
+  const result = await Promise.all(
     Object.keys(byCollection).map(async (collectionSlug: any) => {
-      const stats = await getCollectionStats(collectionSlug)
-      byCollection[collectionSlug] = { ...byCollection[collectionSlug], stats }
+      return getCollectionStats(collectionSlug)
+        .then((response) => response.json())
+        .then(({ stats }) => {
+          return { ...byCollection[collectionSlug], stats }
+        })
     }),
   )
+  console.log(result.length)
+  console.timeEnd(`all getCollectionStats for ${ownerAddress}`)
 
-  return Object.values(byCollection)
+  return result
 }

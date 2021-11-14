@@ -1,6 +1,7 @@
 import { useRef, useState, BaseSyntheticEvent } from 'react'
 import { useRouter } from 'next/router'
 import web3 from 'web3'
+import { toast } from 'react-hot-toast'
 
 import { useKeyPress } from '../hooks/useKeyPress'
 
@@ -17,7 +18,7 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
     if (web3.utils.isAddress(searchQuery)) {
       router.replace(href)
     } else {
-      window.alert(`Address (${searchQuery}) is not valid.`)
+      toast.error(`${searchQuery} is not a valid Ethereum address.`)
     }
   }
 

@@ -58,7 +58,7 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
         type="text"
         className="text-black w-full shadow-sm focus:ring-yellow-600 focus:border-yellow-600 px-4 sm:text-sm border-gray-300 rounded-md
         dark:text-white dark:bg-gray-800 dark:border-gray-700"
-        placeholder="Enter an Ethereum address..."
+        placeholder="Enter an Ethereum address or ENS name"
       />
       <button
         className="absolute right-2 top-2 p-1 bg-gray-100 shadow-sm w-6 sm:text-sm 

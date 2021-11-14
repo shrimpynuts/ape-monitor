@@ -1,4 +1,5 @@
 import web3 from 'web3'
+import { ethers } from 'ethers'
 
 /**
  * Inserts middle ellipses into a given string
@@ -36,4 +37,18 @@ export function getCostBasis(collection: any) {
       symbol: '',
     },
   )
+}
+
+export const getNetworkAddress = async (ensDomain: string) => {
+  const etherscanProvider = new ethers.providers.EtherscanProvider()
+  return await etherscanProvider.resolveName(ensDomain)
+}
+
+export const isENSDomain = (address: string) => address.substr(address.length - 4) === '.eth'
+
+export const getOpenseaData = async (address: string) => {
+  const dev = process.env.NODE_ENV !== 'production'
+  const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
+  const resp = await fetch(`${server}/api/opensea/${address}`)
+  return await resp.json()
 }

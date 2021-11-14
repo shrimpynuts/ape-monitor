@@ -4,21 +4,29 @@ import web3 from 'web3'
 import { toast } from 'react-hot-toast'
 
 import { useKeyPress } from '../hooks/useKeyPress'
+import { isENSDomain } from '../lib/util'
 
 export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }) {
   const [searchQuery, setSearchQuery] = useState('')
   const router = useRouter()
 
+  // Keep a reference to the searchbar input element
   const inputEl = useRef<HTMLInputElement>(null)
 
   const onEnterPress = () => {
-    const dev = process.env.NODE_ENV !== 'production'
-    const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
-    const href = `${server}/${searchQuery}`
-    if (web3.utils.isAddress(searchQuery)) {
-      router.push(href)
-    } else {
-      toast.error(`${searchQuery} is not a valid Ethereum address.`)
+    // Only run handler if focused on the searchbar
+    if (document.activeElement === inputEl.current) {
+      const dev = process.env.NODE_ENV !== 'production'
+      const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
+      const href = `${server}/${searchQuery}`
+
+      // Check if the given query is a valid ETH address or an ENS domain
+      // If so, direct them to the profile
+      if (web3.utils.isAddress(searchQuery) || isENSDomain(searchQuery)) {
+        return router.push(href)
+      } else {
+        return toast.error(`${searchQuery} is not a valid Ethereum address.`)
+      }
     }
   }
 

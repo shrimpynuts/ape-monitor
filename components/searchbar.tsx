@@ -44,11 +44,14 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
     e.preventDefault()
   })
 
+  const handleFocus = (event: any) => event.target.select()
+
   return (
     <div className="relative mt-1 mx-auto rounded-md flex">
       <input
         ref={inputEl}
         autoFocus={autoFocus}
+        onFocus={handleFocus}
         onChange={(e: BaseSyntheticEvent) => {
           setSearchQuery(e.target.value)
         }}
@@ -56,6 +59,7 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
           setSearchQuery(e.target.value)
         }}
         type="text"
+        autoCapitalize="none"
         className="text-black w-full shadow-sm focus:ring-yellow-600 focus:border-yellow-600 px-4 sm:text-sm border-gray-300 rounded-md
         dark:text-white dark:bg-gray-800 dark:border-gray-700"
         placeholder="Enter an Ethereum address or ENS name"

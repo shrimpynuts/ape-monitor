@@ -1,245 +1,25 @@
-import { useState, useEffect, useMemo, useRef, FC } from 'react'
-import {
-  useTable,
-  useFilters,
-  useSortBy,
-  Column,
-  CellProps,
-  UseSortByColumnProps,
-  TableInstance,
-  UseFiltersColumnProps,
-  ColumnInstance,
-  useBlockLayout,
-  useResizeColumns,
-} from 'react-table'
-import { PlusSmIcon, MinusSmIcon, LinkIcon, ExternalLinkIcon } from '@heroicons/react/solid'
-import web3 from 'web3'
+import { useState, useMemo } from 'react'
+import { CellProps } from 'react-table'
+import { LinkIcon, ExternalLinkIcon } from '@heroicons/react/solid'
 import useMobileDetect from 'use-mobile-detect-hook'
 
 import { fixedNumber, getCostBasis } from '../lib/util'
 import DeltaDisplay from './deltaDisplay'
+import Table from './table'
 
-// https://codesandbox.io/s/react-table-typescript-xl7l4
-
-type Data = object
-
-type Props = {
-  columns: Column<Data>[]
-  data: Data[]
-  isMobile: boolean
-}
-
-interface TableColumn<D extends object = {}>
-  extends ColumnInstance<D>,
-    UseSortByColumnProps<D>,
-    UseFiltersColumnProps<D> {
-  getResizerProps: any
-}
-
-const useStopPropagationOnClick = <T extends any>(ref: any) => {
-  useEffect(() => {
-    if (ref.current !== null) {
-      ref.current.addEventListener('click', (e: MouseEvent) => e.stopPropagation())
-    }
-  }, [])
-}
-
-const DefaultColumnFilter = ({
-  column: { filterValue, preFilteredRows, setFilter },
-}: {
-  column: TableColumn<Data>
-}) => {
-  const count = preFilteredRows.length
-  const inputRef = useRef<HTMLInputElement>(null)
-  useStopPropagationOnClick(inputRef)
-  return (
-    <input
-      ref={inputRef}
-      className="hidden md:block px-8 py-2 rounded-sm w-64 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-700"
-      value={filterValue || ''}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
-      }}
-      placeholder={`Search ${count} records...`}
-    />
-  )
-}
-
-const ResizerComponent: FC = (props) => {
-  const ref = useRef<HTMLDivElement>(null)
-  useStopPropagationOnClick(ref)
-  return (
-    <div
-      style={{
-        display: 'inline-block',
-        width: '5px',
-        height: '100%',
-        position: 'absolute',
-        right: '0',
-        top: '0',
-        transform: 'translateX(50%)',
-        zIndex: 1,
-      }}
-      {...props}
-      ref={ref}
-    />
-  )
-}
-
-const Table: FC<Props> = ({ columns, data, isMobile }) => {
-  const defaultColumn = {
-    minWidth: 20,
-    width: isMobile ? 100 : 200,
-    maxWidth: isMobile ? 200 : 300,
-    Filter: DefaultColumnFilter,
-  }
-  // Use the state and functions returned from useTable to build your UI
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable<Data>(
-    {
-      columns,
-      defaultColumn,
-      data,
-      initialState: {
-        hiddenColumns: isMobile ? ['slug'] : [],
-      },
-    },
-    useFilters,
-    useSortBy,
-    useBlockLayout,
-    useResizeColumns,
-    // TODO: Type the TableInstance<> (defines the type for a row)
-  ) as TableInstance<any>
-
-  const [expandedRows, setExpandedRows] = useState<number[]>([])
-
-  // Render the UI for your table
-  return (
-    <div className="sm:rounded-lg">
-      {/* <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 sm:rounded-lg"> */}
-      {/* <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8"> */}
-      <div className="shadow overflow-x-scroll sm:rounded-lg">
-        <table {...getTableProps()} className="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
-          <thead className="bg-gray-100 dark:bg-gray-850">
-            <tr>
-              {headerGroups.map((headerGroup, i) => (
-                <th
-                  className="flex px-6 text-left border-b border-gray-300 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider"
-                  {...headerGroup.getHeaderGroupProps()}
-                  style={{}}
-                  key={i}
-                >
-                  {headerGroup.headers.map((c, ii) => {
-                    const column = c as unknown as TableColumn<Data>
-                    return (
-                      <div className="p-2" {...column.getHeaderProps(column.getSortByToggleProps())} key={ii}>
-                        {column.render('Header')}
-                        <div {...column} />
-                        <div className="my-1">{column.canFilter ? column.render('Filter') : null}</div>
-                        <ResizerComponent {...column.getResizerProps()} />
-                      </div>
-                    )
-                  })}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-300 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
-            {rows.map((row, i) => {
-              prepareRow(row)
-              const isExpanded = expandedRows.includes(i)
-              return (
-                <>
-                  <tr className="relative flex px-6 " {...row.getRowProps()} style={{}} key={i}>
-                    <span
-                      className="absolute left-2 top-4 cursor-pointer"
-                      onClick={() => {
-                        // If this row is already expanded, filter it out from the state of expanded row indexes
-                        // Otherwise, add it to the state of expanded row indexes
-                        if (isExpanded) {
-                          setExpandedRows(expandedRows.filter((row) => row !== i))
-                        } else {
-                          setExpandedRows([...expandedRows, i])
-                        }
-                      }}
-                    >
-                      {!isExpanded ? <PlusSmIcon className="h-5 w-5" /> : <MinusSmIcon className="h-5 w-5" />}
-                    </span>
-                    {row.cells.map((cell, ii) => {
-                      return (
-                        <td className="px-4 py-2 whitespace-nowrap " {...cell.getCellProps()} key={ii}>
-                          {cell.render('Cell')}
-                        </td>
-                      )
-                    })}
-                  </tr>
-                  {isExpanded && (
-                    <table className="table-fixed min-w-full divide-y divide-gray-300 dark:divide-gray-700 ">
-                      <thead className="bg-gray-100 dark:bg-gray-850">
-                        <tr>
-                          <th className="flex px-6 text-left border-b border-gray-300 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
-                            <div className="px-4 py-2 w-1/2">Name</div>
-                            <div className="px-4 py-2 w-1/4">Cost Basis</div>
-                            <div className="px-4 py-2 w-1/4">Opensea</div>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-gray-100 divide-y divide-gray-300 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
-                        {row.original.assets.map((asset: any, i: any) => {
-                          return (
-                            <tr className="relative flex px-6 " key={i}>
-                              <td className="w-1/2 px-4 py-2">
-                                <div className="flex items-center space-x-4">
-                                  <img src={asset.image_thumbnail_url} className="h-8 rounded" />
-                                  <span>{asset.name}</span>
-                                </div>
-                              </td>
-                              <td className="w-1/4 px-4 py-2">
-                                {asset.last_sale ? (
-                                  <div>
-                                    {web3.utils.fromWei(asset.last_sale.total_price)}{' '}
-                                    {asset.last_sale.payment_token.symbol}
-                                  </div>
-                                ) : (
-                                  <div>Minted</div>
-                                )}
-                              </td>
-                              <td className="w-1/4 px-4 py-2">
-                                <div className="flex items-center h-full">
-                                  <a href={asset.permalink} target="_blank" rel="noreferrer">
-                                    <ExternalLinkIcon className="h-4 w-4" />
-                                  </a>
-                                </div>
-                              </td>
-                            </tr>
-                          )
-                        })}
-
-                        <tr className=" relative flex px-6 divide-x divide-gray-300 dark:divide-gray-700"></tr>
-                      </tbody>
-                    </table>
-                  )}
-                </>
-              )
-            })}
-          </tbody>
-        </table>
-        {/* </div> */}
-        {/* </div> */}
-      </div>
-    </div>
-  )
-}
+/**
+ * The possible timespans for opensea price delta data
+ */
+const timespans = [
+  { value: '24h', dataPrefix: 'one_day', display: '24hr' },
+  { value: '7d', dataPrefix: 'seven_day', display: '7 Day' },
+  { value: '30d', dataPrefix: 'thirty_day', display: '30 Day' },
+]
 
 function CollectionsTable({ collections }: { collections: any[] }) {
   // Detect if window is mobile
   const detectMobile = useMobileDetect()
   const isMobile = detectMobile.isMobile()
-
-  const timespans = [
-    { value: '24h', dataPrefix: 'one_day', display: '24hr' },
-    { value: '7d', dataPrefix: 'seven_day', display: '7 Day' },
-    { value: '30d', dataPrefix: 'thirty_day', display: '30 Day' },
-  ]
   const [currentTimespan, setCurrentTimespan] = useState(timespans[0])
 
   const columns = useMemo(
@@ -393,24 +173,31 @@ function CollectionsTable({ collections }: { collections: any[] }) {
     [currentTimespan, isMobile],
   )
 
+  /**
+   * Allows the user to switch between the different available timespans
+   */
+  const TimespanSwitch = () => (
+    <div className="flex my-2 px-4 py-1 space-x-2 shadow rounded dark:bg-gray-800 w-min text-gray-500 dark:text-gray-100 ">
+      {timespans.map((timespan, i) => {
+        const { value } = timespan
+        return (
+          <button
+            key={i}
+            className={`cursor-pointer shadow rounded px-4 hover:bg-gray-50 ${
+              currentTimespan.value === value && 'bg-gray-100 dark:bg-gray-700'
+            }`}
+            onClick={() => setCurrentTimespan(timespan)}
+          >
+            <span>{value}</span>
+          </button>
+        )
+      })}
+    </div>
+  )
+
   return (
     <div className="w-full">
-      <div className="flex my-2 px-4 py-1 space-x-2 shadow rounded dark:bg-gray-800 w-min text-gray-500 dark:text-gray-100 ">
-        {timespans.map((timespan, i) => {
-          const { value } = timespan
-          return (
-            <button
-              key={i}
-              className={`cursor-pointer shadow rounded px-4 hover:bg-gray-50 ${
-                currentTimespan.value === value && 'bg-gray-100 dark:bg-gray-700'
-              }`}
-              onClick={() => setCurrentTimespan(timespan)}
-            >
-              <span>{value}</span>
-            </button>
-          )
-        })}
-      </div>
+      <TimespanSwitch />
       <Table columns={columns} data={collections} isMobile={isMobile} />
     </div>
   )

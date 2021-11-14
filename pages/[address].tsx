@@ -50,18 +50,18 @@ const AddressPage: NextPage = ({
       md:flex-row md:items-center md:divide-x divide-gray-200 dark:divide-gray-700"
       >
         {/* Avatar and name */}
-        <div className="flex text-lg px-1 md:px-4 space-x-2 items-center">
+        <div className="flex text-lg font-bold px-1 md:px-4 space-x-2 items-center">
           <Davatar
             size={20}
             address={address}
             generatedAvatarType="jazzicon" // optional, 'jazzicon' or 'blockies'
           />
-          <h4 className="text-lg ">{ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}</h4>
+          <h4 className="text-xl ">{ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}</h4>
         </div>
         {/* # of NFTs */}
-        <h4 className="text-lg px-1 md:px-4 "># of NFTs: {assetsOwned}</h4>
+        <h4 className="text-sm px-1 md:px-4 "># of NFTs: {assetsOwned}</h4>
         {/* Total Value */}
-        <h4 className="text-lg px-1 space-between md:px-4 relative flex space-x-2 items-center ">
+        <h4 className="text-sm px-1 space-between md:px-4 relative flex space-x-2 items-center ">
           <Tooltip text="Based on floor prices, discounting rarity" />
           <div className="flex space-x-2 items-center flex-grow">
             <span>
@@ -71,7 +71,7 @@ const AddressPage: NextPage = ({
           </div>
         </h4>
         {/* Total Cost Basis */}
-        <h4 className="text-lg px-1 space-between md:px-4 relative flex space-x-2 items-center ">
+        <h4 className="text-sm px-1 space-between md:px-4 relative flex space-x-2 items-center ">
           <Tooltip text="May be inaccurate due to mint costs" />
           <div className="flex space-x-2 items-center flex-grow">
             <span>Total Cost Basis: {fixedNumber(costBasis)}Ξ &nbsp; </span>
@@ -79,7 +79,7 @@ const AddressPage: NextPage = ({
           </div>
         </h4>
         {/* Price of Ethereum (if available) */}
-        {ethPrice && <h4 className="text-lg px-1 md:px-4 ">ETH Price: ${ethPrice}</h4>}
+        {ethPrice && <h4 className="text-sm px-1 md:px-4 ">ETH Price: ${ethPrice}</h4>}
       </div>
 
       {/* Display collections data */}

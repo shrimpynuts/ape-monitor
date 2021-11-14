@@ -50,7 +50,7 @@ const AddressPage: NextPage = ({
       md:flex-row md:items-center md:divide-x divide-gray-200 dark:divide-gray-700"
       >
         {/* Avatar and name */}
-        <div className="flex text-lg font-bold px-1 md:px-4 space-x-2 items-center">
+        <div className="flex text-lg font-bold px-1 md:px-4 space-x-2 items-center border-b md:border-b-0 md:border-r  py-2 md:py-0">
           <Davatar
             size={20}
             address={address}
@@ -59,14 +59,14 @@ const AddressPage: NextPage = ({
           <h4 className="text-xl lowercase ">{ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}</h4>
         </div>
         {/* # of NFTs */}
-        <h4 className="text-sm px-1 md:px-4 "># of NFTs: {assetsOwned}</h4>
+        <h4 className="text-sm px-1 md:px-4 ">{assetsOwned} NFTs</h4>
         {/* Total Value */}
         <h4 className="text-sm px-1 space-between md:px-4 relative flex space-x-2 items-center ">
-          <Tooltip text="Based on floor prices, discounting rarity" />
+          <div className="flex-none">
+            <Tooltip text="Based on floor prices, discounting rarity" />
+          </div>
           <div className="flex space-x-2 items-center flex-grow">
-            <span>
-              Total Value: {fixedNumber(value)}Ξ &nbsp; {ethPrice && <div>(${fixedNumber(ethPrice * value, 0)}) </div>}
-            </span>
+            Total Value: {fixedNumber(value)}Ξ &nbsp; {ethPrice && <div>(${fixedNumber(ethPrice * value, 0)}) </div>}
             <DeltaDisplay delta={oneDayChange} denomination="%" />
           </div>
         </h4>
@@ -79,7 +79,7 @@ const AddressPage: NextPage = ({
           </div>
         </h4>
         {/* Price of Ethereum (if available) */}
-        {ethPrice && <h4 className="text-sm px-1 md:px-4 ">ETH Price: ${ethPrice}</h4>}
+        {ethPrice && <h4 className="hidden md:block text-sm px-1 md:px-4">ETH Price: ${ethPrice}</h4>}
       </div>
 
       {/* Display collections data */}

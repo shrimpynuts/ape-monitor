@@ -15,25 +15,31 @@ const Web3UserState = () => {
   const [provider, setProvider] = useState<Web3Provider | JsonRpcProvider | null>(null) // Ethers provider
   const [ethPrice, setEthPrice] = useState<number>()
 
+  // Fetch ether price
+  useEffect(() => {
+    async function fetchEtherPrice() {
+      var etherscanProvider = new ethers.providers.EtherscanProvider()
+      const price = await etherscanProvider.getEtherPrice()
+      console.log({ price })
+      setEthPrice(price)
+    }
+
+    fetchEtherPrice()
+  }, [])
+
+  // Fetch other data
   useEffect(() => {
     if (account) {
       initializeData(account)
     }
-
     async function initializeData(address: string) {
       const provider = new ethers.providers.Web3Provider(ethereum)
       setProvider(provider)
-
       if (!CONTRACT_ADDRESS) return console.error('Could not find contract address')
-
       let ensName
       if (networkName === 'main') {
         ensName = await provider.lookupAddress(address)
         setEnsName(ensName)
-
-        var etherscanProvider = new ethers.providers.EtherscanProvider()
-        const price = await etherscanProvider.getEtherPrice()
-        setEthPrice(price)
       }
     }
   }, [account, ethereum, networkName])

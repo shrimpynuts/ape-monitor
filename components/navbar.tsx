@@ -13,10 +13,19 @@ import Searchbar from '../components/searchbar'
 import DarkModeToggle from './darkModeToggle'
 import Emoji from './emoji'
 
+interface IProps {
+  displaySearchbar?: boolean
+  displayConnectButton?: boolean
+  customState?: {
+    modalIsOpen: boolean
+    setModalIsOpen: (open: boolean) => void
+  }
+}
+
 /**
  * Navigation bar that enables connect/disconnect from Web3.
  */
-const Navbar = () => {
+const Navbar = ({ displaySearchbar = true, displayConnectButton = true, customState }: IProps) => {
   const { wallet, ensName } = useWeb3Container.useContainer()
   const { status, reset, networkName, account, balance } = wallet
   const [connectModalIsOpen, setConnectModalIsOpen] = useState(false)
@@ -24,9 +33,11 @@ const Navbar = () => {
 
   const { formatUnits } = utils
 
-  const handleLogout = () => {
-    reset()
-  }
+  const setModalIsOpen = (open: boolean) =>
+    customState ? customState.setModalIsOpen(open) : setConnectModalIsOpen(open)
+  const modalIsOpen = customState ? customState.modalIsOpen : connectModalIsOpen
+
+  const handleLogout = () => reset()
 
   useEffect(() => {
     if (status === 'connected' && wallet.account) {
@@ -49,8 +60,12 @@ const Navbar = () => {
         </div>
       </Link>
 
-      <ConnectModal setIsOpen={setConnectModalIsOpen} isOpen={connectModalIsOpen} />
-      <Searchbar />
+      <ConnectModal setIsOpen={setModalIsOpen} isOpen={modalIsOpen} />
+      {displaySearchbar !== false && (
+        <div className="w-96">
+          <Searchbar />
+        </div>
+      )}
 
       {/* Connect to web3, dark mode toggle */}
       <div className="flex items-center space-x-2">
@@ -95,7 +110,7 @@ const Navbar = () => {
             </Button>
           </div>
         ) : (
-          <Button onClick={() => setConnectModalIsOpen(true)}>Connect</Button>
+          displayConnectButton !== false && <Button onClick={() => setModalIsOpen(true)}>Connect</Button>
         )}
         <DarkModeToggle />
       </div>

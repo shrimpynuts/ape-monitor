@@ -4,7 +4,7 @@ import web3 from 'web3'
 
 import { useKeyPress } from '../hooks/useKeyPress'
 
-export default function Searchbar() {
+export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }) {
   const [searchQuery, setSearchQuery] = useState('')
   const router = useRouter()
 
@@ -34,9 +34,10 @@ export default function Searchbar() {
   })
 
   return (
-    <div className="mt-1 relative rounded-md shadow-sm" style={{ width: 500 }}>
+    <div className="mt-1 mx-auto relative rounded-md shadow-sm">
       <input
         ref={inputEl}
+        autoFocus={autoFocus}
         onChange={(e: BaseSyntheticEvent) => {
           setSearchQuery(e.target.value)
         }}
@@ -44,7 +45,7 @@ export default function Searchbar() {
           setSearchQuery(e.target.value)
         }}
         type="text"
-        className="text-black focus:ring-yellow-600 focus:border-yellow-600 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md
+        className="text-black w-full focus:ring-yellow-600 focus:border-yellow-600 px-4 sm:text-sm border-gray-300 rounded-md
         dark:text-white dark:bg-gray-800 dark:border-gray-700"
         placeholder="[ / ] Enter an Ethereum address..."
       />

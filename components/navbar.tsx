@@ -44,7 +44,7 @@ const Navbar = ({ displaySearchbar = true, displayConnectButton = true, customSt
       const dev = process.env.NODE_ENV !== 'production'
       const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
       const href = `${server}/${wallet.account}`
-      router.replace(href)
+      router.push(href)
     }
   }, [status])
 

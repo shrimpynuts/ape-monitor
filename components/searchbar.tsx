@@ -16,7 +16,7 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
     const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
     const href = `${server}/${searchQuery}`
     if (web3.utils.isAddress(searchQuery)) {
-      router.replace(href)
+      router.push(href)
     } else {
       toast.error(`${searchQuery} is not a valid Ethereum address.`)
     }

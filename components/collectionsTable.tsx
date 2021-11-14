@@ -114,117 +114,117 @@ const Table: FC<Props> = ({ columns, data, isMobile }) => {
 
   // Render the UI for your table
   return (
-    <div className="flex flex-col sm:rounded-lg">
-      <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 sm:rounded-lg">
-        <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-          <div className="shadow overflow-hidden sm:rounded-lg">
-            <table {...getTableProps()} className="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
-              <thead className="bg-gray-100 dark:bg-gray-850">
-                <tr>
-                  {headerGroups.map((headerGroup, i) => (
-                    <th
-                      className="flex px-6 text-left border-b border-gray-300 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider"
-                      {...headerGroup.getHeaderGroupProps()}
-                      style={{}}
-                      key={i}
+    <div className="sm:rounded-lg">
+      {/* <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 sm:rounded-lg"> */}
+      {/* <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8"> */}
+      <div className="shadow overflow-x-scroll sm:rounded-lg">
+        <table {...getTableProps()} className="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
+          <thead className="bg-gray-100 dark:bg-gray-850">
+            <tr>
+              {headerGroups.map((headerGroup, i) => (
+                <th
+                  className="flex px-6 text-left border-b border-gray-300 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider"
+                  {...headerGroup.getHeaderGroupProps()}
+                  style={{}}
+                  key={i}
+                >
+                  {headerGroup.headers.map((c, ii) => {
+                    const column = c as unknown as TableColumn<Data>
+                    return (
+                      <div className="p-2" {...column.getHeaderProps(column.getSortByToggleProps())} key={ii}>
+                        {column.render('Header')}
+                        <div {...column} />
+                        <div className="my-1">{column.canFilter ? column.render('Filter') : null}</div>
+                        <ResizerComponent {...column.getResizerProps()} />
+                      </div>
+                    )
+                  })}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-300 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
+            {rows.map((row, i) => {
+              prepareRow(row)
+              const isExpanded = expandedRows.includes(i)
+              return (
+                <>
+                  <tr className="relative flex px-6 " {...row.getRowProps()} style={{}} key={i}>
+                    <span
+                      className="absolute left-2 top-4 cursor-pointer"
+                      onClick={() => {
+                        // If this row is already expanded, filter it out from the state of expanded row indexes
+                        // Otherwise, add it to the state of expanded row indexes
+                        if (isExpanded) {
+                          setExpandedRows(expandedRows.filter((row) => row !== i))
+                        } else {
+                          setExpandedRows([...expandedRows, i])
+                        }
+                      }}
                     >
-                      {headerGroup.headers.map((c, ii) => {
-                        const column = c as unknown as TableColumn<Data>
-                        return (
-                          <div className="p-2" {...column.getHeaderProps(column.getSortByToggleProps())} key={ii}>
-                            {column.render('Header')}
-                            <div {...column} />
-                            <div className="my-1">{column.canFilter ? column.render('Filter') : null}</div>
-                            <ResizerComponent {...column.getResizerProps()} />
-                          </div>
-                        )
-                      })}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-300 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
-                {rows.map((row, i) => {
-                  prepareRow(row)
-                  const isExpanded = expandedRows.includes(i)
-                  return (
-                    <>
-                      <tr className="relative flex px-6 " {...row.getRowProps()} style={{}} key={i}>
-                        <span
-                          className="absolute left-2 top-4 cursor-pointer"
-                          onClick={() => {
-                            // If this row is already expanded, filter it out from the state of expanded row indexes
-                            // Otherwise, add it to the state of expanded row indexes
-                            if (isExpanded) {
-                              setExpandedRows(expandedRows.filter((row) => row !== i))
-                            } else {
-                              setExpandedRows([...expandedRows, i])
-                            }
-                          }}
-                        >
-                          {!isExpanded ? <PlusSmIcon className="h-5 w-5" /> : <MinusSmIcon className="h-5 w-5" />}
-                        </span>
-                        {row.cells.map((cell, ii) => {
+                      {!isExpanded ? <PlusSmIcon className="h-5 w-5" /> : <MinusSmIcon className="h-5 w-5" />}
+                    </span>
+                    {row.cells.map((cell, ii) => {
+                      return (
+                        <td className="px-4 py-2 whitespace-nowrap " {...cell.getCellProps()} key={ii}>
+                          {cell.render('Cell')}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                  {isExpanded && (
+                    <table className="table-fixed min-w-full divide-y divide-gray-300 dark:divide-gray-700 ">
+                      <thead className="bg-gray-100 dark:bg-gray-850">
+                        <tr>
+                          <th className="flex px-6 text-left border-b border-gray-300 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
+                            <div className="px-4 py-2 w-1/2">Name</div>
+                            <div className="px-4 py-2 w-1/4">Cost Basis</div>
+                            <div className="px-4 py-2 w-1/4">Opensea</div>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-gray-100 divide-y divide-gray-300 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
+                        {row.original.assets.map((asset: any, i: any) => {
                           return (
-                            <td className="px-4 py-2 whitespace-nowrap " {...cell.getCellProps()} key={ii}>
-                              {cell.render('Cell')}
-                            </td>
+                            <tr className="relative flex px-6 " key={i}>
+                              <td className="w-1/2 px-4 py-2">
+                                <div className="flex items-center space-x-4">
+                                  <img src={asset.image_thumbnail_url} className="h-8 rounded" />
+                                  <span>{asset.name}</span>
+                                </div>
+                              </td>
+                              <td className="w-1/4 px-4 py-2">
+                                {asset.last_sale ? (
+                                  <div>
+                                    {web3.utils.fromWei(asset.last_sale.total_price)}{' '}
+                                    {asset.last_sale.payment_token.symbol}
+                                  </div>
+                                ) : (
+                                  <div>Minted</div>
+                                )}
+                              </td>
+                              <td className="w-1/4 px-4 py-2">
+                                <div className="flex items-center h-full">
+                                  <a href={asset.permalink} target="_blank" rel="noreferrer">
+                                    <ExternalLinkIcon className="h-4 w-4" />
+                                  </a>
+                                </div>
+                              </td>
+                            </tr>
                           )
                         })}
-                      </tr>
-                      {isExpanded && (
-                        <table className="table-fixed min-w-full divide-y divide-gray-300 dark:divide-gray-700 ">
-                          <thead className="bg-gray-100 dark:bg-gray-850">
-                            <tr>
-                              <th className="flex px-6 text-left border-b border-gray-300 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
-                                <div className="px-4 py-2 w-1/2">Name</div>
-                                <div className="px-4 py-2 w-1/4">Cost Basis</div>
-                                <div className="px-4 py-2 w-1/4">Opensea</div>
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody className="bg-gray-100 divide-y divide-gray-300 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
-                            {row.original.assets.map((asset: any, i: any) => {
-                              return (
-                                <tr className="relative flex px-6 " key={i}>
-                                  <td className="w-1/2 px-4 py-2">
-                                    <div className="flex items-center space-x-4">
-                                      <img src={asset.image_thumbnail_url} className="h-8 rounded" />
-                                      <span>{asset.name}</span>
-                                    </div>
-                                  </td>
-                                  <td className="w-1/4 px-4 py-2">
-                                    {asset.last_sale ? (
-                                      <div>
-                                        {web3.utils.fromWei(asset.last_sale.total_price)}{' '}
-                                        {asset.last_sale.payment_token.symbol}
-                                      </div>
-                                    ) : (
-                                      <div>Minted</div>
-                                    )}
-                                  </td>
-                                  <td className="w-1/4 px-4 py-2">
-                                    <div className="flex items-center h-full">
-                                      <a href={asset.permalink} target="_blank" rel="noreferrer">
-                                        <ExternalLinkIcon className="h-4 w-4" />
-                                      </a>
-                                    </div>
-                                  </td>
-                                </tr>
-                              )
-                            })}
 
-                            <tr className=" relative flex px-6 divide-x divide-gray-300 dark:divide-gray-700"></tr>
-                          </tbody>
-                        </table>
-                      )}
-                    </>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                        <tr className=" relative flex px-6 divide-x divide-gray-300 dark:divide-gray-700"></tr>
+                      </tbody>
+                    </table>
+                  )}
+                </>
+              )
+            })}
+          </tbody>
+        </table>
+        {/* </div> */}
+        {/* </div> */}
       </div>
     </div>
   )
@@ -363,6 +363,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
             Header: 'Activity',
             accessor: 'slug',
             id: 'activity',
+            width: 20,
             Cell: ({ cell: { value } }: CellProps<object>) => (
               <a href={`https://opensea.io/collection/${value}?tab=activity`} target="_blank" rel="noreferrer">
                 <ExternalLinkIcon className="h-4 w-4" />

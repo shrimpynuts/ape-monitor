@@ -31,34 +31,34 @@ const AddressPage: NextPage = ({
       <Navbar />
 
       {/* Display profile details */}
-      <div className="flex flex-col px-6 py-4 space-y-4 mx-4 shadow sm:rounded-lg bg-gray-100 dark:bg-gray-850 text-gray-500 dark:text-gray-100">
-        <div className="flex flex-col md:flex-row md:items-center md:divide-x divide-gray-200 dark:divide-gray-700">
-          <div className="flex text-lg px-4 space-x-2 items-center">
-            <Davatar
-              size={20}
-              address={address}
-              generatedAvatarType="jazzicon" // optional, 'jazzicon' or 'blockies'
-            />
-            <h4 className="text-lg ">{middleEllipses(address, 4, 6, 4)}</h4>
-          </div>
-          <h4 className="text-lg px-4 "># of NFTs: {assetsOwned}</h4>
-          <h4 className="text-lg px-4 relative flex space-x-2 items-center ">
-            <Tooltip text="Based on floor prices, discounting rarity" />
-            <div className="flex space-x-2 items-center">
-              Total Value: {fixedNumber(value)}Ξ &nbsp; {ethPrice && <div>(${fixedNumber(ethPrice * value, 0)}) </div>}
-              <DeltaDisplay delta={oneDayChange} denomination="%" />
-            </div>
-          </h4>
-          <h4 className="text-lg px-4 relative flex space-x-2 items-center ">
-            <Tooltip text="May not be accurate due to mint costs" />
-            <div className="flex space-x-2 items-center">
-              Total Cost Basis: {fixedNumber(costBasis)}Ξ &nbsp;{' '}
-              {ethPrice && <div>(${fixedNumber(costBasis * ethPrice, 0)}) </div>}
-            </div>
-          </h4>
-          {ethPrice && <h4 className="text-lg px-4 ">ETH Price: ${ethPrice}</h4>}
+      <div className="flex flex-col px-2 py-4 space-y-4 mx-4 shadow sm:rounded-lg bg-gray-100 dark:bg-gray-850 text-gray-500 dark:text-gray-100">
+        {/* <div className="flex flex-col md:flex-row md:items-center md:divide-x divide-gray-200 dark:divide-gray-700"> */}
+        <div className="flex text-lg px-4 space-x-2 items-center">
+          <Davatar
+            size={20}
+            address={address}
+            generatedAvatarType="jazzicon" // optional, 'jazzicon' or 'blockies'
+          />
+          <h4 className="text-lg ">{middleEllipses(address, 4, 6, 4)}</h4>
         </div>
+        <h4 className="text-lg px-4 "># of NFTs: {assetsOwned}</h4>
+        <h4 className="text-lg px-4 relative flex space-x-2 items-center ">
+          <Tooltip text="Based on floor prices, discounting rarity" />
+          <div className="flex space-x-2 items-center">
+            Total Value: {fixedNumber(value)}Ξ &nbsp; {ethPrice && <div>(${fixedNumber(ethPrice * value, 0)}) </div>}
+            <DeltaDisplay delta={oneDayChange} denomination="%" />
+          </div>
+        </h4>
+        <h4 className="text-lg px-4 relative flex space-x-2 items-center ">
+          <Tooltip text="May not be accurate due to mint costs" />
+          <div className="flex space-x-2 items-center">
+            Total Cost Basis: {fixedNumber(costBasis)}Ξ &nbsp;{' '}
+            {ethPrice && <div>(${fixedNumber(costBasis * ethPrice, 0)}) </div>}
+          </div>
+        </h4>
+        {ethPrice && <h4 className="text-lg px-4 ">ETH Price: ${ethPrice}</h4>}
       </div>
+      {/* </div> */}
 
       {/* Display collections data */}
       <div className="flex flex-col flex-wrap space-y-2 mt-4 mx-4">

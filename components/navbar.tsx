@@ -31,7 +31,7 @@ const Navbar = () => {
   useEffect(() => {
     if (wallet.account) {
       const dev = process.env.NODE_ENV !== 'production'
-      const server = dev ? 'http://localhost:3000' : 'https://nft-monitor.vercel.app'
+      const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
       const href = `${server}/${wallet.account}`
       router.replace(href)
     }

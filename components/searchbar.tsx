@@ -12,7 +12,7 @@ export default function Searchbar() {
 
   const onEnterPress = () => {
     const dev = process.env.NODE_ENV !== 'production'
-    const server = dev ? 'http://localhost:3000' : 'https://nft-monitor.vercel.app'
+    const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
     const href = `${server}/${searchQuery}`
     if (web3.utils.isAddress(searchQuery)) {
       router.replace(href)

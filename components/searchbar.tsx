@@ -63,6 +63,7 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
       <button
         className="absolute right-2 top-2 p-1 bg-gray-100 shadow-sm w-6 sm:text-sm 
       border-gray-300 rounded-md dark:text-white dark:bg-gray-700 
+      hover:bg-gray-200 dark:hover:bg-gray-800
       border dark:border-gray-700"
         onClick={() => onEnterPress(false)}
       >

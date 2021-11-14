@@ -31,7 +31,10 @@ const AddressPage: NextPage = ({
       <Navbar />
 
       {/* Display profile details */}
-      <div className="flex flex-col px-2 py-4 space-y-4 mx-4 shadow sm:rounded-lg bg-gray-100 dark:bg-gray-850 text-gray-500 dark:text-gray-100">
+      <div
+        className="flex flex-col px-2 py-4 space-y-4 md:space-y-0 mx-4 shadow sm:rounded-lg bg-gray-100 dark:bg-gray-850 text-gray-500 dark:text-gray-100
+      md:flex-row md:items-center md:divide-x divide-gray-200 dark:divide-gray-700"
+      >
         {/* <div className="flex flex-col md:flex-row md:items-center md:divide-x divide-gray-200 dark:divide-gray-700"> */}
         <div className="flex text-lg px-4 space-x-2 items-center">
           <Davatar

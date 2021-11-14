@@ -322,9 +322,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
                   <>
                     <span>{fixedNumber(value.floor_price)}Ξ</span>
                     {value[`${currentTimespan.dataPrefix}_change`] > 0 && (
-                      <span className="text-green-600">
-                        +{fixedNumber(value[`${currentTimespan.dataPrefix}_change`])}Ξ
-                      </span>
+                      <DeltaDisplay delta={value[`${currentTimespan.dataPrefix}_change`]} denomination="%" />
                     )}
                   </>
                 ) : (

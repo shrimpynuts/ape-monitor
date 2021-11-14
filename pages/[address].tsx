@@ -46,10 +46,11 @@ const AddressPage: NextPage = ({
 
       {/* Display profile details */}
       <div
-        className="flex flex-col px-2 py-4 space-y-4 md:space-y-0 mx-4 shadow sm:rounded-lg bg-gray-100 dark:bg-gray-850 text-gray-500 dark:text-gray-100
+        className="flex flex-col px-2 py-4 space-y-2 md:space-y-0 mx-4 shadow sm:rounded-lg bg-gray-100 dark:bg-gray-850 text-gray-500 dark:text-gray-100
       md:flex-row md:items-center md:divide-x divide-gray-200 dark:divide-gray-700"
       >
-        <div className="flex text-lg px-4 space-x-2 items-center">
+        {/* Avatar and name */}
+        <div className="flex text-lg px-1 md:px-4 space-x-2 items-center">
           <Davatar
             size={20}
             address={address}
@@ -57,22 +58,28 @@ const AddressPage: NextPage = ({
           />
           <h4 className="text-lg ">{ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}</h4>
         </div>
-        <h4 className="text-lg px-4 "># of NFTs: {assetsOwned}</h4>
-        <h4 className="text-lg px-4 relative flex space-x-2 items-center ">
+        {/* # of NFTs */}
+        <h4 className="text-lg px-1 md:px-4 "># of NFTs: {assetsOwned}</h4>
+        {/* Total Value */}
+        <h4 className="text-lg px-1 space-between md:px-4 relative flex space-x-2 items-center ">
           <Tooltip text="Based on floor prices, discounting rarity" />
-          <div className="flex space-x-2 items-center">
-            Total Value: {fixedNumber(value)}Ξ &nbsp; {ethPrice && <div>(${fixedNumber(ethPrice * value, 0)}) </div>}
+          <div className="flex space-x-2 items-center flex-grow">
+            <span>
+              Total Value: {fixedNumber(value)}Ξ &nbsp; {ethPrice && <div>(${fixedNumber(ethPrice * value, 0)}) </div>}
+            </span>
             <DeltaDisplay delta={oneDayChange} denomination="%" />
           </div>
         </h4>
-        <h4 className="text-lg px-4 relative flex space-x-2 items-center ">
-          <Tooltip text="May not be accurate due to mint costs" />
-          <div className="flex space-x-2 items-center">
-            Total Cost Basis: {fixedNumber(costBasis)}Ξ &nbsp;{' '}
+        {/* Total Cost Basis */}
+        <h4 className="text-lg px-1 space-between md:px-4 relative flex space-x-2 items-center ">
+          <Tooltip text="May be inaccurate due to mint costs" />
+          <div className="flex space-x-2 items-center flex-grow">
+            <span>Total Cost Basis: {fixedNumber(costBasis)}Ξ &nbsp; </span>
             {ethPrice && <div>(${fixedNumber(costBasis * ethPrice, 0)}) </div>}
           </div>
         </h4>
-        {ethPrice && <h4 className="text-lg px-4 ">ETH Price: ${ethPrice}</h4>}
+        {/* Price of Ethereum (if available) */}
+        {ethPrice && <h4 className="text-lg px-1 md:px-4 ">ETH Price: ${ethPrice}</h4>}
       </div>
 
       {/* Display collections data */}

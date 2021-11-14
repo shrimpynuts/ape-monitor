@@ -19,6 +19,20 @@ const Home: NextPage = () => {
         <title>Ape Monitor</title>
         <meta name="description" content="Monitor the performance of your Ethereum NFTs using Opensea data." />
         <link rel="icon" href="/favicon.ico" />
+
+        {/* Open graph */}
+        <meta property="og:url" content="https://www.apemonitor.com/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Ape Monitor - Track your NFT portfolio." />
+        <meta property="og:description" content="Monitor the performance of your Ethereum NFTs using Opensea data." />
+        <meta property="og:image" content="https://www.apemonitor.com/image-metadata.png" />
+
+        {/* Twitter */}
+        <meta property="twitter:url" content="https://www.apemonitor.com/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Ape Monitor - Track your NFT portfolio." />
+        <meta name="twitter:description" content="Monitor the performance of your Ethereum NFTs using Opensea data." />
+        <meta name="twitter:image" content={'https://www.apemonitor.com/image-metadata.png'} />
       </Head>
       <Toaster />
       <Navbar displaySearchbar={false} displayConnectButton={false} customState={{ modalIsOpen, setModalIsOpen }} />

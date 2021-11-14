@@ -29,13 +29,13 @@ const Navbar = () => {
   }
 
   useEffect(() => {
-    if (wallet.account) {
+    if (status === 'connected' && wallet.account) {
       const dev = process.env.NODE_ENV !== 'production'
       const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
       const href = `${server}/${wallet.account}`
       router.replace(href)
     }
-  }, [wallet])
+  }, [status])
 
   const formattedETH = parseFloat(formatUnits(balance)).toFixed(2)
 

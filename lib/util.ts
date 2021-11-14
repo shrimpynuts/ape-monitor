@@ -50,5 +50,21 @@ export const getOpenseaData = async (address: string) => {
   const dev = process.env.NODE_ENV !== 'production'
   const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
   const resp = await fetch(`${server}/api/opensea/${address}`)
-  return await resp.json()
+  const { collections } = await resp.json()
+  const totalStats = collections.reduce(
+    (acc: any, collection: any) => {
+      const numOwned = collection.assets.length
+      const { total: singleCostBasis } = getCostBasis(collection)
+      const singleValue = collection.stats ? collection.assets.length * collection.stats.floor_price : 0
+      const singleOneDayChange = collection.stats ? numOwned * collection.stats.one_day_change : 0
+      return {
+        assetsOwned: acc.assetsOwned + numOwned,
+        value: acc.value + singleValue,
+        oneDayChange: acc.oneDayChange + singleOneDayChange,
+        costBasis: acc.costBasis + singleCostBasis,
+      }
+    },
+    { value: 0, oneDayChange: 0, assetsOwned: 0, costBasis: 0 },
+  )
+  return { totalStats, collections }
 }

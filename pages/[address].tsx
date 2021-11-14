@@ -56,7 +56,7 @@ const AddressPage: NextPage = ({
             address={address}
             generatedAvatarType="jazzicon" // optional, 'jazzicon' or 'blockies'
           />
-          <h4 className="text-xl ">{ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}</h4>
+          <h4 className="text-xl lowercase ">{ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}</h4>
         </div>
         {/* # of NFTs */}
         <h4 className="text-sm px-1 md:px-4 "># of NFTs: {assetsOwned}</h4>

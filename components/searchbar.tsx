@@ -2,6 +2,7 @@ import { useRef, useState, BaseSyntheticEvent } from 'react'
 import { useRouter } from 'next/router'
 import web3 from 'web3'
 import { toast } from 'react-hot-toast'
+import Reward, { RewardElement } from 'react-rewards'
 
 import { useKeyPress } from '../hooks/useKeyPress'
 import { isENSDomain } from '../lib/util'
@@ -13,6 +14,9 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
   // Keep a reference to the searchbar input element
   const inputEl = useRef<HTMLInputElement>(null)
 
+  // Keep a reference to the reward element
+  const rewardRef = useRef<RewardElement>(null)
+
   const onEnterPress = (checkFocused?: boolean) => {
     // Only run handler if focused on the searchbar unless checkFocused is false
     if (document.activeElement === inputEl.current || checkFocused === false) {
@@ -23,6 +27,7 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
       // Check if the given query is a valid ETH address or an ENS domain
       // If so, direct them to the profile
       if (web3.utils.isAddress(searchQuery) || isENSDomain(searchQuery)) {
+        rewardRef.current?.rewardMe()
         return router.push(href)
       } else {
         return toast.error(
@@ -61,15 +66,29 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
         autoComplete={'' + Math.random()}
         type="text"
         autoCapitalize="none"
-        className="text-black w-full shadow-sm focus:ring-yellow-600 focus:border-yellow-600 px-4 sm:text-sm border-gray-300 rounded-md
+        className="text-black z-10 w-full shadow-sm focus:ring-yellow-600 focus:border-yellow-600 px-4 sm:text-sm border-gray-300 rounded-md
         dark:text-white dark:bg-gray-800 dark:border-gray-700"
         placeholder="Enter an Ethereum address or ENS name"
       />
+      <span className="absolute left-48 top-2">
+        <Reward
+          ref={rewardRef}
+          type="emoji"
+          config={{
+            emoji: ['🍌'],
+            elementCount: 10,
+            spread: 360,
+            startVelocity: 20,
+            angle: 270,
+            lifetime: 100,
+          }}
+        />
+      </span>
       <button
-        className="absolute right-2 top-2 p-1 bg-gray-100 shadow-sm w-6 sm:text-sm 
-      border-gray-300 rounded-md dark:text-white dark:bg-gray-700 
-      hover:bg-gray-200 dark:hover:bg-gray-800
-      border dark:border-gray-700"
+        className="absolute right-2 z-20 top-2 p-1 bg-gray-100 shadow-sm w-6 sm:text-sm 
+        border-gray-300 rounded-md dark:text-white dark:bg-gray-700 
+        hover:bg-gray-200 dark:hover:bg-gray-800
+        border dark:border-gray-700"
         onClick={() => onEnterPress(false)}
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="fill-current">

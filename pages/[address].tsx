@@ -19,12 +19,27 @@ const AddressPage: NextPage = ({
 }: any) => {
   const { ethPrice } = useWeb3Container.useContainer()
 
+  const metadataTitle = `${ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}\'s NFT Portfolio`
   return (
     <div className="max-w-screen-xl m-auto pb-4 md:pb-12">
       <Head>
-        <title>{ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}&apos;s NFT Portfolio</title>
+        <title>{metadataTitle}</title>
         <meta name="description" content="NFT Monitor tracks NFT portfolios on the Ethereum network." />
         <link rel="icon" href="/favicon.ico" />
+
+        {/* Open graph */}
+        <meta property="og:url" content="https://www.apemonitor.com/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={metadataTitle} />
+        <meta property="og:description" content="Monitor the performance of your Ethereum NFTs using Opensea data." />
+        <meta property="og:image" content="https://www.apemonitor.com/image-metadata.png" />
+
+        {/* Twitter */}
+        <meta property="twitter:url" content="https://www.apemonitor.com/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={metadataTitle} />
+        <meta name="twitter:description" content="Monitor the performance of your Ethereum NFTs using Opensea data." />
+        <meta name="twitter:image" content="https://www.apemonitor.com/image-metadata.png" />
       </Head>
       <Toaster />
       <Navbar />

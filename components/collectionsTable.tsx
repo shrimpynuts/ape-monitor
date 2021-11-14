@@ -314,11 +314,22 @@ function CollectionsTable({ collections }: { collections: any[] }) {
         columns: [
           {
             Header: `Floor Price (with ${currentTimespan.display} Change)`,
-            accessor: 'stats.floor_price',
-            Cell: ({ cell: { value, row } }: CellProps<any>) => (
+            accessor: 'stats',
+            id: 'floor_price',
+            Cell: ({ cell: { value } }: CellProps<any>) => (
               <div className="flex items-center space-x-2">
-                <span>{fixedNumber(value)}Ξ</span>
-                <DeltaDisplay delta={row.original.stats[`${currentTimespan.dataPrefix}_change`]} denomination="%" />
+                {value ? (
+                  <>
+                    <span>{fixedNumber(value.floor_price)}Ξ</span>
+                    {value[`${currentTimespan.dataPrefix}_change`] > 0 && (
+                      <span className="text-green-600">
+                        +{fixedNumber(value[`${currentTimespan.dataPrefix}_change`])}Ξ
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  ''
+                )}
               </div>
             ),
             disableFilters: true,
@@ -326,14 +337,21 @@ function CollectionsTable({ collections }: { collections: any[] }) {
           },
           {
             Header: `Volume (with ${currentTimespan.display} Volume)`,
-            accessor: 'stats.total_volume',
-            Cell: ({ cell: { value, row } }: CellProps<any>) => (
+            accessor: 'stats',
+            id: 'Volume',
+            Cell: ({ cell: { value } }: CellProps<any>) => (
               <div className="flex items-center space-x-2">
-                <span>{fixedNumber(value)}Ξ</span>
-                {row.original.stats[`${currentTimespan.dataPrefix}_volume`] > 0 && (
-                  <span className="text-green-600">
-                    +{fixedNumber(row.original.stats[`${currentTimespan.dataPrefix}_volume`])}Ξ
-                  </span>
+                {value ? (
+                  <>
+                    <span>{fixedNumber(value.total_volume)}Ξ</span>
+                    {value[`${currentTimespan.dataPrefix}_volume`] > 0 && (
+                      <span className="text-green-600">
+                        +{fixedNumber(value[`${currentTimespan.dataPrefix}_volume`])}Ξ
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  ''
                 )}
               </div>
             ),

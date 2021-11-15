@@ -219,9 +219,11 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                 )
               })
             ) : (
-              <div className="pt-32 pb-80">
-                <Spinner />
-              </div>
+              <tr className="relative flex px-6 ">
+                <div className="pt-32 pb-80">
+                  <Spinner />
+                </div>
+              </tr>
             )}
           </tbody>
         </table>

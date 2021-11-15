@@ -177,15 +177,20 @@ function CollectionsTable({ collections }: { collections: any[] }) {
    * Allows the user to switch between the different available timespans
    */
   const TimespanSwitch = () => (
-    <div className="flex my-2 px-4 py-1 space-x-2 shadow rounded dark:bg-gray-800 w-min text-gray-500 dark:text-gray-100 ">
+    <div
+      className="flex my-2 shadow divide-x divide-gray-200 dark:divide-gray-700 rounded 
+    dark:bg-gray-800 w-min text-gray-500 dark:text-gray-100 "
+    >
       {timespans.map((timespan, i) => {
         const { value } = timespan
         return (
           <button
             key={i}
-            className={`cursor-pointer shadow rounded px-4 hover:bg-gray-50 ${
-              currentTimespan.value === value && 'bg-gray-100 dark:bg-gray-700'
-            }`}
+            className={`cursor-pointer px-4 hover:bg-gray-50 dark:hover:bg-gray-700 
+            ${currentTimespan.value === value && 'bg-gray-100 dark:bg-gray-600'}
+            ${i === 0 && 'rounded-l'}
+            ${i === timespans.length - 1 && 'rounded-r'}
+            `}
             onClick={() => setCurrentTimespan(timespan)}
           >
             <span>{value}</span>

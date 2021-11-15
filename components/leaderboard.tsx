@@ -6,6 +6,19 @@ import Spinner from './spinner'
 import { middleEllipses, fixedNumber } from '../lib/util'
 import Tooltip from '../components/tooltip'
 
+const getRankDisplay = (rank: number) => {
+  switch (rank) {
+    case 1:
+      return '🥇'
+    case 2:
+      return '🥈'
+    case 3:
+      return '🥉'
+    default:
+      return `#${rank}`
+  }
+}
+
 const SingleLeaderboard = ({
   users,
   loading,
@@ -33,7 +46,7 @@ const SingleLeaderboard = ({
             <Link href={`/${user.ensDomain || user.address}`} key={i}>
               <div className="cursor-pointer flex justify-between">
                 <div>
-                  #{i + 1} &nbsp; {user.ensDomain ? user.ensDomain : middleEllipses(user.address, 4, 6, 4)}
+                  {getRankDisplay(i + 1)} {user.ensDomain ? user.ensDomain : middleEllipses(user.address, 4, 6, 4)}
                 </div>
                 <div>{`${fixedNumber(user[accessor])}${denomination}`}</div>
               </div>

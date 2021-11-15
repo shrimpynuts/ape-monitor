@@ -82,7 +82,9 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
             angle: 270,
             lifetime: 100,
           }}
-        />
+        >
+          <span />
+        </Reward>
       </span>
       <button
         className="absolute right-2 z-20 top-2 p-1 bg-gray-100 shadow-sm w-6 sm:text-sm 

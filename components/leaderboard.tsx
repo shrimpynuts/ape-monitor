@@ -3,10 +3,22 @@ import Link from 'next/link'
 
 import { GET_LEADERBOARD } from '../graphql/queries'
 import Spinner from './spinner'
-import { middleEllipses } from '../lib/util'
+import { middleEllipses, fixedNumber } from '../lib/util'
 import Tooltip from '../components/tooltip'
 
-const SingleLeaderboard = ({ users, loading, title }: { title: string; users: any; loading: boolean }) => {
+const SingleLeaderboard = ({
+  users,
+  loading,
+  title,
+  accessor,
+  denomination,
+}: {
+  title: string
+  users: any
+  loading: boolean
+  accessor: string
+  denomination: string
+}) => {
   return (
     <div
       className="flex flex-1 flex-col p-4 rounded
@@ -19,9 +31,12 @@ const SingleLeaderboard = ({ users, loading, title }: { title: string; users: an
         <div className="flex flex-col space-y-2 mt-4">
           {users.map((user: any, i: number) => (
             <Link href={`/${user.ensDomain || user.address}`} key={i}>
-              <span className="cursor-pointer">
-                #{i + 1}: {user.ensDomain ? user.ensDomain : middleEllipses(user.address, 4, 6, 4)}
-              </span>
+              <div className="cursor-pointer flex justify-between">
+                <div>
+                  #{i + 1} &nbsp; {user.ensDomain ? user.ensDomain : middleEllipses(user.address, 4, 6, 4)}
+                </div>
+                <div>{`${fixedNumber(user[accessor])}${denomination}`}</div>
+              </div>
             </Link>
           ))}
         </div>
@@ -39,9 +54,27 @@ const Leaderboard = () => {
         <h1 className="text-center relative text-xl font-bold tracking-wide">Ape Leaderboard</h1>
       </div>
       <div className="flex flex-col md:flex-row space-between space-y-4 md:space-y-0 md:space-x-4 mt-4">
-        <SingleLeaderboard title="Total Value" users={data?.totalValue} loading={loading} />
-        <SingleLeaderboard title="Total Cost Basis" users={data?.totalCostBasis} loading={loading} />
-        <SingleLeaderboard title="Total Asset Count" users={data?.totalAssetCount} loading={loading} />
+        <SingleLeaderboard
+          title="Total Value"
+          users={data?.totalValue}
+          denomination="Ξ"
+          accessor={'totalValue'}
+          loading={loading}
+        />
+        <SingleLeaderboard
+          title="Total Cost Basis"
+          users={data?.totalCostBasis}
+          denomination="Ξ"
+          accessor={'totalCostBasis'}
+          loading={loading}
+        />
+        <SingleLeaderboard
+          title="Total Asset Count"
+          users={data?.totalAssetCount}
+          denomination=""
+          accessor={'totalAssetCount'}
+          loading={loading}
+        />
       </div>
     </div>
   )

@@ -21,6 +21,7 @@ export interface ITotalStats {
 export interface IAddressData {
   address: string
   ensDomain?: string
+  addressFound: boolean
 }
 interface IOpenseaDataState {
   collections: ICollection[]
@@ -32,8 +33,8 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
     collections: [],
     totalStats: { oneDayChange: 0, value: 0, assetsOwned: 0, costBasis: 0 },
   })
-  const { address, ensDomain } = addressData
-  const [loading, setLoading] = useState(true)
+  const { address, ensDomain, addressFound } = addressData
+  const [loading, setLoading] = useState(addressFound)
 
   /**
    * Fetches data from opensea at the /api/opensea endpoint and updates state client-side
@@ -43,8 +44,10 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
       setOpenseaData(await getOpenseaData(address))
       setLoading(false)
     }
-    setLoading(true)
-    initialFetch()
+    if (addressFound) {
+      setLoading(true)
+      initialFetch()
+    }
   }, [address])
 
   const metadataTitle = `${ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}\'s NFT Portfolio`
@@ -87,7 +90,9 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
  * Error in case getServerSideProps cannot resolve ENS domain or bad address given
  */
 const error = () => {
-  return { props: { address: 'not found', ensDomain: 'not found' } }
+  return {
+    props: { address: 'could not find this ape :(', ensDomain: 'could not find this ape :(', addressFound: false },
+  }
 }
 
 /**
@@ -104,7 +109,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const ensDomain = isENSDomain(address) ? address : null
 
-  return { props: { address: networkAddress, ensDomain } }
+  return { props: { address: networkAddress, ensDomain, addressFound: true } }
 }
 
 export default AddressPage

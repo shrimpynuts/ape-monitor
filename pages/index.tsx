@@ -37,7 +37,7 @@ const Home: NextPage = () => {
       </Head>
       <Toaster />
       <Navbar displaySearchbar={false} displayConnectButton={false} customState={{ modalIsOpen, setModalIsOpen }} />
-      <div className="px-4 w-full">
+      <div className="px-4 w-full mt-4">
         <div className="flex flex-col items-center w-full md:mx-auto md:w-96 space-y-4">
           <div className="w-full">
             <Searchbar autoFocus />

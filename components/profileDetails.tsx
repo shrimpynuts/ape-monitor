@@ -23,10 +23,10 @@ const ProfileDetails: React.FC<IProps> = ({
   return (
     <div
       className="flex flex-col px-2 py-4 space-y-2 md:space-y-0 mx-4 shadow sm:rounded-lg bg-gray-100 dark:bg-gray-850 text-gray-500 dark:text-gray-100
-      md:flex-row md:items-center md:divide-x divide-gray-200 dark:divide-gray-700"
+      md:flex-row md:items-center md:divide-x-2 divide-gray-200 dark:divide-gray-700"
     >
       {/* Avatar and name */}
-      <div className="flex text-lg font-bold px-1 md:px-4 space-x-2 items-center border-b md:border-b-0 md:border-r  py-2 md:py-0">
+      <div className="flex text-lg font-bold px-1 md:px-4 space-x-2 items-center border-b-2 md:border-b-0 border-gray-200 dark:border-gray-700 py-2 md:py-0">
         <Davatar
           size={20}
           address={address}

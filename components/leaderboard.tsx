@@ -64,7 +64,7 @@ const Leaderboard = () => {
     <div className="text-gray-900 dark:text-gray-300">
       <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full">
         <Tooltip text="Contains only users who have connected" />
-        <h1 className="text-center relative text-xl font-bold tracking-wide">Ape Leaderboard</h1>
+        <h1 className="text-center relative text-xl font-bold tracking-wide">Leaderboard</h1>
       </div>
       <div className="flex flex-col md:flex-row space-between space-y-4 md:space-y-0 md:space-x-4 mt-4">
         <SingleLeaderboard

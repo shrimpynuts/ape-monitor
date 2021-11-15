@@ -3,7 +3,8 @@ import Link from 'next/link'
 
 import { GET_LEADERBOARD } from '../graphql/queries'
 import Spinner from './spinner'
-import { middleEllipses, getServer } from '../lib/util'
+import { middleEllipses } from '../lib/util'
+import Tooltip from '../components/tooltip'
 
 const SingleLeaderboard = ({ users, loading, title }: { title: string; users: any; loading: boolean }) => {
   return (
@@ -30,10 +31,13 @@ const SingleLeaderboard = ({ users, loading, title }: { title: string; users: an
 }
 
 const Leaderboard = () => {
-  const { data, loading, error } = useQuery(GET_LEADERBOARD)
+  const { data, loading } = useQuery(GET_LEADERBOARD)
   return (
     <div className="text-gray-900 dark:text-gray-300">
-      <h1 className="text-center text-xl font-bold tracking-wide">Ape Leaderboard</h1>
+      <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full">
+        <Tooltip text="Contains only users who have connected" />
+        <h1 className="text-center relative text-xl font-bold tracking-wide">Ape Leaderboard</h1>
+      </div>
       <div className="flex flex-col md:flex-row space-between space-y-4 md:space-y-0 md:space-x-4 mt-4">
         <SingleLeaderboard title="Total Value" users={data?.totalValue} loading={loading} />
         <SingleLeaderboard title="Total Cost Basis" users={data?.totalCostBasis} loading={loading} />

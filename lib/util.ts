@@ -53,9 +53,7 @@ export const getNetworkAddress = async (ensDomain: string) => {
 export const isENSDomain = (address: string) => address.substr(address.length - 4) === '.eth'
 
 export const getOpenseaData = async (address: string) => {
-  const dev = process.env.NODE_ENV !== 'production'
-  const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
-  const resp = await fetch(`${server}/api/opensea/${address}`)
+  const resp = await fetch(`${getServer()}/api/opensea/${address}`)
   const { collections } = await resp.json()
   const totalStats = collections.reduce(
     (acc: any, collection: any) => {

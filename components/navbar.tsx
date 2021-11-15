@@ -12,6 +12,7 @@ import ConnectModal from './connectWalletModal'
 import Searchbar from '../components/searchbar'
 import DarkModeToggle from './darkModeToggle'
 import Emoji from './emoji'
+import { getServer } from '../lib/util'
 
 interface IProps {
   displaySearchbar?: boolean
@@ -41,9 +42,7 @@ const Navbar = ({ displaySearchbar = true, displayConnectButton = true, customSt
 
   useEffect(() => {
     if (status === 'connected' && wallet.account) {
-      const dev = process.env.NODE_ENV !== 'production'
-      const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
-      const href = `${server}/${ensName ? ensName : wallet.account}`
+      const href = `${getServer()}/${ensName ? ensName : wallet.account}`
       router.push(href)
     }
   }, [status])

@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast'
 import Reward, { RewardElement } from 'react-rewards'
 
 import { useKeyPress } from '../hooks/useKeyPress'
-import { isENSDomain } from '../lib/util'
+import { isENSDomain, getServer } from '../lib/util'
 
 export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }) {
   const [searchQuery, setSearchQuery] = useState('')
@@ -20,9 +20,7 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
   const onEnterPress = (checkFocused?: boolean) => {
     // Only run handler if focused on the searchbar unless checkFocused is false
     if (document.activeElement === inputEl.current || checkFocused === false) {
-      const dev = process.env.NODE_ENV !== 'production'
-      const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
-      const href = `${server}/${searchQuery}`
+      const href = `${getServer()}/${searchQuery}`
 
       // Check if the given query is a valid ETH address or an ENS domain
       // If so, direct them to the profile

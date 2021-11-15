@@ -5,7 +5,6 @@ import { middleEllipses, fixedNumber } from '../lib/util'
 import DeltaDisplay from '../components/deltaDisplay'
 import useWeb3Container from '../hooks/useWeb3User'
 import Tooltip from '../components/tooltip'
-import Spinner from '../components/spinner'
 
 interface IProps {
   totalStats: ITotalStats

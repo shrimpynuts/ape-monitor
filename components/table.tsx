@@ -220,7 +220,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
               })
             ) : (
               <tr className="relative flex px-6 ">
-                <div className="pt-32 pb-80">
+                <div className="pt-32 pb-80 mx-0 pl-40 md:pl-0 md:mx-auto">
                   <Spinner />
                 </div>
               </tr>

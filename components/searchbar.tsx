@@ -63,7 +63,7 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
         onInput={(e: BaseSyntheticEvent) => {
           setSearchQuery(e.target.value)
         }}
-        autoComplete={'' + Math.random()}
+        autoComplete="new-password"
         type="text"
         autoCapitalize="none"
         className="text-black z-10 w-full shadow-sm focus:ring-yellow-600 focus:border-yellow-600 px-4 sm:text-sm border-gray-300 rounded-md

@@ -29,6 +29,7 @@ const ProfileDetails: React.FC<IProps> = ({
         <Davatar
           size={20}
           address={address}
+          key={address}
           generatedAvatarType="jazzicon" // optional, 'jazzicon' or 'blockies'
         />
         <h4 className="text-xl lowercase ">{ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}</h4>

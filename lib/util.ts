@@ -20,6 +20,12 @@ export function fixedNumber(n: number, decimalPoints?: number) {
   return n ? parseFloat(n.toFixed(decimalPoints !== undefined ? decimalPoints : 2)) : 0
 }
 
+export function getServer() {
+  const dev = process.env.NODE_ENV !== 'production'
+  const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
+  return server
+}
+
 export function getCostBasis(collection: any) {
   return collection.assets?.reduce(
     (acc: any, asset: any) => {

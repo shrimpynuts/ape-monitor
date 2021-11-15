@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast'
 import Searchbar from '../components/searchbar'
 import Navbar from '../components/navbar'
 import Button from '../components/button'
+import Leaderboard from '../components/leaderboard'
 
 function getRandomInt(max: number) {
   return Math.floor(Math.random() * max) + 1
@@ -37,14 +38,17 @@ const Home: NextPage = () => {
       <Toaster />
       <Navbar displaySearchbar={false} displayConnectButton={false} customState={{ modalIsOpen, setModalIsOpen }} />
       <div className="px-4 w-full">
-        <div className="flex flex-col items-center w-full md:mx-auto md:w-96 my-8">
+        <div className="flex flex-col items-center w-full md:mx-auto md:w-96 space-y-4">
           <div className="w-full">
             <Searchbar autoFocus />
           </div>
           <span className="my-2">or</span>
           <Button onClick={() => setModalIsOpen(true)}>Connect to Wallet</Button>
+          <img className="m-auto sm:w-full md:w-96" src={`/apes/ape${getRandomInt(8)}.gif`} />
         </div>
-        <img className="m-auto sm:w-full md:w-96" src={`/apes/ape${getRandomInt(8)}.gif`} />
+        <div className="w-full md:mx-auto md:w-2/3 my-8">
+          <Leaderboard />
+        </div>
       </div>
     </div>
   )

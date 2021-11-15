@@ -4,6 +4,7 @@ import { LinkIcon, ExternalLinkIcon } from '@heroicons/react/solid'
 import useMobileDetect from 'use-mobile-detect-hook'
 
 import { fixedNumber, getCostBasis } from '../lib/util'
+import { ICollection } from '../pages/[address]'
 import DeltaDisplay from './deltaDisplay'
 import Table from './table'
 
@@ -16,7 +17,12 @@ const timespans = [
   { value: '30d', dataPrefix: 'thirty_day', display: '30 Day' },
 ]
 
-function CollectionsTable({ collections }: { collections: any[] }) {
+interface IProps {
+  collections: ICollection[]
+  loading: boolean
+}
+
+function CollectionsTable({ collections, loading }: IProps) {
   // Detect if window is mobile
   const detectMobile = useMobileDetect()
   const isMobile = detectMobile.isMobile()
@@ -203,7 +209,7 @@ function CollectionsTable({ collections }: { collections: any[] }) {
   return (
     <div className="w-full">
       <TimespanSwitch />
-      <Table columns={columns} data={collections} isMobile={isMobile} />
+      <Table columns={columns} data={collections} isMobile={isMobile} loading={loading} />
     </div>
   )
 }

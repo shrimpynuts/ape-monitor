@@ -9,7 +9,7 @@ import { middleEllipses, getOpenseaData, getNetworkAddress, isENSDomain } from '
 import CollectionsTable from '../components/collectionsTable'
 import ProfileDetails from '../components/profileDetails'
 
-interface ICollection {}
+export interface ICollection {}
 
 export interface ITotalStats {
   oneDayChange: number
@@ -17,14 +17,14 @@ export interface ITotalStats {
   assetsOwned: number
   costBasis: number
 }
-interface IOpenseaDataState {
-  collections: ICollection[]
-  totalStats: ITotalStats
-}
 
 export interface IAddressData {
   address: string
   ensDomain?: string
+}
+interface IOpenseaDataState {
+  collections: ICollection[]
+  totalStats: ITotalStats
 }
 
 const AddressPage: NextPage<IAddressData> = (addressData) => {
@@ -77,7 +77,7 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
 
       {/* Display collections data */}
       <div className="flex flex-col flex-wrap space-y-2 mt-4 mx-4">
-        <CollectionsTable collections={collections} />
+        <CollectionsTable collections={collections} loading={loading} />
       </div>
     </div>
   )

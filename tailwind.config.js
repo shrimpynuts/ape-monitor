@@ -30,6 +30,11 @@ module.exports = {
         gray: {
           850: '#192332',
         },
+        blackPearl: '#0b1829',
+        darkblue: '#244370',
+        lightblue: '#b9cff1',
+        lightgreen: '#00efa1',
+        lightred: '#ff4651',
       },
     },
   },

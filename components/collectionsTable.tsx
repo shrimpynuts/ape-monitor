@@ -223,8 +223,6 @@ const Table: FC<Props> = ({ columns, data, isMobile }) => {
             })}
           </tbody>
         </table>
-        {/* </div> */}
-        {/* </div> */}
       </div>
     </div>
   )

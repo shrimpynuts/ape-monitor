@@ -68,7 +68,7 @@ export default function Searchbar({ autoFocus = false }: { autoFocus?: boolean }
         autoCapitalize="none"
         className="text-black z-10 w-full shadow-sm focus:ring-yellow-600 focus:border-yellow-600 px-4 sm:text-sm border-gray-300 rounded-md
         dark:text-white dark:bg-gray-800 dark:border-gray-700"
-        placeholder="Enter an Ethereum address or ENS name"
+        placeholder="Enter an ENS name or Ethereum address"
       />
       <span className="absolute left-48 top-2">
         <Reward

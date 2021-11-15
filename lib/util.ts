@@ -1,6 +1,8 @@
 import web3 from 'web3'
 import { ethers } from 'ethers'
 
+import { IOpenseaData } from '../pages/[address]'
+
 /**
  * Inserts middle ellipses into a given string
  * @param str The string to insert ellipses into
@@ -52,7 +54,7 @@ export const getNetworkAddress = async (ensDomain: string) => {
 
 export const isENSDomain = (address: string) => address.substr(address.length - 4) === '.eth'
 
-export const getOpenseaData = async (address: string) => {
+export const getOpenseaData: (address: string) => Promise<IOpenseaData> = async (address: string) => {
   const resp = await fetch(`${getServer()}/api/opensea/${address}`)
   const { collections } = await resp.json()
   const totalStats = collections.reduce(
@@ -62,13 +64,13 @@ export const getOpenseaData = async (address: string) => {
       const singleValue = collection.stats ? collection.assets.length * collection.stats.floor_price : 0
       const singleOneDayChange = collection.stats ? numOwned * collection.stats.one_day_change : 0
       return {
-        assetsOwned: acc.assetsOwned + numOwned,
-        value: acc.value + singleValue,
+        totalAssetCount: acc.totalAssetCount + numOwned,
+        totalValue: acc.totalValue + singleValue,
         oneDayChange: acc.oneDayChange + singleOneDayChange,
-        costBasis: acc.costBasis + singleCostBasis,
+        totalCostBasis: acc.totalCostBasis + singleCostBasis,
       }
     },
-    { value: 0, oneDayChange: 0, assetsOwned: 0, costBasis: 0 },
+    { totalValue: 0, oneDayChange: 0, totalAssetCount: 0, totalCostBasis: 0 },
   )
   return { totalStats, collections }
 }

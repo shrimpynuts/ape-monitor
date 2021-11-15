@@ -14,7 +14,7 @@ interface IProps {
 
 const ProfileDetails: React.FC<IProps> = ({
   loading,
-  totalStats: { oneDayChange, value, assetsOwned, costBasis },
+  totalStats: { oneDayChange, totalValue, totalAssetCount, totalCostBasis },
   addressData: { ensDomain, address },
 }) => {
   const { ethPrice } = useWeb3Container.useContainer()
@@ -38,14 +38,15 @@ const ProfileDetails: React.FC<IProps> = ({
       {!loading && (
         <>
           {/* # of NFTs */}
-          <h4 className="text-sm px-1 md:px-4 ">{assetsOwned} NFTs</h4>
+          <h4 className="text-sm px-1 md:px-4 ">{totalAssetCount} NFTs</h4>
           {/* Total Value */}
           <h4 className="text-sm px-1 space-between md:px-4 relative flex space-x-2 items-center ">
             <div className="flex-none">
               <Tooltip text="Based on floor prices, discounting rarity" />
             </div>
             <div className="flex space-x-2 items-center flex-grow">
-              Total Value: {fixedNumber(value)}Ξ &nbsp; {ethPrice && <div>(${fixedNumber(ethPrice * value, 0)}) </div>}
+              Total Value: {fixedNumber(totalValue)}Ξ &nbsp;{' '}
+              {ethPrice && <div>(${fixedNumber(ethPrice * totalValue, 0)}) </div>}
               <DeltaDisplay delta={oneDayChange} denomination="%" />
             </div>
           </h4>
@@ -53,8 +54,8 @@ const ProfileDetails: React.FC<IProps> = ({
           <h4 className="text-sm px-1 space-between md:px-4 relative flex space-x-2 items-center ">
             <Tooltip text="May be inaccurate due to mint costs" />
             <div className="flex space-x-2 items-center flex-grow">
-              <span>Total Cost Basis: {fixedNumber(costBasis)}Ξ &nbsp; </span>
-              {ethPrice && <div>(${fixedNumber(costBasis * ethPrice, 0)}) </div>}
+              <span>Total Cost Basis: {fixedNumber(totalCostBasis)}Ξ &nbsp; </span>
+              {ethPrice && <div>(${fixedNumber(totalCostBasis * ethPrice, 0)}) </div>}
             </div>
           </h4>
           {/* Price of Ethereum (if available) */}

@@ -17,8 +17,8 @@ const SingleLeaderboard = ({ users, loading, title }: { title: string; users: an
       ) : (
         <div className="flex flex-col space-y-2 mt-4">
           {users.map((user: any, i: number) => (
-            <Link href={`${getServer}/${user.ensDomain || user.address}`}>
-              <span className="cursor-pointer" key={i}>
+            <Link href={`${getServer}/${user.ensDomain || user.address}`} key={i}>
+              <span className="cursor-pointer">
                 #{i + 1}: {user.ensDomain ? user.ensDomain : middleEllipses(user.address, 4, 6, 4)}
               </span>
             </Link>

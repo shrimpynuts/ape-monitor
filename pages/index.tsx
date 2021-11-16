@@ -3,17 +3,26 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { Toaster } from 'react-hot-toast'
 
+import useWeb3Container from '../hooks/useWeb3User'
+import Leaderboard from '../components/leaderboard'
 import Searchbar from '../components/searchbar'
 import Navbar from '../components/navbar'
 import Button from '../components/button'
-import Leaderboard from '../components/leaderboard'
 
 function getRandomInt(max: number) {
   return Math.floor(Math.random() * max) + 1
 }
 
 const Home: NextPage = () => {
+  const { wallet } = useWeb3Container.useContainer()
   const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [shouldRedirectToProfile, setShouldRedirectToProfile] = useState(false)
+
+  const onConnectClick = () => {
+    setShouldRedirectToProfile(true)
+    setModalIsOpen(true)
+  }
+
   return (
     <div className="max-w-screen-xl m-auto pb-4 md:pb-12">
       <Head>
@@ -36,14 +45,23 @@ const Home: NextPage = () => {
         <meta name="twitter:image" content={'https://www.apemonitor.com/image-metadata.png'} />
       </Head>
       <Toaster />
-      <Navbar displaySearchbar={false} displayConnectButton={false} customState={{ modalIsOpen, setModalIsOpen }} />
+      <Navbar
+        displaySearchbar={false}
+        displayConnectButton={false}
+        customState={{ modalIsOpen, setModalIsOpen }}
+        redirectToProfileOnConnect={shouldRedirectToProfile}
+      />
       <div className="px-4 w-full mt-4">
         <div className="flex flex-col items-center w-full md:mx-auto md:w-96 space-y-4">
-          <div className="w-full">
-            <Searchbar autoFocus />
-          </div>
-          <span className="my-2">or</span>
-          <Button onClick={() => setModalIsOpen(true)}>Connect to Wallet</Button>
+          {wallet.status !== 'connected' && (
+            <>
+              <div className="w-full">
+                <Searchbar autoFocus />
+              </div>
+              <span className="my-2">or</span>
+              <Button onClick={onConnectClick}>Connect to Wallet</Button>
+            </>
+          )}
           <img className="m-auto sm:w-full md:w-96" src={`/apes/ape${getRandomInt(8)}.gif`} />
         </div>
         <div className="w-full md:mx-auto md:w-2/3 my-8">

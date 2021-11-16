@@ -21,31 +21,63 @@ interface IProps {
     modalIsOpen: boolean
     setModalIsOpen: (open: boolean) => void
   }
+  redirectToProfileOnConnect?: boolean
 }
 
 /**
  * Navigation bar that enables connect/disconnect from Web3.
  */
-const Navbar = ({ displaySearchbar = true, displayConnectButton = true, customState }: IProps) => {
+const Navbar = ({
+  displaySearchbar = true,
+  displayConnectButton = true,
+  customState,
+  redirectToProfileOnConnect = false,
+}: IProps) => {
   const { wallet, ensName } = useWeb3Container.useContainer()
   const { status, reset, networkName, account, balance } = wallet
   const [connectModalIsOpen, setConnectModalIsOpen] = useState(false)
   const router = useRouter()
-
   const { formatUnits } = utils
-
-  const setModalIsOpen = (open: boolean) =>
-    customState ? customState.setModalIsOpen(open) : setConnectModalIsOpen(open)
   const modalIsOpen = customState ? customState.modalIsOpen : connectModalIsOpen
 
-  const handleLogout = () => reset()
+  // Used to redirect user to their profile on connect
+  const [shouldRedirectToProfile, setShouldRedirectToProfile] = useState(false)
 
+  // We might use separate modal state (in index.tsx)
+  const setModalIsOpen = (open: boolean) => {
+    if (customState) {
+      customState.setModalIsOpen(open)
+    } else {
+      setConnectModalIsOpen(open)
+    }
+  }
+
+  const handleLogout = () => {
+    reset()
+  }
+
+  /**
+   * Redirect the user to their profile when they connect
+   */
   useEffect(() => {
-    if (status === 'connected' && wallet.account) {
-      const href = `${getServer()}/${ensName ? ensName : wallet.account}`
-      router.push(href)
+    // Make sure not to redirect when going to homepage after being connected
+    if (redirectToProfileOnConnect || shouldRedirectToProfile) {
+      // Make sure that the user is actually connected
+      if (status === 'connected' && wallet.account) {
+        const href = `${getServer()}/${ensName ? ensName : wallet.account}`
+        router.push(href)
+        setShouldRedirectToProfile(false)
+      }
     }
   }, [status])
+
+  /**
+   * Save the state so that we can redirect to the user's profile when modal gets closed
+   */
+  const onConnectClick = () => {
+    setShouldRedirectToProfile(true)
+    setModalIsOpen(true)
+  }
 
   const formattedETH = parseFloat(formatUnits(balance)).toFixed(2)
 
@@ -100,7 +132,9 @@ const Navbar = ({ displaySearchbar = true, displayConnectButton = true, customSt
                   </svg>
                   {networkName == 'main' ? `Mainnet` : networkName}
                 </span>
-                <AddressPill address={account ? account : ''} ensName={ensName} balance={formattedETH} />
+                <Link href={`/${ensName || account}`}>
+                  <AddressPill address={account ? account : ''} ensName={ensName} balance={formattedETH} />
+                </Link>
                 <Button
                   type="button"
                   className="inline-flex items-center p-2 rounded-md shadow-sm bg-white text-black border border-solid border-gray-200 hover:bg-gray-100 
@@ -111,7 +145,7 @@ const Navbar = ({ displaySearchbar = true, displayConnectButton = true, customSt
                 </Button>
               </div>
             ) : (
-              displayConnectButton !== false && <Button onClick={() => setModalIsOpen(true)}>Connect</Button>
+              displayConnectButton !== false && <Button onClick={onConnectClick}>Connect</Button>
             )}
             <DarkModeToggle />
           </div>

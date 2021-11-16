@@ -6,10 +6,14 @@ import Head from 'next/head'
 import { Toaster } from 'react-hot-toast'
 import { useMutation } from '@apollo/client'
 
-import { middleEllipses, getOpenseaData, getNetworkAddress, isENSDomain, getENSDomain } from '../lib/util'
+import { middleEllipses, getOpenseaData, getNetworkAddress, isENSDomain, fixedNumber, getENSDomain } from '../lib/util'
 import Navbar from '../components/navbar'
 import CollectionsTable from '../components/collectionsTable'
-import ProfileDetails from '../components/profileDetails'
+
+import ProfileBanner from '../components/profileBanner'
+
+// import DeltaDisplay from '../components/deltaDisplay'
+// import Tooltip from '../components/tooltip'
 import { INSERT_USER } from '../graphql/mutations'
 import useWeb3Container from '../hooks/useWeb3User'
 
@@ -81,7 +85,7 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
 
   const metadataTitle = `${ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}\'s NFT Portfolio`
   return (
-    <div className="max-w-screen-xl m-auto pb-4 md:pb-12">
+    <div className="pb-4 md:pb-12">
       <Head>
         <title>{metadataTitle}</title>
         <meta name="description" content="NFT Monitor tracks NFT portfolios on the Ethereum network." />
@@ -101,15 +105,28 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
         <meta name="twitter:description" content="Monitor the performance of your Ethereum NFTs using Opensea data." />
         <meta name="twitter:image" content="https://www.apemonitor.com/image-metadata.png" />
       </Head>
-      <Toaster />
-      <Navbar />
+      <div className="bg-black pb-28 border-b border-darkblue">
+        <div className="max-w-screen-xl m-auto ">
+          <Navbar />
+        </div>
+      </div>
 
-      {/* Display profile details */}
-      <ProfileDetails loading={loading} totalStats={totalStats} addressData={addressData} />
+      <div className="max-w-screen-lg m-auto bg-blackPearl">
+        <div className="relative bottom-14">
+          <ProfileBanner
+            ensName={ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}
+            address={address}
+            costBasis={fixedNumber(totalStats.totalCostBasis)}
+            totalValue={fixedNumber(totalStats.totalValue)}
+            oneDayChange={fixedNumber(totalStats.oneDayChange)}
+          />
+        </div>
+        <Toaster />
 
-      {/* Display collections data */}
-      <div className="flex flex-col flex-wrap space-y-2 mt-4 mx-4">
-        <CollectionsTable collections={collections} loading={loading} />
+        {/* Display collections data */}
+        <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
+          <CollectionsTable collections={collections} loading={loading} />
+        </div>
       </div>
     </div>
   )

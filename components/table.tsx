@@ -114,12 +114,12 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
   return (
     <div className="sm:rounded-lg">
       <div className="shadow overflow-x-scroll sm:rounded-lg">
-        <table {...getTableProps()} className="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
-          <thead className="bg-gray-100 dark:bg-gray-850">
+        <table {...getTableProps()} className="min-w-full">
+          <thead className="bg-gray-100 dark:bg-blackPearl">
             <tr>
               {headerGroups.map((headerGroup, i) => (
                 <th
-                  className="flex px-6 text-left border-b border-gray-300 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider"
+                  className="flex px-6 text-left border-b border-gray-300 dark:border-darkblue text-lg font-normal text-gray-500 dark:text-white"
                   {...headerGroup.getHeaderGroupProps()}
                   style={{}}
                   key={i}
@@ -130,7 +130,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                       <div className="p-2" {...column.getHeaderProps(column.getSortByToggleProps())} key={ii}>
                         {column.render('Header')}
                         <div {...column} />
-                        <div className="my-1">{column.canFilter ? column.render('Filter') : null}</div>
+                        {/* <div className="my-1">{column.canFilter ? column.render('Filter') : null}</div> */}
                         <ResizerComponent {...column.getResizerProps()} />
                       </div>
                     )
@@ -139,92 +139,83 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
               ))}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-300 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
-            {!loading ? (
-              rows.map((row, i) => {
-                prepareRow(row)
-                const isExpanded = expandedRows.includes(i)
-                return (
-                  <>
-                    <tr className="relative flex px-6 " {...row.getRowProps()} style={{}} key={i}>
-                      <span
-                        className="absolute left-2 top-4 cursor-pointer"
-                        onClick={() => {
-                          // If this row is already expanded, filter it out from the state of expanded row indexes
-                          // Otherwise, add it to the state of expanded row indexes
-                          if (isExpanded) {
-                            setExpandedRows(expandedRows.filter((row) => row !== i))
-                          } else {
-                            setExpandedRows([...expandedRows, i])
-                          }
-                        }}
-                      >
-                        {!isExpanded ? <PlusSmIcon className="h-5 w-5" /> : <MinusSmIcon className="h-5 w-5" />}
-                      </span>
-                      {row.cells.map((cell, ii) => {
-                        return (
-                          <td className="px-4 py-2 whitespace-nowrap " {...cell.getCellProps()} key={ii}>
-                            {cell.render('Cell')}
-                          </td>
-                        )
-                      })}
-                    </tr>
-                    {isExpanded && (
-                      <table className="table-fixed min-w-full divide-y divide-gray-300 dark:divide-gray-700 ">
-                        <thead className="bg-gray-100 dark:bg-gray-850">
-                          <tr>
-                            <th className="flex px-6 text-left border-b border-gray-300 dark:border-gray-700  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
-                              <div className="px-4 py-2 w-1/2">Name</div>
-                              <div className="px-4 py-2 w-1/4">Cost Basis</div>
-                              <div className="px-4 py-2 w-1/4">Opensea</div>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-gray-100 divide-y divide-gray-300 text-gray-500 dark:text-gray-100 dark:bg-gray-800 dark:divide-gray-700">
-                          {row.original.assets.map((asset: any, i: any) => {
-                            return (
-                              <tr className="relative flex px-6 " key={i}>
-                                <td className="w-1/2 px-4 py-2">
-                                  <div className="flex items-center space-x-4">
-                                    <img src={asset.image_thumbnail_url} className="h-8 rounded" />
-                                    <span>{asset.name}</span>
+          <tbody className="bg-white text-gray-500 dark:text-gray-100 dark:bg-blackPearl dark:divide-darkblue px-6">
+            {rows.map((row, i) => {
+              prepareRow(row)
+              const isExpanded = expandedRows.includes(i)
+              return (
+                <>
+                  <tr
+                    className="relative flex hover:bg-black transition-all cursor-pointer"
+                    {...row.getRowProps()}
+                    key={i}
+                    onClick={() => {
+                      // If this row is already expanded, filter it out from the state of expanded row indexes
+                      // Otherwise, add it to the state of expanded row indexes
+                      if (isExpanded) {
+                        setExpandedRows(expandedRows.filter((row) => row !== i))
+                      } else {
+                        setExpandedRows([...expandedRows, i])
+                      }
+                    }}
+                  >
+                    {row.cells.map((cell, ii) => {
+                      return (
+                        <td className="px-4 py-4 text-center whitespace-nowrap" {...cell.getCellProps()} key={ii}>
+                          {cell.render('Cell')}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                  {isExpanded && (
+                    <table className="table-fixed min-w-full divide-y divide-gray-300 dark:divide-gray-700 ">
+                      <thead className="bg-gray-100 dark:bg-blackPearl">
+                        <tr>
+                          <th className="flex px-6 text-left border-gray-300 dark:border-darkblue  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
+                            <div className="px-4 py-2 w-1/2">Name</div>
+                            <div className="px-4 py-2 w-1/4">Cost Basis</div>
+                            <div className="px-4 py-2 w-1/4">Opensea</div>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-gray-100 divide-y divide-gray-300 text-gray-500 dark:text-gray-100 dark:bg-blackPearl">
+                        {row.original.assets.map((asset: any, i: any) => {
+                          return (
+                            <tr className="relative flex px-6 " key={i}>
+                              <td className="w-1/2 px-4 py-2">
+                                <div className="flex items-center space-x-4">
+                                  <img src={asset.image_thumbnail_url} className="h-8 rounded-full" />
+                                  <span>{asset.name}</span>
+                                </div>
+                              </td>
+                              <td className="w-1/4 px-4 py-2">
+                                {asset.last_sale ? (
+                                  <div>
+                                    {web3.utils.fromWei(asset.last_sale.total_price)}{' '}
+                                    {asset.last_sale.payment_token.symbol}
                                   </div>
-                                </td>
-                                <td className="w-1/4 px-4 py-2">
-                                  {asset.last_sale ? (
-                                    <div>
-                                      {web3.utils.fromWei(asset.last_sale.total_price)}{' '}
-                                      {asset.last_sale.payment_token.symbol}
-                                    </div>
-                                  ) : (
-                                    <div>Minted</div>
-                                  )}
-                                </td>
-                                <td className="w-1/4 px-4 py-2">
-                                  <div className="flex items-center h-full">
-                                    <a href={asset.permalink} target="_blank" rel="noreferrer">
-                                      <ExternalLinkIcon className="h-4 w-4" />
-                                    </a>
-                                  </div>
-                                </td>
-                              </tr>
-                            )
-                          })}
+                                ) : (
+                                  <div>Minted</div>
+                                )}
+                              </td>
+                              <td className="w-1/4 px-4 py-2">
+                                <div className="flex items-center h-full">
+                                  <a href={asset.permalink} target="_blank" rel="noreferrer">
+                                    <ExternalLinkIcon className="h-4 w-4" />
+                                  </a>
+                                </div>
+                              </td>
+                            </tr>
+                          )
+                        })}
 
-                          <tr className=" relative flex px-6 divide-x divide-gray-300 dark:divide-gray-700"></tr>
-                        </tbody>
-                      </table>
-                    )}
-                  </>
-                )
-              })
-            ) : (
-              <tr className="relative flex px-6 ">
-                <div className="pt-32 pb-80 mx-0 pl-40 md:pl-0 md:mx-auto">
-                  <Spinner />
-                </div>
-              </tr>
-            )}
+                        <tr className=" relative flex px-6 divide-x divide-gray-300 dark:divide-gray-700"></tr>
+                      </tbody>
+                    </table>
+                  )}
+                </>
+              )
+            })}
           </tbody>
         </table>
       </div>

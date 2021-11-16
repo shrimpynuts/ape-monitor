@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider attribute="class">
       <ApolloProvider client={client}>
-        <div className="min-h-screen bg-white dark:bg-gray-900 dark:text-white">
+        <div className="min-h-screen bg-white dark:bg-blackPearl dark:text-white">
           <UseWalletProvider
             connectors={{
               walletconnect: {

@@ -17,7 +17,14 @@ const ProfileAvatar = ({ address, ensName }: IProps) => (
       />
     </div>
     <div className="mt-2">
-      <AddressPill isAvatarHidden ensName={ensName} balance="0.0" address={address} />
+      <AddressPill
+        isBalanceHidden
+        isAvatarHidden
+        ensName={ensName}
+        balance="0.0"
+        address={address}
+        href={`/${ensName}`}
+      />
     </div>
   </div>
 )

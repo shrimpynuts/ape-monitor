@@ -37,7 +37,9 @@ const SingleLeaderboard = ({
       className="flex flex-1 flex-col p-4 rounded
     bg-gray-50 dark:bg-gray-800"
     >
-      <h3 className="border-b border-gray-200 dark:border-gray-700 pb-2 font-bold text-center ">{title}</h3>
+      <h3 className="border-b border-gray-200 dark:border-gray-700 pb-2 font-bold text-center uppercase tracking-wide text-xs ">
+        {title}
+      </h3>
       {loading ? (
         <div className="py-8">
           <Spinner />

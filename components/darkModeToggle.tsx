@@ -1,33 +1,22 @@
 import { useTheme } from 'next-themes'
 
 import Switch from './switch'
+import { getNextTheme } from '../lib/util'
 
 /**
  * Button to toggle dark/light mode.
  */
 const DarkModeToggle = () => {
   const { theme, systemTheme, setTheme } = useTheme() // next-themes hook to enable dark mode
-
-  /**
-   * Fetches the next theme that would be toggled to
-   * @returns 'dark' or 'light'
-   */
-  const getNextTheme = () => {
-    if (theme === 'system') {
-      return systemTheme === 'light' ? 'dark' : 'light'
-    } else {
-      return theme === 'light' ? 'dark' : 'light'
-    }
-  }
-
+  const isDarkTheme = getNextTheme(theme, systemTheme) === 'light'
   /**
    * Performs the actual toggle
    */
   const handleThemeChange = () => {
-    setTheme(getNextTheme())
+    setTheme(getNextTheme(theme, systemTheme))
   }
 
-  return <Switch onClick={handleThemeChange} />
+  return <Switch onClick={handleThemeChange} checked={!isDarkTheme} />
 }
 
 export default DarkModeToggle

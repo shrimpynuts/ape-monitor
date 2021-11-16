@@ -79,3 +79,15 @@ export const getOpenseaData: (address: string) => Promise<IOpenseaData> = async 
   )
   return { totalStats, collections }
 }
+
+/**
+ * Fetches the next theme that would be toggled to (for next-themes)
+ * @returns 'dark' or 'light'
+ */
+export const getNextTheme = (theme: string | undefined, systemTheme: string | undefined) => {
+  if (theme === 'system') {
+    return systemTheme === 'light' ? 'dark' : 'light'
+  } else {
+    return theme === 'light' ? 'dark' : 'light'
+  }
+}

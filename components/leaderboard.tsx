@@ -68,7 +68,7 @@ const Leaderboard = () => {
   return (
     <div className="text-gray-900 dark:text-gray-300">
       <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full">
-        <Tooltip text="Connect to enter the leaderboard" />
+        <Tooltip width={64} text="Connect to enter leaderboard" />
         <h1 className="text-center relative text-xl font-bold tracking-wide">Top Apes</h1>
       </div>
       <div className="flex flex-col md:flex-row space-between space-y-4 md:space-y-0 md:space-x-4 mt-4">

@@ -1,3 +1,5 @@
+import { getCostBasis } from './util'
+
 export const getCollectionsForOwner = async (ownerAddress: string) => {
   const resp = await fetch(`https://api.opensea.io/api/v1/collections?asset_owner=${ownerAddress}&offset=0&limit=300`)
   const collections = await resp.json()
@@ -72,13 +74,14 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
   }, {})
 
   console.time(`all getCollectionStats for ${ownerAddress}`)
-  // Add stats to byCollections object
+  // Add stats and costBasis to byCollections object
   const result = await Promise.all(
     Object.keys(byCollection).map(async (collectionSlug: any) => {
       return getCollectionStats(collectionSlug)
         .then((response) => response.json())
         .then(({ stats }) => {
-          return { ...byCollection[collectionSlug], stats }
+          const collection = byCollection[collectionSlug]
+          return { ...collection, stats, costBasis: getCostBasis(collection) }
         })
     }),
   )

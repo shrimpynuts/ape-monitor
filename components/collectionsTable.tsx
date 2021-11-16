@@ -1,9 +1,9 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { CellProps } from 'react-table'
 import { LinkIcon, ExternalLinkIcon } from '@heroicons/react/solid'
 import useMobileDetect from 'use-mobile-detect-hook'
 
-import { fixedNumber, getCostBasis } from '../lib/util'
+import { fixedNumber } from '../lib/util'
 import { ICollection } from '../pages/[address]'
 import DeltaDisplay from './deltaDisplay'
 import Table from './table'
@@ -28,6 +28,14 @@ function CollectionsTable({ collections, loading }: IProps) {
   const isMobile = detectMobile.isMobile()
   const [currentTimespan, setCurrentTimespan] = useState(timespans[0])
 
+  console.log({ collections })
+
+  const costBasisSortType = useCallback(({ values: valuesA }: any, { values: valuesB }: any) => {
+    const costBasisA = valuesA.costBasis ? valuesA.costBasis.total : 0
+    const costBasisB = valuesB.costBasis ? valuesB.costBasis.total : 0
+    return costBasisA > costBasisB ? 1 : -1
+  }, [])
+
   const columns = useMemo(
     () => [
       {
@@ -47,11 +55,13 @@ function CollectionsTable({ collections, loading }: IProps) {
           {
             Header: isMobile ? '#' : '# Owned',
             accessor: 'assets.length',
+            sortDescFirst: true,
             width: isMobile ? '20' : 80,
             disableFilters: true,
           },
           {
             Header: 'Links',
+            disableSortBy: true,
             accessor: 'slug',
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
               <div className="flex space-x-2 items-center h-full">
@@ -100,19 +110,23 @@ function CollectionsTable({ collections, loading }: IProps) {
         columns: [
           {
             Header: `Floor Price (with ${currentTimespan.display} Change)`,
-            accessor: 'stats',
+            accessor: 'stats.floor_price',
+            sortDescFirst: true,
             id: 'floor_price',
-            Cell: ({ cell: { value } }: CellProps<any>) => (
+            Cell: ({ cell: { value, row } }: CellProps<any>) => (
               <div className="flex items-center space-x-2">
                 {value ? (
                   <>
-                    <span>{fixedNumber(value.floor_price)}Ξ</span>
-                    {value[`${currentTimespan.dataPrefix}_change`] > 0 && (
-                      <DeltaDisplay delta={value[`${currentTimespan.dataPrefix}_change`]} denomination="%" />
+                    <span>{fixedNumber(value)}Ξ</span>
+                    {row.original.stats[`${currentTimespan.dataPrefix}_change`] > 0 && (
+                      <DeltaDisplay
+                        delta={row.original.stats[`${currentTimespan.dataPrefix}_change`]}
+                        denomination="%"
+                      />
                     )}
                   </>
                 ) : (
-                  ''
+                  '--'
                 )}
               </div>
             ),
@@ -121,21 +135,22 @@ function CollectionsTable({ collections, loading }: IProps) {
           },
           {
             Header: `Volume (with ${currentTimespan.display} Volume)`,
-            accessor: 'stats',
+            accessor: 'stats.total_volume',
             id: 'Volume',
-            Cell: ({ cell: { value } }: CellProps<any>) => (
+            sortDescFirst: true,
+            Cell: ({ cell: { value, row } }: CellProps<any>) => (
               <div className="flex items-center space-x-2">
                 {value ? (
                   <>
-                    <span>{fixedNumber(value.total_volume)}Ξ</span>
-                    {value[`${currentTimespan.dataPrefix}_volume`] > 0 && (
+                    <span>{fixedNumber(value)}Ξ</span>
+                    {row.original.stats[`${currentTimespan.dataPrefix}_volume`] > 0 && (
                       <span className="text-green-600">
-                        +{fixedNumber(value[`${currentTimespan.dataPrefix}_volume`])}Ξ
+                        +{fixedNumber(row.original.stats[`${currentTimespan.dataPrefix}_volume`])}Ξ
                       </span>
                     )}
                   </>
                 ) : (
-                  ''
+                  '--'
                 )}
               </div>
             ),
@@ -144,12 +159,14 @@ function CollectionsTable({ collections, loading }: IProps) {
           },
           {
             Header: `Cost Basis`,
-            accessor: 'assets',
-            Cell: ({ cell: { row } }: CellProps<any>) => {
-              const costBasis = getCostBasis(row.original)
+            accessor: 'costBasis',
+            sortType: costBasisSortType,
+            sortDescFirst: true,
+            Cell: ({ cell: { value, row } }: CellProps<any>) => {
+              // const costBasis = getCostBasis(row.original)
               return (
                 <div className="flex items-center justify-between space-x-2">
-                  <span>{`${fixedNumber(costBasis.total)} ${costBasis.symbol}`}</span>
+                  <span>{`${fixedNumber(value.total)} ${value.symbol}`}</span>
                 </div>
               )
             },
@@ -165,6 +182,7 @@ function CollectionsTable({ collections, loading }: IProps) {
             Header: 'Activity',
             accessor: 'slug',
             id: 'activity',
+            disableSortBy: true,
             width: 20,
             Cell: ({ cell: { value } }: CellProps<object>) => (
               <a href={`https://opensea.io/collection/${value}?tab=activity`} target="_blank" rel="noreferrer">

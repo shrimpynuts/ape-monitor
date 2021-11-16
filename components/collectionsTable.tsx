@@ -40,7 +40,7 @@ function CollectionsTable({ collections, loading }: IProps) {
   const columns = useMemo(
     () => [
       {
-        Header: `Collections (${collections.length})`,
+        Header: `Collections`,
         accessor: 'name',
         width: isMobile ? 200 : 275,
         Cell: ({ cell: { value, row } }: CellProps<any>) => (

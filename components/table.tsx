@@ -146,7 +146,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
               return (
                 <>
                   <tr
-                    className="relative flex hover:bg-black transition-all cursor-pointer"
+                    className="relative flex hover:bg-gray-100 dark:hover:bg-black transition-all cursor-pointer"
                     {...row.getRowProps()}
                     key={i}
                     onClick={() => {

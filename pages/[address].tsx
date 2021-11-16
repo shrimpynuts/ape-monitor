@@ -105,13 +105,13 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
         <meta name="twitter:description" content="Monitor the performance of your Ethereum NFTs using Opensea data." />
         <meta name="twitter:image" content="https://www.apemonitor.com/image-metadata.png" />
       </Head>
-      <div className="bg-black pb-28 border-b border-darkblue">
+      <div className="bg-blue-500 dark:bg-black pb-28 border-b light:border-gray-300 dark:border-darkblue">
         <div className="max-w-screen-xl m-auto ">
           <Navbar />
         </div>
       </div>
 
-      <div className="max-w-screen-lg m-auto bg-blackPearl">
+      <div className="max-w-screen-lg m-auto dark:bg-blackPearl">
         <div className="relative bottom-14">
           <ProfileBanner
             ensName={ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}

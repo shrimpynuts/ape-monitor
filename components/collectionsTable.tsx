@@ -114,16 +114,16 @@ function CollectionsTable({ collections, loading }: IProps) {
             sortDescFirst: true,
             id: 'floor_price',
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-end space-x-2 justify-end">
                 {value ? (
                   <>
-                    <span>{fixedNumber(value)}Ξ</span>
                     {row.original.stats[`${currentTimespan.dataPrefix}_change`] > 0 && (
                       <DeltaDisplay
                         delta={row.original.stats[`${currentTimespan.dataPrefix}_change`]}
                         denomination="%"
                       />
                     )}
+                    <span>{fixedNumber(value)}Ξ</span>
                   </>
                 ) : (
                   '--'
@@ -131,7 +131,7 @@ function CollectionsTable({ collections, loading }: IProps) {
               </div>
             ),
             disableFilters: true,
-            width: 170,
+            width: 160,
           },
           {
             Header: `Volume (with ${currentTimespan.display} Volume)`,
@@ -139,15 +139,15 @@ function CollectionsTable({ collections, loading }: IProps) {
             id: 'Volume',
             sortDescFirst: true,
             Cell: ({ cell: { value, row } }: CellProps<any>) => (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-end space-x-2 justify-end">
                 {value ? (
                   <>
-                    <span>{fixedNumber(value)}Ξ</span>
                     {row.original.stats[`${currentTimespan.dataPrefix}_volume`] > 0 && (
                       <span className="text-green-600">
                         +{fixedNumber(row.original.stats[`${currentTimespan.dataPrefix}_volume`])}Ξ
                       </span>
                     )}
+                    <span>{fixedNumber(value)}Ξ</span>
                   </>
                 ) : (
                   '--'
@@ -155,7 +155,7 @@ function CollectionsTable({ collections, loading }: IProps) {
               </div>
             ),
             disableFilters: true,
-            width: 170,
+            width: 160,
           },
           {
             Header: `Cost Basis`,
@@ -164,7 +164,7 @@ function CollectionsTable({ collections, loading }: IProps) {
             sortDescFirst: true,
             Cell: ({ cell: { value } }: CellProps<any>) => {
               return (
-                <div className="flex items-center justify-between space-x-2">
+                <div className="flex items-end space-x-2 justify-end">
                   {value.total ? (
                     <span>{`${fixedNumber(value.total)}${
                       value.symbol === 'ETH' || value.symbol === 'WETH' ? 'Ξ' : value.symbol
@@ -176,7 +176,7 @@ function CollectionsTable({ collections, loading }: IProps) {
               )
             },
             disableFilters: true,
-            width: 200,
+            width: 100,
           },
         ],
       },

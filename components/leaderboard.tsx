@@ -39,7 +39,9 @@ const SingleLeaderboard = ({
     >
       <h3 className="border-b border-gray-200 dark:border-gray-700 pb-2 font-bold ">{title}</h3>
       {loading ? (
-        <Spinner />
+        <div className="py-8">
+          <Spinner />
+        </div>
       ) : (
         <div className="flex flex-col space-y-2 mt-4">
           {users.map((user: any, i: number) => (
@@ -63,7 +65,7 @@ const Leaderboard = () => {
   return (
     <div className="text-gray-900 dark:text-gray-300">
       <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full">
-        <Tooltip text="Contains only users who have connected" />
+        <Tooltip text="Connect to enter the leaderboard" />
         <h1 className="text-center relative text-xl font-bold tracking-wide">Leaderboard</h1>
       </div>
       <div className="flex flex-col md:flex-row space-between space-y-4 md:space-y-0 md:space-x-4 mt-4">

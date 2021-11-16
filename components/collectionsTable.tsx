@@ -162,11 +162,12 @@ function CollectionsTable({ collections, loading }: IProps) {
             accessor: 'costBasis',
             sortType: costBasisSortType,
             sortDescFirst: true,
-            Cell: ({ cell: { value, row } }: CellProps<any>) => {
-              // const costBasis = getCostBasis(row.original)
+            Cell: ({ cell: { value } }: CellProps<any>) => {
               return (
                 <div className="flex items-center justify-between space-x-2">
-                  <span>{`${fixedNumber(value.total)} ${value.symbol}`}</span>
+                  <span>{`${fixedNumber(value.total)}${
+                    value.symbol === 'ETH' || value.symbol === 'WETH' ? 'Ξ' : value.symbol
+                  }`}</span>
                 </div>
               )
             },

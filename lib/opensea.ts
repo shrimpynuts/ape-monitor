@@ -85,7 +85,6 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
         })
     }),
   )
-  console.log(result.length)
   console.timeEnd(`all getCollectionStats for ${ownerAddress}`)
 
   return result

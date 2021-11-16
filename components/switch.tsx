@@ -16,8 +16,6 @@ const Toggle: React.FC<IProps> = ({ onClick, checked }) => {
     onClick()
   }
 
-  console.log({ checked })
-
   return (
     <Switch
       checked={checked}

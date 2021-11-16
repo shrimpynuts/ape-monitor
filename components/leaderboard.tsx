@@ -45,9 +45,9 @@ const SingleLeaderboard = ({
       ) : (
         <div className="flex flex-col space-y-2 mt-4">
           {users.map((user: any, i: number) => (
-            <div className="flex justify-between ">
+            <div className="flex justify-between " key={i}>
               <span className="flex-1">{getRankDisplay(i + 1)}</span>
-              <Link href={`/${user.ensDomain || user.address}`} key={i}>
+              <Link href={`/${user.ensDomain || user.address}`}>
                 <span className="flex-1 cursor-pointer hover:text-yellow-600 hover:font-bold">
                   {user.ensDomain ? user.ensDomain : middleEllipses(user.address, 4, 6, 4)}
                 </span>

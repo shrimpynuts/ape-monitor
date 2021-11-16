@@ -52,6 +52,11 @@ export const getNetworkAddress = async (ensDomain: string) => {
   return await etherscanProvider.resolveName(ensDomain)
 }
 
+export const getENSDomain = async (address: string) => {
+  const etherscanProvider = new ethers.providers.EtherscanProvider()
+  return await etherscanProvider.lookupAddress(address)
+}
+
 export const isENSDomain = (address: string) => address.substr(address.length - 4) === '.eth'
 
 export const getOpenseaData: (address: string) => Promise<IOpenseaData> = async (address: string) => {

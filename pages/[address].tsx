@@ -6,7 +6,7 @@ import Head from 'next/head'
 import { Toaster } from 'react-hot-toast'
 import { useMutation } from '@apollo/client'
 
-import { middleEllipses, getOpenseaData, getNetworkAddress, isENSDomain } from '../lib/util'
+import { middleEllipses, getOpenseaData, getNetworkAddress, isENSDomain, getENSDomain } from '../lib/util'
 import Navbar from '../components/navbar'
 import CollectionsTable from '../components/collectionsTable'
 import ProfileDetails from '../components/profileDetails'
@@ -136,7 +136,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const networkAddress = isENSDomain(address) ? await getNetworkAddress(address) : address
   if (!networkAddress) return error()
 
-  const ensDomain = isENSDomain(address) ? address : null
+  // Fetch ENS domain if not given it
+  const ensDomain = isENSDomain(address) ? address : await getENSDomain(address)
+
+  // If the user gives address, but we find the ENS domain, redirect the user to the ENS domain
+  if (!isENSDomain(address) && ensDomain) {
+    return {
+      redirect: {
+        destination: `/${ensDomain}`,
+        permanent: false,
+      },
+    }
+  }
 
   return { props: { address: networkAddress, ensDomain, addressFound: true } }
 }

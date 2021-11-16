@@ -1,26 +1,87 @@
+import { useState, useEffect } from 'react'
+
 import { GetServerSideProps } from 'next'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { Toaster } from 'react-hot-toast'
-import Davatar from '@davatar/react'
+import { useMutation } from '@apollo/client'
 
+import { middleEllipses, getOpenseaData, getNetworkAddress, isENSDomain, fixedNumber } from '../lib/util'
 import Navbar from '../components/navbar'
-import { middleEllipses, fixedNumber, getCostBasis, getNetworkAddress, isENSDomain } from '../lib/util'
 import CollectionsTable from '../components/collectionsTable'
 
 import ProfileBanner from '../components/profileBanner'
 
-import DeltaDisplay from '../components/deltaDisplay'
-import Tooltip from '../components/tooltip'
+// import DeltaDisplay from '../components/deltaDisplay'
+// import Tooltip from '../components/tooltip'
+import { INSERT_USER } from '../graphql/mutations'
 import useWeb3Container from '../hooks/useWeb3User'
 
-const AddressPage: NextPage = ({
-  collections,
-  address,
-  ensDomain,
-  totalStats: { oneDayChange, value, assetsOwned, costBasis },
-}: any) => {
-  const { ethPrice } = useWeb3Container.useContainer()
+export interface ICollection {}
+
+export interface ITotalStats {
+  oneDayChange: number
+  totalValue: number
+  totalAssetCount: number
+  totalCostBasis: number
+}
+
+export interface IAddressData {
+  address: string
+  ensDomain?: string
+  addressFound: boolean
+}
+export interface IOpenseaData {
+  collections: ICollection[]
+  totalStats: ITotalStats
+}
+
+const AddressPage: NextPage<IAddressData> = (addressData) => {
+  const { wallet } = useWeb3Container.useContainer()
+  const [openseaData, setOpenseaData] = useState<IOpenseaData>({
+    collections: [],
+    totalStats: { oneDayChange: 0, totalValue: 0, totalAssetCount: 0, totalCostBasis: 0 },
+  })
+  const { collections, totalStats } = openseaData
+  const { address, ensDomain, addressFound } = addressData
+  const [loading, setLoading] = useState(addressFound)
+  const [insertUser] = useMutation(INSERT_USER)
+
+  /**
+   * Updates the users data in our database (only if connected and is the owner of this wallet)
+   */
+  useEffect(() => {
+    // Make sure the user is connected and the address matches
+    if (wallet.isConnected() && wallet.account === address) {
+      // Upsert user into DB
+      insertUser({
+        variables: {
+          user: {
+            address: address,
+            ensDomain: ensDomain,
+            totalValue: openseaData.totalStats.totalValue,
+            totalAssetCount: openseaData.totalStats.totalAssetCount,
+            totalCostBasis: openseaData.totalStats.totalCostBasis,
+          },
+        },
+      }).catch(console.error)
+    }
+  }, [openseaData, wallet])
+
+  /**
+   * Fetches data from opensea at the /api/opensea endpoint and updates state client-side
+   */
+  useEffect(() => {
+    const initialFetch = async () => {
+      const fetchedOpenseaData = await getOpenseaData(address)
+      setOpenseaData(fetchedOpenseaData)
+      setLoading(false)
+    }
+    if (addressFound) {
+      setLoading(true)
+      initialFetch()
+    }
+  }, [address])
 
   const metadataTitle = `${ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}\'s NFT Portfolio`
   return (
@@ -55,59 +116,46 @@ const AddressPage: NextPage = ({
           <ProfileBanner
             ensName={ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}
             address={address}
-            costBasis={fixedNumber(costBasis)}
-            totalValue={fixedNumber(value)}
-            oneDayChange={fixedNumber(oneDayChange)}
+            costBasis={fixedNumber(totalStats.totalCostBasis)}
+            totalValue={fixedNumber(totalStats.totalValue)}
+            oneDayChange={fixedNumber(totalStats.oneDayChange)}
           />
         </div>
         <Toaster />
 
         {/* Display collections data */}
         <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
-          <CollectionsTable collections={collections} />
+          <CollectionsTable collections={collections} loading={loading} />
         </div>
       </div>
     </div>
   )
 }
 
+/**
+ * Error in case getServerSideProps cannot resolve ENS domain or bad address given
+ */
 const error = () => {
-  return { props: { collections: [], address: 'not found', totalStats: 0, ensDomain: 'not found' } }
+  return {
+    props: { address: 'could not find this ape :(', ensDomain: 'could not find this ape :(', addressFound: false },
+  }
 }
 
-const getOpenseaData = async (address: string) => {
-  const dev = process.env.NODE_ENV !== 'production'
-  const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
-  const resp = await fetch(`${server}/api/opensea/${address}`)
-  return await resp.json()
-}
-
+/**
+ * Resolves the ENS domain if given, and passes the domain and associated address to the page
+ */
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context
   const address = params?.address
   if (typeof address !== 'string') return error()
+
+  // Fetches the network address (starts with "0x") if given an ENS domain
   const networkAddress = isENSDomain(address) ? await getNetworkAddress(address) : address
   if (!networkAddress) return error()
-  const { collections } = await getOpenseaData(networkAddress)
+
   const ensDomain = isENSDomain(address) ? address : null
 
-  const totalStats = collections.reduce(
-    (acc: any, collection: any) => {
-      const numOwned = collection.assets.length
-      const { total: singleCostBasis } = getCostBasis(collection)
-      const singleValue = collection.stats ? collection.assets.length * collection.stats.floor_price : 0
-      const singleOneDayChange = collection.stats ? numOwned * collection.stats.one_day_change : 0
-      return {
-        assetsOwned: acc.assetsOwned + numOwned,
-        value: acc.value + singleValue,
-        oneDayChange: acc.oneDayChange + singleOneDayChange,
-        costBasis: acc.costBasis + singleCostBasis,
-      }
-    },
-    { value: 0, oneDayChange: 0, assetsOwned: 0, costBasis: 0 },
-  )
-
-  return { props: { collections, address: networkAddress, totalStats, ensDomain } }
+  return { props: { address: networkAddress, ensDomain, addressFound: true } }
 }
 
 export default AddressPage

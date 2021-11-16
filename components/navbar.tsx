@@ -132,9 +132,12 @@ const Navbar = ({
                   </svg>
                   {networkName == 'main' ? `Mainnet` : networkName}
                 </span>
-                <Link href={`/${ensName || account}`}>
-                  <AddressPill address={account ? account : ''} ensName={ensName} balance={formattedETH} />
-                </Link>
+                <AddressPill
+                  href={`/${ensName || account}`}
+                  address={account ? account : ''}
+                  ensName={ensName}
+                  balance={formattedETH}
+                />
                 <Button
                   type="button"
                   className="inline-flex items-center p-2 rounded-md shadow-sm bg-white text-black border border-solid border-gray-200 hover:bg-gray-100 

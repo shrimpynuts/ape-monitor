@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { CellProps } from 'react-table'
 import { LinkIcon, ExternalLinkIcon } from '@heroicons/react/solid'
 import useMobileDetect from 'use-mobile-detect-hook'
@@ -28,6 +28,14 @@ function CollectionsTable({ collections, loading }: IProps) {
   const detectMobile = useMobileDetect()
   const isMobile = detectMobile.isMobile()
   const [currentTimespan, setCurrentTimespan] = useState(timespans[0])
+
+  console.log({ collections })
+
+  const costBasisSortType = useCallback(({ values: valuesA }: any, { values: valuesB }: any) => {
+    const costBasisA = valuesA.costBasis ? valuesA.costBasis.total : 0
+    const costBasisB = valuesB.costBasis ? valuesB.costBasis.total : 0
+    return costBasisA > costBasisB ? 1 : -1
+  }, [])
 
   const columns = useMemo(
     () => [

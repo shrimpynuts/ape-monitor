@@ -52,6 +52,11 @@ export const getNetworkAddress = async (ensDomain: string) => {
   return await etherscanProvider.resolveName(ensDomain)
 }
 
+export const getENSDomain = async (address: string) => {
+  const etherscanProvider = new ethers.providers.EtherscanProvider()
+  return await etherscanProvider.lookupAddress(address)
+}
+
 export const isENSDomain = (address: string) => address.substr(address.length - 4) === '.eth'
 
 export const getOpenseaData: (address: string) => Promise<IOpenseaData> = async (address: string) => {
@@ -73,4 +78,16 @@ export const getOpenseaData: (address: string) => Promise<IOpenseaData> = async 
     { totalValue: 0, oneDayChange: 0, totalAssetCount: 0, totalCostBasis: 0 },
   )
   return { totalStats, collections }
+}
+
+/**
+ * Fetches the next theme that would be toggled to (for next-themes)
+ * @returns 'dark' or 'light'
+ */
+export const getNextTheme = (theme: string | undefined, systemTheme: string | undefined) => {
+  if (theme === 'system') {
+    return systemTheme === 'light' ? 'dark' : 'light'
+  } else {
+    return theme === 'light' ? 'dark' : 'light'
+  }
 }

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getAssetsGroupedByCollectionForOwner } from '../../../lib/opensea'
+import { getAssetsGroupedByCollectionForOwner } from '../../../../lib/opensea'
 
 /**
  * Fetches the collections of the given address using the Opensea API.

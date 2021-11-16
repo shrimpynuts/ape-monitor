@@ -60,7 +60,7 @@ export const getENSDomain = async (address: string) => {
 export const isENSDomain = (address: string) => address.substr(address.length - 4) === '.eth'
 
 export const getOpenseaData: (address: string) => Promise<IOpenseaData> = async (address: string) => {
-  const resp = await fetch(`${getServer()}/api/opensea/${address}`)
+  const resp = await fetch(`${getServer()}/api/opensea/assets/${address}`)
   const { collections } = await resp.json()
   const totalStats = collections.reduce(
     (acc: any, collection: any) => {

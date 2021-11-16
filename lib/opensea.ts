@@ -1,4 +1,7 @@
 import { getCostBasis } from './util'
+export interface IOpenSeaEvent {
+  [key: string]: any
+}
 
 export const getCollectionsForOwner = async (ownerAddress: string) => {
   const resp = await fetch(`https://api.opensea.io/api/v1/collections?asset_owner=${ownerAddress}&offset=0&limit=300`)
@@ -88,4 +91,59 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
   console.timeEnd(`all getCollectionStats for ${ownerAddress}`)
 
   return result
+}
+
+/**
+ * Fetches the events (buy/sells) for a given address
+ */
+export const getEventsForOwner = async (ownerAddress: string) => {
+  let totalAssetEvents: any[] = []
+  const limit = 300
+  // Infinite loop until all asset_events are fetched
+  while (1) {
+    // Fetch with address and the current offset set to the number of already fetched asset_events
+    const { asset_events } = await fetch(
+      `https://api.opensea.io/api/v1/events?account_address=${ownerAddress}&only_opensea=false&offset=0&limit=${limit}`,
+    ).then((resp) => resp.json())
+    totalAssetEvents = [...totalAssetEvents, ...asset_events]
+
+    // If we get less than the limit of 50 asset_events, we know we've fetched everything
+    if (asset_events.length < limit) break
+  }
+  return totalAssetEvents
+}
+
+export const getTradesFromEventsForOwner = (events: IOpenSeaEvent, ownerAddress: string) => {
+  // Filter for successful event_types
+  const successfulEvents = events.filter((event: IOpenSeaEvent) => event.event_type === 'successful')
+
+  // Retrieve sales
+  const sales = successfulEvents.reduce((acc: any, event: IOpenSeaEvent) => {
+    if (event.seller.address === ownerAddress) acc[event.asset.id] = event
+    return acc
+  }, {})
+
+  // Retrieve buys
+  const buys = successfulEvents.reduce((acc: any, event: IOpenSeaEvent) => {
+    if (event.winner_account.address === ownerAddress) acc[event.asset.id] = event
+    return acc
+  }, {})
+
+  // Retrieve sales that have a matching buy
+  const matches = Object.keys(sales).reduce((acc: any, saleId: string) => {
+    if (Object.keys(buys).includes(saleId)) {
+      const sale = sales[saleId]
+      const buy = buys[saleId]
+      const salePrice = sale.total_price
+      const buyPrice = buy.total_price
+      const asset = sale.asset
+      acc[saleId] = { salePrice, buyPrice, asset }
+    }
+    return acc
+  }, {})
+
+  console.log(`${Object.keys(sales).length} sales`)
+  console.log(`${Object.keys(buys).length} buys`)
+  console.log(`${Object.keys(matches).length} matches`)
+  return matches
 }

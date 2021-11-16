@@ -165,9 +165,13 @@ function CollectionsTable({ collections, loading }: IProps) {
             Cell: ({ cell: { value } }: CellProps<any>) => {
               return (
                 <div className="flex items-center justify-between space-x-2">
-                  <span>{`${fixedNumber(value.total)}${
-                    value.symbol === 'ETH' || value.symbol === 'WETH' ? 'Ξ' : value.symbol
-                  }`}</span>
+                  {value.total ? (
+                    <span>{`${fixedNumber(value.total)}${
+                      value.symbol === 'ETH' || value.symbol === 'WETH' ? 'Ξ' : value.symbol
+                    }`}</span>
+                  ) : (
+                    '--'
+                  )}
                 </div>
               )
             },

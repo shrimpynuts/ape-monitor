@@ -129,7 +129,7 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
         </div>
 
         {/* Display collections data */}
-        <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
+        <div className="max-w-screen-lg m-auto overflow-hidden mt-8">
           <div className="flex flex-col flex-wrap space-y-2 mx-4">
             <CollectionsTable collections={collections} loading={loading} />
           </div>

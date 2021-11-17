@@ -248,6 +248,7 @@ export const getTradesByCollectionAndTradeStatsForOwner = (
 
         // Prepare the collection data
         const prunedCollection = {
+          name: collection.name,
           slug: collection.slug,
           image_url: collection.image_url,
         }

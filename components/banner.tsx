@@ -19,8 +19,8 @@ const Banner = ({ costBasis, totalValue, oneDayChange }: IProps) => {
       <div className="flex flex-col text-center px-16 text-gray-700 dark:text-lightblue">
         <span
           className={classnames('font-xl font-normal text-4xl', {
-            ' text-lightred': performanceIndicator == 'negative',
-            ' text-lightgreen': performanceIndicator == 'positive',
+            'text-red-600 dark:text-lightred': performanceIndicator == 'negative',
+            'text-green-600 dark:text-lightgreen': performanceIndicator == 'positive',
           })}
         >
           {amount}

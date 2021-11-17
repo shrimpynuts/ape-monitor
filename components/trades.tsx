@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
+
 import { getServer } from '../lib/util'
 import Spinner from './spinner'
 import { fixedNumber } from '../lib/util'
+import useWeb3Container from '../hooks/useWeb3User'
 
 interface ITradeData {
   [key: string]: any
@@ -10,37 +13,58 @@ interface ITradeData {
 const SingleTrade = ({ trade, title }: { trade: any; title: string }) => {
   var daysHeld = Math.floor(trade.averageHoldTime / 1000 / (3600 * 24))
 
+  const { ethPrice } = useWeb3Container.useContainer()
+
+  const Row: React.FC<{ name: string }> = ({ children, name }) => {
+    return (
+      <div className="flex space-between font-semibold">
+        <span className="flex-1">{name}</span>
+        <span className="text-right">
+          <span className="flex space-x-1">{children}</span>
+        </span>
+      </div>
+    )
+  }
+
+  const EthRow = ({ name, amount }: { name: string; amount: number }) => {
+    return (
+      <Row name={name}>
+        <img src="eth-logo.svg" width="10" />
+        <span>{amount}</span>
+      </Row>
+    )
+  }
+
   return (
-    <div>
-      <h4 className="text-2xl">{title}</h4>
-      <div
-        className="mt-2 rounded-xl bg-white dark:bg-blackPearl 
-      p-4 drop-shadow-md
-      w-80 h-56
-      border border-solid border-gray-300 dark:border-darkblue"
-      >
-        <img src={trade.image_url} className="h-8 w-8 rounded-full" />
-        <h3>{trade.name}</h3>
-        <div className="flex space-between">
-          <span className="flex-1">Volume:</span>
-          <span className="flex-1 text-right">{trade.assets.length}</span>
+    <div className="w-full">
+      <h4 className="text-2xl font-semibold">{title}</h4>
+      <div className="mt-2 rounded-xl bg-white dark:bg-blackPearl shadow border border-solid border-gray-300 dark:border-darkblue">
+        <div className="p-4">
+          <div className="flex justify-center items-center space-x-2 mb-2">
+            <img src={trade.image_url} className="h-8 w-8 rounded-full border border-solid border-gray-300" />
+            <h3 className="font-bold">{trade.name}</h3>
+          </div>
+          <Row name="Volume">
+            <span className="flex-1 text-right">{trade.assets.length}</span>
+          </Row>
+          <EthRow name="Sale Price" amount={fixedNumber(trade.averageSalePrice)} />
+          <EthRow name="Buy Price" amount={fixedNumber(trade.averageBuyPrice)} />
+          <Row name="Hold Time">
+            <span className="flex-1 text-right">{daysHeld} days</span>
+          </Row>
         </div>
-        <div className="flex space-between">
-          <span className="flex-1">Average Sale Price:</span>
-          <span className="flex-1  text-right">{fixedNumber(trade.averageSalePrice)}</span>
+        <div className="w-full py-4 flex items-center justify-center space-x-2 border-t border-solid border-gray-200">
+          {ethPrice !== undefined ? (
+            <>
+              <span className="text-3xl font-semibold">{fixedNumber(trade.totalProfit * ethPrice)}</span>
+            </>
+          ) : (
+            <>
+              <Image src="eth-logo.svg" alt="eth logo" width="13" />
+              <span className="text-3xl font-semibold">{fixedNumber(trade.totalProfit)}</span>
+            </>
+          )}
         </div>
-        <div className="flex space-between">
-          <span className="flex-1">Average Buy Price:</span>
-          <span className="flex-1 text-right">{fixedNumber(trade.averageBuyPrice)}</span>
-        </div>
-        <div className="flex space-between">
-          <span className="flex-1">Average Hold Time:</span>
-          <span className="flex-1 text-right">{daysHeld}</span>
-        </div>
-        <h3 className="">
-          <span className="flex-1">Total Profit:</span>
-          <span className="flex-1 text-right">{fixedNumber(trade.totalProfit)}Ξ</span>
-        </h3>
       </div>
     </div>
   )
@@ -49,8 +73,6 @@ const SingleTrade = ({ trade, title }: { trade: any; title: string }) => {
 export default function Trades({ address }: { address: string }) {
   const [tradeData, setTradeData] = useState<ITradeData>()
   const [loading, setLoading] = useState(true)
-
-  console.log({ tradeData })
 
   /**
    * Fetches data from opensea at the /api/opensea endpoint and updates state client-side
@@ -68,10 +90,10 @@ export default function Trades({ address }: { address: string }) {
   return (
     <>
       {tradeData ? (
-        <>
-          <SingleTrade title="🔥 Best Flip" trade={tradeData.totalTradeStats.bestTrade} />
-          <SingleTrade title="😢 Biggest L" trade={tradeData.totalTradeStats.worstTrade} />
-        </>
+        <div className="flex flex-1 space-x-12 m-auto max-w-3xl">
+          <SingleTrade title="💰 Best Flip" trade={tradeData.totalTradeStats.bestTrade} />
+          <SingleTrade title="🥲 Biggest L" trade={tradeData.totalTradeStats.worstTrade} />
+        </div>
       ) : (
         <Spinner />
       )}

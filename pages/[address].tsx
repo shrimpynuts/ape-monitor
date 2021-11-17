@@ -105,13 +105,13 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
         <meta name="twitter:description" content="Monitor the performance of your Ethereum NFTs using Opensea data." />
         <meta name="twitter:image" content="https://www.apemonitor.com/image-metadata.png" />
       </Head>
-      <div className="bg-black pb-28 border-b border-darkblue">
+      <div className="bg-blue-500 dark:bg-black pb-16 md:pb-28 border-b light:border-gray-300 dark:border-darkblue">
         <div className="max-w-screen-xl m-auto ">
           <Navbar />
         </div>
       </div>
 
-      <div className="max-w-screen-lg m-auto bg-blackPearl">
+      <div className="max-w-screen-lg m-auto dark:bg-blackPearl">
         <div className="relative bottom-14">
           <ProfileBanner
             ensName={ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}
@@ -124,13 +124,15 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
         <Toaster />
 
         {/* Display historical trade data */}
-        <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
+        {/* <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
           <Trades address={address} />
-        </div>
+        </div> */}
 
         {/* Display collections data */}
-        <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
-          <CollectionsTable collections={collections} loading={loading} />
+        <div className="max-w-screen-lg m-auto overflow-hidden">
+          <div className="flex flex-col flex-wrap space-y-2 mx-4">
+            <CollectionsTable collections={collections} loading={loading} />
+          </div>
         </div>
       </div>
     </div>

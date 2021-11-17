@@ -112,14 +112,14 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
 
   // Render the UI for your table
   return (
-    <div className="sm:rounded-lg">
-      <div className="shadow overflow-x-scroll sm:rounded-lg">
+    <div className="sm:rounded-lg shadow-md border border-solid border-gray-300 dark:border-0 dark:border-transparent">
+      <div className="sm:rounded-lg overflow-hidden">
         <table {...getTableProps()} className="min-w-full">
           <thead className="bg-gray-100 dark:bg-blackPearl">
             <tr>
               {headerGroups.map((headerGroup, i) => (
                 <th
-                  className="flex px-6 text-left border-b border-gray-300 dark:border-darkblue text-lg font-normal text-gray-500 dark:text-white"
+                  className="flex px-5 pb-2 text-left border-b border-gray-300 dark:border-darkblue text-md font-normal text-gray-500 dark:text-white"
                   {...headerGroup.getHeaderGroupProps()}
                   style={{}}
                   key={i}
@@ -130,7 +130,6 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                       <div className="p-2" {...column.getHeaderProps(column.getSortByToggleProps())} key={ii}>
                         {column.render('Header')}
                         <div {...column} />
-                        {/* <div className="my-1">{column.canFilter ? column.render('Filter') : null}</div> */}
                         <ResizerComponent {...column.getResizerProps()} />
                       </div>
                     )
@@ -146,7 +145,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
               return (
                 <>
                   <tr
-                    className="relative flex hover:bg-black transition-all cursor-pointer"
+                    className="relative flex hover:bg-gray-100 dark:hover:bg-black transition-all cursor-pointer"
                     {...row.getRowProps()}
                     key={i}
                     onClick={() => {
@@ -161,7 +160,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                   >
                     {row.cells.map((cell, ii) => {
                       return (
-                        <td className="px-4 py-4 text-center whitespace-nowrap" {...cell.getCellProps()} key={ii}>
+                        <td className="p-2 md:p-4 text-center whitespace-nowrap" {...cell.getCellProps()} key={ii}>
                           {cell.render('Cell')}
                         </td>
                       )

@@ -121,7 +121,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
             <tr>
               {headerGroups.map((headerGroup, i) => (
                 <th
-                  className="flex px-5 pb-2 text-left border-b border-gray-300 dark:border-darkblue text-md font-normal text-gray-500 dark:text-white"
+                  className="flex px-5 pb-1 text-left border-b border-gray-300 dark:border-darkblue text-xs font-bold uppercase text-gray-500 dark:text-white"
                   {...headerGroup.getHeaderGroupProps()}
                   style={{}}
                   key={i}

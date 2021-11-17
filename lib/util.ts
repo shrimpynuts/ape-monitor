@@ -91,3 +91,29 @@ export const getNextTheme = (theme: string | undefined, systemTheme: string | un
     return theme === 'light' ? 'dark' : 'light'
   }
 }
+
+export function secondsToDhms(seconds: number) {
+  seconds = Number(seconds)
+  var d = Math.floor(seconds / (3600 * 24))
+  var h = Math.floor((seconds % (3600 * 24)) / 3600)
+  var m = Math.floor((seconds % 3600) / 60)
+  var s = Math.floor(seconds % 60)
+
+  var dDisplay = d > 0 ? d + (d == 1 ? ' day, ' : ' days, ') : ''
+  var hDisplay = h > 0 ? h + (h == 1 ? ' hour, ' : ' hours, ') : ''
+  var mDisplay = m > 0 ? m + (m == 1 ? ' minute, ' : ' minutes, ') : ''
+  var sDisplay = s > 0 ? s + (s == 1 ? ' second' : ' seconds') : ''
+  return dDisplay + hDisplay + mDisplay + sDisplay
+}
+
+export function getFormattedDate(date: Date) {
+  var year = date.getFullYear()
+
+  var month = (1 + date.getMonth()).toString()
+  month = month.length > 1 ? month : '0' + month
+
+  var day = date.getDate().toString()
+  day = day.length > 1 ? day : '0' + day
+
+  return month + '/' + day + '/' + year
+}

@@ -9,8 +9,8 @@ import { useMutation } from '@apollo/client'
 import { middleEllipses, getOpenseaData, getNetworkAddress, isENSDomain, fixedNumber, getENSDomain } from '../lib/util'
 import Navbar from '../components/navbar'
 import CollectionsTable from '../components/collectionsTable'
-
 import ProfileBanner from '../components/profileBanner'
+import Trades from '../components/trades'
 
 // import DeltaDisplay from '../components/deltaDisplay'
 // import Tooltip from '../components/tooltip'
@@ -122,6 +122,11 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
           />
         </div>
         <Toaster />
+
+        {/* Display historical trade data */}
+        <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
+          <Trades address={address} />
+        </div>
 
         {/* Display collections data */}
         <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">

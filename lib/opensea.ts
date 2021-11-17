@@ -151,14 +151,14 @@ export const getEventsBySuccessfulSalesAndBuys = (events: IOpenSeaEvent, ownerAd
   const sales = successfulEvents.reduce((acc: any, event: IOpenSeaEvent) => {
     // Trade order is just a unique id to match across sale/buy events
     const tradeOrder = event.asset ? event.asset.permalink : event.asset_bundle.permalink
-    if (event.seller.address.toLowerCase() === ownerAddress) acc[tradeOrder] = event
+    if (event.seller && event.seller.address.toLowerCase() === ownerAddress) acc[tradeOrder] = event
     return acc
   }, {})
 
   // Retrieve buys
   const buys = successfulEvents.reduce((acc: any, event: IOpenSeaEvent) => {
     const tradeOrder = event.asset ? event.asset.permalink : event.asset_bundle.permalink
-    if (event.winner_account.address.toLowerCase() === ownerAddress) acc[tradeOrder] = event
+    if (event.winner_account && event.winner_account.address.toLowerCase() === ownerAddress) acc[tradeOrder] = event
     return acc
   }, {})
   return { sales, buys }

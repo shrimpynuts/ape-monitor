@@ -39,7 +39,7 @@ function CollectionsTable({ collections, loading }: IProps) {
       {
         Header: `Collection`,
         accessor: 'name',
-        width: isMobile ? 200 : 225,
+        width: isMobile ? 200 : 250,
         Cell: ({ cell: { value, row } }: CellProps<any>) => (
           <div className="flex items-center pl-2 space-x-3 overflow-ellipsis">
             <img src={row.original.image_url} className="h-8 w-8 rounded-full" />
@@ -54,7 +54,7 @@ function CollectionsTable({ collections, loading }: IProps) {
         Cell: ({ cell: { value } }: CellProps<any>) => (
           <div>
             {value ? (
-              <span className="flex justify-center space-x-2">
+              <span className="flex items-center justify-center space-x-2">
                 <img src="/eth-logo.svg" alt="eth logo" width="11" />
                 <span>{fixedNumber(value.floor_price)}</span>
               </span>
@@ -64,7 +64,7 @@ function CollectionsTable({ collections, loading }: IProps) {
           </div>
         ),
         disableFilters: true,
-        width: 150,
+        width: 100,
       },
       {
         Header: `24h %`,

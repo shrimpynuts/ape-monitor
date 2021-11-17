@@ -5,6 +5,7 @@ import { Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
 import { ethers } from 'ethers'
 import { useWallet } from 'use-wallet'
 
+import { alchemyProvider } from '../lib/ethersProvider'
 import { CONTRACT_ADDRESS } from '../ethers/config'
 
 const Web3UserState = () => {
@@ -18,8 +19,7 @@ const Web3UserState = () => {
   // Fetch ether price
   useEffect(() => {
     async function fetchEtherPrice() {
-      var etherscanProvider = new ethers.providers.EtherscanProvider()
-      const price = await etherscanProvider.getEtherPrice()
+      const price = await alchemyProvider.getEtherPrice()
       setEthPrice(price)
     }
 

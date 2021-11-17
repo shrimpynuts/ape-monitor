@@ -12,8 +12,6 @@ import CollectionsTable from '../components/collectionsTable'
 import ProfileBanner from '../components/profileBanner'
 import Trades from '../components/trades'
 
-// import DeltaDisplay from '../components/deltaDisplay'
-// import Tooltip from '../components/tooltip'
 import { INSERT_USER } from '../graphql/mutations'
 import useWeb3Container from '../hooks/useWeb3User'
 
@@ -124,12 +122,14 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
         <Toaster />
 
         {/* Display historical trade data */}
-        {/* <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
-          <Trades address={address} />
-        </div> */}
+        <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
+          <div className="flex space-x-4 ">
+            <Trades address={address} />
+          </div>
+        </div>
 
         {/* Display collections data */}
-        <div className="max-w-screen-lg m-auto overflow-hidden">
+        <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
           <div className="flex flex-col flex-wrap space-y-2 mx-4">
             <CollectionsTable collections={collections} loading={loading} />
           </div>

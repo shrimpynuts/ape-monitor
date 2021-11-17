@@ -122,11 +122,11 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
         <Toaster />
 
         {/* Display historical trade data */}
-        <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
+        {/* <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
           <div className="flex space-x-4 ">
             <Trades address={address} />
           </div>
-        </div>
+        </div> */}
 
         {/* Display collections data */}
         <div className="max-w-screen-lg m-auto overflow-hidden mt-4">

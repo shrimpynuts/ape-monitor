@@ -160,7 +160,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                   >
                     {row.cells.map((cell, ii) => {
                       return (
-                        <td className="px-4 py-4 text-center whitespace-nowrap" {...cell.getCellProps()} key={ii}>
+                        <td className="p-2 md:p-4 text-center whitespace-nowrap" {...cell.getCellProps()} key={ii}>
                           {cell.render('Cell')}
                         </td>
                       )

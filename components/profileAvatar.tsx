@@ -9,14 +9,14 @@ interface IProps {
 
 const ProfileAvatar = ({ address, ensName }: IProps) => (
   <div className="inline-block">
-    <div className="flex justify-center">
+    <div className="flex justify-center rounded-full">
       <Davatar
         size={80}
         address={address}
         generatedAvatarType="jazzicon" // optional, 'jazzicon' or 'blockies'
       />
     </div>
-    <div className="mt-2">
+    <div className="-mt-2 md:mt-2 mb-2 md:mb-0">
       <AddressPill
         isBalanceHidden
         isAvatarHidden

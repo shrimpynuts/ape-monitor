@@ -115,7 +115,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
   // Render the UI for your table
   return (
     <div className="sm:rounded-lg mb-2 shadow border border-solid border-gray-300 dark:border-darkblue">
-      <div className="sm:rounded-lg overflow-hidden">
+      <div className="sm:rounded-lg overflow-x-scroll">
         <table {...getTableProps()} className="min-w-full">
           <thead className="bg-gray-100 dark:bg-blackPearl">
             <tr>

@@ -48,7 +48,7 @@ const Banner = ({ costBasis, totalValue, oneDayChange }: IProps) => {
 
   const charge = oneDayChange > 0 ? '+' : ''
   return (
-    <div className="flex items-center rounded-xl bg-white dark:bg-blackPearl border border-solid border-gray-200 dark:border-darkblue py-4 drop-shadow-md">
+    <div className="flex items-center rounded-xl bg-white dark:bg-blackPearl border border-solid border-gray-300 dark:border-darkblue py-4 drop-shadow-md">
       <div className="flex items-center">
         <BannerDisplay amount={`${totalValue}`} subtext="total value" />
         <VerticalSpacer />

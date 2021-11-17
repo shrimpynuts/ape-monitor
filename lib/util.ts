@@ -1,6 +1,7 @@
 import web3 from 'web3'
 import { ethers } from 'ethers'
 
+import { alchemyProvider } from './ethersProvider'
 import { IOpenseaData } from '../pages/[address]'
 
 /**
@@ -48,13 +49,12 @@ export function getCostBasis(collection: any) {
 }
 
 export const getNetworkAddress = async (ensDomain: string) => {
-  const etherscanProvider = new ethers.providers.EtherscanProvider()
-  return await etherscanProvider.resolveName(ensDomain)
+  const networkAddress = await alchemyProvider.resolveName(ensDomain)
+  return networkAddress
 }
 
 export const getENSDomain = async (address: string) => {
-  const etherscanProvider = new ethers.providers.EtherscanProvider()
-  return await etherscanProvider.lookupAddress(address)
+  return await alchemyProvider.lookupAddress(address)
 }
 
 export const isENSDomain = (address: string) => address.substr(address.length - 4) === '.eth'

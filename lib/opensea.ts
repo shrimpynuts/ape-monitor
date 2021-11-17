@@ -82,11 +82,15 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
   // Add stats and costBasis to byCollections object
   const result = await Promise.all(
     Object.keys(byCollection).map(async (collectionSlug: any) => {
+      const collection = byCollection[collectionSlug]
       return getCollectionStats(collectionSlug)
         .then((response) => response.json())
         .then(({ stats }) => {
-          const collection = byCollection[collectionSlug]
           return { ...collection, stats, costBasis: getCostBasis(collection) }
+        })
+        .catch(() => {
+          // TODO: handle failed stats gracefully
+          return { ...collection, stats: { error: 'could not fetch stats!' }, costBasis: null }
         })
     }),
   )

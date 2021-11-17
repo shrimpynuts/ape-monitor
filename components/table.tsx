@@ -112,7 +112,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
 
   // Render the UI for your table
   return (
-    <div className="sm:rounded-lg shadow-md border border-solid border-gray-300 dark:border-0 dark:border-transparent">
+    <div className="sm:rounded-lg shadow-md border border-solid border-gray-300 dark:border-darkblue">
       <div className="sm:rounded-lg overflow-hidden">
         <table {...getTableProps()} className="min-w-full">
           <thead className="bg-gray-100 dark:bg-blackPearl">
@@ -167,17 +167,17 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                     })}
                   </tr>
                   {isExpanded && (
-                    <table className="table-fixed min-w-full divide-y divide-gray-300 dark:divide-gray-700 ">
+                    <table className="table-fixed min-w-full divide-y divide-gray-300 dark:divide-darkblue">
                       <thead className="bg-gray-100 dark:bg-blackPearl">
                         <tr>
-                          <th className="flex px-6 text-left border-gray-300 dark:border-darkblue  text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
+                          <th className="flex px-6 text-left border-gray-300 dark:border-darkblue text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
                             <div className="px-4 py-2 w-1/2">Name</div>
                             <div className="px-4 py-2 w-1/4">Cost Basis</div>
                             <div className="px-4 py-2 w-1/4">Opensea</div>
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="bg-gray-100 divide-y divide-gray-300 text-gray-500 dark:text-gray-100 dark:bg-blackPearl">
+                      <tbody className="bg-gray-100 divide-y divide-gray-300 dark:divide-darkblue text-gray-500 dark:text-gray-100 dark:bg-blackPearl">
                         {row.original.assets.map((asset: any, i: any) => {
                           return (
                             <tr className="relative flex px-6 " key={i}>

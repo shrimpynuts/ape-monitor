@@ -36,6 +36,7 @@ const AddressPill: React.FC<IProps> = ({
           {!isAvatarHidden && (
             <div className="md:ml-2 md:-mx-1">
               <Davatar
+                key={address}
                 size={20}
                 address={address}
                 generatedAvatarType="jazzicon" // optional, 'jazzicon' or 'blockies'

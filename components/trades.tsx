@@ -48,43 +48,45 @@ const SingleTrade = ({ trade, title }: { trade: any; title: string }) => {
   return (
     <div className="w-full">
       <h4 className="text-2xl font-semibold">{title}</h4>
-      <div className="mt-2 rounded-xl bg-white dark:bg-blackPearl shadow border border-solid border-gray-300 dark:border-darkblue">
-        <div className="p-4">
-          <div className="flex justify-center items-center space-x-2 mb-2">
-            <img src={trade.image_url} className="h-8 w-8 rounded-full border border-solid border-gray-300" />
-            <h3 className="font-bold">{trade.name}</h3>
+      <div className="border-wrapper">
+        <div className="mt-2 rounded-xl bg-white dark:bg-blackPearl shadow border border-solid border-gray-300 dark:border-darkblue">
+          <div className="p-4">
+            <div className="flex justify-center items-center space-x-2 mb-2">
+              <img src={trade.image_url} className="h-8 w-8 rounded-full border border-solid border-gray-300" />
+              <h3 className="font-bold">{trade.name}</h3>
+            </div>
+            <Row name="Volume">
+              <span className="flex-1 text-right">{trade.assets.length}</span>
+            </Row>
+            <EthRow name="Sale Price" amount={fixedNumber(trade.averageSalePrice)} />
+            <EthRow name="Buy Price" amount={fixedNumber(trade.averageBuyPrice)} />
+            <Row name="Hold Time">
+              <span className="flex-1 text-right">{daysHeld} days</span>
+            </Row>
           </div>
-          <Row name="Volume">
-            <span className="flex-1 text-right">{trade.assets.length}</span>
-          </Row>
-          <EthRow name="Sale Price" amount={fixedNumber(trade.averageSalePrice)} />
-          <EthRow name="Buy Price" amount={fixedNumber(trade.averageBuyPrice)} />
-          <Row name="Hold Time">
-            <span className="flex-1 text-right">{daysHeld} days</span>
-          </Row>
-        </div>
-        <div
-          className={classNames(
-            'w-full py-4 flex items-center justify-center space-x-2 border-t border-solid border-gray-200',
-            {
-              'text-green-600 dark:text-lightgreen': fixedNumber(trade.totalProfit) > 0,
-              'text-red-600 dark:text-lightred': fixedNumber(trade.totalProfit) < 0,
-            },
-          )}
-        >
-          {ethPrice !== undefined ? (
-            <>
-              <span className="text-3xl font-semibold">
-                {fixedNumber(trade.totalProfit) > 0 && <>+</>}
-                {formatter.format(fixedNumber(trade.totalProfit * ethPrice))}
-              </span>
-            </>
-          ) : (
-            <>
-              <Image src="eth-logo.svg" alt="eth logo" width="13" />
-              <span className="text-3xl font-semibold">{fixedNumber(trade.totalProfit)}</span>
-            </>
-          )}
+          <div
+            className={classNames(
+              'w-full py-4 flex items-center justify-center space-x-2 border-t border-solid border-gray-200 dark:border-darkblue',
+              {
+                'text-green-600 dark:text-lightgreen': fixedNumber(trade.totalProfit) > 0,
+                'text-red-600 dark:text-lightred': fixedNumber(trade.totalProfit) < 0,
+              },
+            )}
+          >
+            {ethPrice !== undefined ? (
+              <>
+                <span className="text-3xl font-semibold">
+                  {fixedNumber(trade.totalProfit) > 0 && <>+</>}
+                  {formatter.format(fixedNumber(trade.totalProfit * ethPrice))}
+                </span>
+              </>
+            ) : (
+              <>
+                <Image src="eth-logo.svg" alt="eth logo" width="13" />
+                <span className="text-3xl font-semibold">{fixedNumber(trade.totalProfit)}</span>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

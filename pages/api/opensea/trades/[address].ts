@@ -9,7 +9,7 @@ import {
 /**
  * Fetches the sales of the given address using the Opensea API.
  */
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const request = async (req: NextApiRequest, res: NextApiResponse) => {
   const { address: givenAddress } = req.query
 
   if (typeof givenAddress !== 'string') return res.status(400).json({ error: 'address must be given' })
@@ -31,3 +31,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   res.status(200).json({ tradesByCollection, totalTradeStats })
 }
+
+export default request

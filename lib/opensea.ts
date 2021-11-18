@@ -80,7 +80,7 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
 
   console.time(`all getCollectionStats for ${ownerAddress}`)
   // Add stats and costBasis to byCollections object
-  const result = await Promise.all(
+  const results = await Promise.all(
     Object.keys(byCollection).map(async (collectionSlug: any) => {
       const collection = byCollection[collectionSlug]
       return getCollectionStats(collectionSlug)
@@ -94,9 +94,29 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
         })
     }),
   )
-  console.timeEnd(`all getCollectionStats for ${ownerAddress}`)
 
-  return result
+  const prunedResults = results.map((result) => {
+    return {
+      name: result.name,
+      stats: result.stats,
+      slug: result.slug,
+      image_url: result.image_url,
+      twitter_username: result.twitter_username,
+      discord_url: result.discord_url,
+      external_url: result.external_url,
+      assets: result.assets.map((asset: any) => {
+        return {
+          image_thumbnail_url: asset.image_thumbnail_url,
+          name: asset.name,
+          permalink: asset.permalink,
+          external_link: asset.external_link,
+        }
+      }),
+    }
+  })
+
+  console.timeEnd(`all getCollectionStats for ${ownerAddress}`)
+  return prunedResults
 }
 
 /**

@@ -11,6 +11,7 @@ const ProfileAvatar = ({ address, ensName }: IProps) => (
   <div className="inline-block">
     <div className="flex justify-center rounded-full">
       <Davatar
+        key={address}
         size={80}
         address={address}
         generatedAvatarType="jazzicon" // optional, 'jazzicon' or 'blockies'

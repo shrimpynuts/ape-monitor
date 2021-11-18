@@ -3,7 +3,7 @@ import Image from 'next/image'
 import classNames from 'classnames'
 
 import { getServer } from '../lib/util'
-import Spinner from './spinner'
+// import Spinner from './spinner'
 import { fixedNumber } from '../lib/util'
 import useWeb3Container from '../hooks/useWeb3User'
 
@@ -118,7 +118,8 @@ export default function Trades({ address }: { address: string }) {
           <SingleTrade title="🥲 Biggest L" trade={tradeData.totalTradeStats.worstTrade} />
         </div>
       ) : (
-        <Spinner />
+        // <Spinner />
+        <></>
       )}
     </>
   )

@@ -176,7 +176,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                       </tr>
                       {isExpanded && (
                         <table className="table-fixed min-w-full divide-y divide-gray-300 dark:divide-darkblue">
-                          <thead className="bg-gray-100 dark:bg-blackPearl">
+                          <thead className="border-t border-gray-300 dark:border-darkblue bg-gray-100 dark:bg-blackPearl">
                             <tr>
                               <th className="flex px-6 text-left border-gray-300 dark:border-darkblue text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
                                 <div className="px-4 py-2 w-1/2">Name</div>

@@ -6,6 +6,7 @@ import { getAssetsGroupedByCollectionForOwner } from '../../../../lib/opensea'
  * https://api.opensea.io/api/v1/assets
  */
 const request = async (req: NextApiRequest, res: NextApiResponse) => {
+  res.setHeader('Cache-Control', 's-maxage=1800')
   const { address: ownerAddress } = req.query
   if (typeof ownerAddress !== 'string') return res.status(400).json({ error: 'ownerAddress must be given' })
   const collections = await getAssetsGroupedByCollectionForOwner(ownerAddress)

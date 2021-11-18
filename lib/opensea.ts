@@ -49,9 +49,9 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
       image_thumbnail_url: asset.image_thumbnail_url,
       name: asset.name,
       permalink: asset.permalink,
-      traits: asset.traits,
+      // traits: asset.traits,
+      // token_metadata: asset.token_metadata,
       external_link: asset.external_link,
-      token_metadata: asset.token_metadata,
       listing_date: asset.listing_date,
       top_bid: asset.top_bid,
       description: asset.description,
@@ -95,28 +95,8 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
     }),
   )
 
-  const prunedResults = results.map((result) => {
-    return {
-      name: result.name,
-      stats: result.stats,
-      slug: result.slug,
-      image_url: result.image_url,
-      twitter_username: result.twitter_username,
-      discord_url: result.discord_url,
-      external_url: result.external_url,
-      assets: result.assets.map((asset: any) => {
-        return {
-          image_thumbnail_url: asset.image_thumbnail_url,
-          name: asset.name,
-          permalink: asset.permalink,
-          external_link: asset.external_link,
-        }
-      }),
-    }
-  })
-
   console.timeEnd(`all getCollectionStats for ${ownerAddress}`)
-  return prunedResults
+  return results
 }
 
 /**

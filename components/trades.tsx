@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import classNames from 'classnames'
 
 import { getServer } from '../lib/util'
 import Spinner from './spinner'
@@ -35,6 +36,15 @@ const SingleTrade = ({ trade, title }: { trade: any; title: string }) => {
     )
   }
 
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+
+    // These options are needed to round to whole numbers if that's what you want.
+    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+  })
+
   return (
     <div className="w-full">
       <h4 className="text-2xl font-semibold">{title}</h4>
@@ -53,10 +63,21 @@ const SingleTrade = ({ trade, title }: { trade: any; title: string }) => {
             <span className="flex-1 text-right">{daysHeld} days</span>
           </Row>
         </div>
-        <div className="w-full py-4 flex items-center justify-center space-x-2 border-t border-solid border-gray-200">
+        <div
+          className={classNames(
+            'w-full py-4 flex items-center justify-center space-x-2 border-t border-solid border-gray-200',
+            {
+              'text-green-600 dark:text-lightgreen': fixedNumber(trade.totalProfit) > 0,
+              'text-red-600 dark:text-lightred': fixedNumber(trade.totalProfit) < 0,
+            },
+          )}
+        >
           {ethPrice !== undefined ? (
             <>
-              <span className="text-3xl font-semibold">{fixedNumber(trade.totalProfit * ethPrice)}</span>
+              <span className="text-3xl font-semibold">
+                {fixedNumber(trade.totalProfit) > 0 && <>+</>}
+                {formatter.format(fixedNumber(trade.totalProfit * ethPrice))}
+              </span>
             </>
           ) : (
             <>

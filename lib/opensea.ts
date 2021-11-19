@@ -114,6 +114,8 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
           return { ...collection, stats, costBasis: getCostBasis(collection) }
         })
         .catch(() => {
+          console.error(`Could not fetch collection: ${collectionSlug}\n\n`)
+
           // TODO: handle failed stats gracefully
           return { ...collection, stats: { error: 'could not fetch stats!' }, costBasis: null }
         })

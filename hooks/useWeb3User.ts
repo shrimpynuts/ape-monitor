@@ -19,8 +19,10 @@ const Web3UserState = () => {
   useEffect(() => {
     async function fetchEtherPrice() {
       var etherscanProvider = new ethers.providers.EtherscanProvider()
-      const price = await etherscanProvider.getEtherPrice()
-      setEthPrice(price)
+      const price = await etherscanProvider
+        .getEtherPrice()
+        .then((price) => setEthPrice(price))
+        .catch((err) => console.error(`Error while fetching eth price: ${err}`))
     }
 
     fetchEtherPrice()

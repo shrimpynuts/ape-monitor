@@ -14,9 +14,9 @@ import {
   convertNumberToRoundedString,
   getENSDomain,
 } from '../lib/util'
-import Navbar from '../components/navbar'
+import Navbar from '../components/layout/navbar'
 import CollectionsTable from '../components/collectionsTable'
-import ProfileBanner from '../components/profileBanner'
+import ProfileBanner from '../components/profile/profileBanner'
 import Trades from '../components/trades'
 
 import { INSERT_USER } from '../graphql/mutations'

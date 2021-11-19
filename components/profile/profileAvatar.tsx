@@ -1,6 +1,6 @@
 import React from 'react'
 import Davatar from '@davatar/react'
-import AddressPill from './addressPill'
+import AddressPill from '../util/addressPill'
 
 interface IProps {
   address: string

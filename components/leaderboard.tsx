@@ -2,9 +2,9 @@ import { useQuery } from '@apollo/client'
 import Link from 'next/link'
 
 import { GET_LEADERBOARD } from '../graphql/queries'
-import Spinner from './spinner'
+import Spinner from './util/spinner'
 import { middleEllipses, convertNumberToRoundedString } from '../lib/util'
-import Tooltip from '../components/tooltip'
+import Tooltip from './util/tooltip'
 
 const getRankDisplay = (rank: number) => {
   switch (rank) {

@@ -6,8 +6,8 @@ import { Toaster } from 'react-hot-toast'
 import useWeb3Container from '../hooks/useWeb3User'
 import Leaderboard from '../components/leaderboard'
 import Searchbar from '../components/searchbar'
-import Navbar from '../components/navbar'
-import Button from '../components/button'
+import Navbar from '../components/layout/navbar'
+import Button from '../components/util/button'
 
 function getRandomInt(max: number) {
   return Math.floor(Math.random() * max) + 1

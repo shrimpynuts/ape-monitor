@@ -4,7 +4,7 @@ import useMobileDetect from 'use-mobile-detect-hook'
 
 import { convertNumberToRoundedString, getCostBasis } from '../lib/util'
 import { ICollection } from '../pages/[address]'
-import DeltaDisplay from './deltaDisplay'
+import DeltaDisplay from './util/deltaDisplay'
 
 import Table from './table'
 

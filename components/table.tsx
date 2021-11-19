@@ -14,7 +14,7 @@ import {
 
 import { ExternalLinkIcon } from '@heroicons/react/solid'
 // import { RowLoader } from './loaders'
-import Spinner from './spinner'
+import Spinner from './util/spinner'
 
 import web3 from 'web3'
 

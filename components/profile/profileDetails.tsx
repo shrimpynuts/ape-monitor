@@ -1,10 +1,10 @@
 import Davatar from '@davatar/react'
 
-import { ITotalStats, IAddressData } from '../pages/[address]'
-import { middleEllipses, convertNumberToRoundedString } from '../lib/util'
-import DeltaDisplay from '../components/deltaDisplay'
-import useWeb3Container from '../hooks/useWeb3User'
-import Tooltip from '../components/tooltip'
+import { ITotalStats, IAddressData } from '../../pages/[address]'
+import { middleEllipses, convertNumberToRoundedString } from '../../lib/util'
+import DeltaDisplay from '../util/deltaDisplay'
+import useWeb3Container from '../../hooks/useWeb3User'
+import Tooltip from '../util/tooltip'
 
 interface IProps {
   totalStats: ITotalStats

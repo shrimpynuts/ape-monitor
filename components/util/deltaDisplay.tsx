@@ -1,4 +1,4 @@
-import { convertNumberToRoundedString } from '../lib/util'
+import { convertNumberToRoundedString } from '../../lib/util'
 
 const DeltaDisplay = ({ delta, denomination }: { delta: number; denomination: string }) => {
   const color =

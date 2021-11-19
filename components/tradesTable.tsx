@@ -118,8 +118,6 @@ function TradesTable({ collections, loading }: IProps) {
     [isMobile, ethPrice],
   )
 
-  if (!collections || collections.length === 0) return <></>
-
   // Sort the collections by total profit by default
   const sortedCollections = collections.sort((collectionA, collectionB) => {
     if ((collectionA.totalProfit || 0) > (collectionB.totalProfit || 0)) {

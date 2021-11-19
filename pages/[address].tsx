@@ -5,6 +5,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { Toaster } from 'react-hot-toast'
 import { useMutation } from '@apollo/client'
+import classNames from 'classnames'
 
 import {
   middleEllipses,
@@ -39,6 +40,27 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
 
   const [tradeData, setTradeData] = useState<ITradeData>()
   const [tradesLoading, setTradesLoading] = useState(true)
+
+  /**
+   * Tabs for the different displays on the portfolio page
+   */
+  const tabs = [
+    {
+      display: 'Current Portfolio',
+      index: 0,
+    },
+    // Only have the historical trades
+    ...(tradeData
+      ? [
+          {
+            display: 'Previous Trades',
+            index: 1,
+          },
+        ]
+      : []),
+  ]
+
+  const [currentTab, setCurrentTab] = useState(tabs[0])
 
   /**
    * Updates the users data in our database (only if connected and is the owner of this wallet)
@@ -90,6 +112,7 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
   }, [address])
 
   const metadataTitle = `${ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}\'s NFT Portfolio`
+
   return (
     <div className="pb-4 md:pb-12">
       <Head>
@@ -129,25 +152,58 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
         </div>
         <Toaster />
 
-        {/* Display historical trade data */}
+        {/* Display best trades */}
         <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
           <div className="flex space-x-4 ">
             <HighlightedTrades tradeData={tradeData} loading={tradesLoading} />
           </div>
         </div>
 
+        {/* Display all tab options */}
         <div className="max-w-screen-lg m-auto overflow-hidden mt-8">
-          <div className="flex flex-col flex-wrap space-y-2 mx-4">
-            <AllTrades tradeData={tradeData} loading={tradesLoading} />
+          <div className="flex flex-wrap space-x-4 mx-4">
+            {tabs.map(({ display, index }) => {
+              return (
+                <div
+                  className={classNames(
+                    'py-2 px-4 cursor-pointer rounded-xl bg-white border border-solid border-gray-300 dark:border-darkblue drop-shadow-md hover:bg-gray-100 dark:hover:bg-gray-800',
+                    // If tab is selected
+                    {
+                      'bg-gray-100 dark:bg-gray-800': currentTab.index === index,
+                    },
+                    // If tab is not selected
+                    {
+                      'bg-gray-100 dark:bg-blackPearl': currentTab.index !== index,
+                    },
+                  )}
+                  onClick={() => {
+                    setCurrentTab(tabs[index])
+                  }}
+                >
+                  <span className="text-gray-800 dark:text-gray-50 ">{display}</span>
+                </div>
+              )
+            })}
           </div>
         </div>
 
-        {/* Display collections data */}
-        <div className="max-w-screen-lg m-auto overflow-hidden mt-8">
-          <div className="flex flex-col flex-wrap space-y-2 mx-4">
-            <CollectionsTable collections={collections} loading={loading} />
+        {/* Current portfolio tab */}
+        {currentTab.index === 0 && (
+          <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
+            <div className="flex flex-col flex-wrap space-y-2 mx-4">
+              <CollectionsTable collections={collections} loading={loading} />
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Historical trades tab */}
+        {currentTab.index === 1 && (
+          <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
+            <div className="flex flex-col flex-wrap space-y-2 mx-4">
+              <AllTrades tradeData={tradeData} loading={tradesLoading} />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -166,21 +166,22 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
               return (
                 <div
                   className={classNames(
-                    'py-2 px-4 cursor-pointer rounded-xl bg-white border border-solid border-gray-300 dark:border-darkblue drop-shadow-md hover:bg-gray-100 dark:hover:bg-gray-800',
-                    // If tab is selected
+                    'py-2 px-4 cursor-pointer rounded-xl border border-solid border-gray-300 dark:border-darkblue drop-shadow-md  ',
+                    // Styling if tab is selected
                     {
-                      'bg-gray-100 dark:bg-gray-800': currentTab.index === index,
+                      'bg-gray-100 dark:bg-gray-850 ': currentTab.index === index,
                     },
-                    // If tab is not selected
+                    // Styling if tab is not selected
                     {
-                      'bg-gray-100 dark:bg-blackPearl': currentTab.index !== index,
+                      'bg-white dark:bg-blackPearl hover:bg-gray-100 dark:hover:bg-gray-800':
+                        currentTab.index !== index,
                     },
                   )}
                   onClick={() => {
                     setCurrentTab(tabs[index])
                   }}
                 >
-                  <span className="text-gray-800 dark:text-gray-50 ">{display}</span>
+                  <span className="text-gray-600 dark:text-gray-50 ">{display}</span>
                 </div>
               )
             })}

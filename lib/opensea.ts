@@ -35,14 +35,18 @@ export const getAssetsForOwner = async (ownerAddress: string) => {
 
     // Fetch with address and the current offset set to the number of already fetched assets
     const resp = await fetch(openseaEndpoint, openseaFetchHeaders)
-    const { assets } = await resp.json()
+    const { assets, detail } = await resp.json()
+
+    if (detail) {
+      console.error(`\nDetail: ${detail}\n`)
+    }
 
     if (assets) {
       totalAssets = [...totalAssets, ...assets]
       // If we get less than the limit of 50 assets, we know we've fetched everything
       if (assets.length < 50) break
     } else {
-      console.error(`Could not fetch events for endpoint: ${openseaEndpoint}`)
+      console.error(`Could not fetch events for endpoint: ${openseaEndpoint}\n\n`)
       break
     }
   }
@@ -139,7 +143,7 @@ export const getEventsForOwner = async (ownerAddress: string) => {
       // If we get less than the limit of 50 asset_events, we know we've fetched everything
       if (asset_events.length < limit) break
     } else {
-      console.error(`Could not fetch events for endpoint: ${openseaEndpoint}`)
+      console.error(`\n\nCould not fetch events for endpoint: ${openseaEndpoint}\n\n`)
       break
     }
   }

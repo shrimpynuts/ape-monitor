@@ -53,7 +53,7 @@ function CollectionsTable({ collections, loading }: IProps) {
         Cell: ({ cell: { value } }: CellProps<any>) => (
           <div>
             {value ? (
-              <span className="flex items-center justify-center space-x-2">
+              <span className="flex items-center justify-start space-x-2">
                 <img src="/eth-logo.svg" alt="eth logo" width="11" />
                 <span>{convertNumberToRoundedString(value.floor_price)}</span>
               </span>
@@ -70,7 +70,7 @@ function CollectionsTable({ collections, loading }: IProps) {
         accessor: `stats.one_day_change`,
         Cell: ({ cell: { value } }: CellProps<any>) => {
           return (
-            <div className="flex justify-center">
+            <div className="flex justify-start">
               <span>{<DeltaDisplay delta={value} denomination="%" />}</span>
             </div>
           )
@@ -83,7 +83,7 @@ function CollectionsTable({ collections, loading }: IProps) {
         accessor: `stats.seven_day_change`,
         Cell: ({ cell: { value } }: CellProps<any>) => {
           return (
-            <div className="flex justify-center">
+            <div className="flex justify-start">
               <span>{<DeltaDisplay delta={value} denomination="%" />}</span>
             </div>
           )
@@ -96,7 +96,7 @@ function CollectionsTable({ collections, loading }: IProps) {
         accessor: `stats.thirty_day_change`,
         Cell: ({ cell: { value } }: CellProps<any>) => {
           return (
-            <div className="flex justify-center">
+            <div className="flex justify-start">
               <span>{<DeltaDisplay delta={value} denomination="%" />}</span>
             </div>
           )
@@ -111,7 +111,7 @@ function CollectionsTable({ collections, loading }: IProps) {
         Cell: ({ cell: { value } }: CellProps<any>) => (
           <div>
             {value ? (
-              <span className="flex justify-center space-x-2">
+              <span className="flex justify-start space-x-2">
                 <img src="/eth-logo.svg" alt="eth logo" width="11" />
                 <span>{convertNumberToRoundedString(value.total_volume)}</span>
               </span>
@@ -121,7 +121,7 @@ function CollectionsTable({ collections, loading }: IProps) {
           </div>
         ),
         disableFilters: true,
-        width: 100,
+        width: 120,
       },
       {
         Header: `Total Spent`,
@@ -129,7 +129,7 @@ function CollectionsTable({ collections, loading }: IProps) {
         Cell: ({ cell: { row } }: CellProps<any>) => {
           const costBasis = getCostBasis(row.original)
           return (
-            <div className="flex justify-center space-x-2">
+            <div className="flex justify-start space-x-2">
               <img src="/eth-logo.svg" alt="eth logo" width="11" />
               <span>{`${convertNumberToRoundedString(costBasis.total)}`}</span>
             </div>
@@ -144,6 +144,13 @@ function CollectionsTable({ collections, loading }: IProps) {
         accessor: 'assets.length',
         width: isMobile ? '20' : 120,
         disableFilters: true,
+        Cell: ({ cell: { value } }: CellProps<any>) => {
+          return (
+            <div className="flex justify-start space-x-2">
+              <span className="text-left">{`${value}`}</span>
+            </div>
+          )
+        },
       },
     ],
     [isMobile],

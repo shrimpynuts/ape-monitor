@@ -8,7 +8,7 @@ interface IProps {
 }
 
 export default function AllTrades({ tradeData, loading }: IProps) {
-  console.log(tradeData?.tradesByCollection)
+  console.log({ tradeData })
   return (
     <>
       {tradeData && (

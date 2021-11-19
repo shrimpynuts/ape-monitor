@@ -14,6 +14,8 @@ interface IProps {
 }
 
 function TradesTable({ collections, loading }: IProps) {
+  if (!collections || collections.length === 0) return <></>
+
   // Detect if window is mobile
   const detectMobile = useMobileDetect()
   const isMobile = detectMobile.isMobile()
@@ -133,7 +135,13 @@ function TradesTable({ collections, loading }: IProps) {
 
   return (
     <div className="w-full">
-      <Table columns={columns} data={sortedCollections} isMobile={isMobile} loading={loading} />
+      <Table
+        columns={columns}
+        data={sortedCollections}
+        isMobile={isMobile}
+        loading={loading}
+        dontIncludeSubrowCostBasis
+      />
     </div>
   )
 }

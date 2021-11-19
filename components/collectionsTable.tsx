@@ -40,7 +40,7 @@ function CollectionsTable({ collections, loading }: IProps) {
         accessor: 'name',
         width: isMobile ? 200 : 250,
         Cell: ({ cell: { value, row } }: CellProps<any>) => (
-          <div className="flex items-center pl-2 space-x-3 overflow-ellipsis">
+          <div className="flex items-center space-x-3 overflow-ellipsis">
             <img src={row.original.image_url} className="h-8 w-8 rounded-full" />
             <span className="overflow-ellipsis overflow-hidden">{value}</span>
           </div>
@@ -63,7 +63,7 @@ function CollectionsTable({ collections, loading }: IProps) {
           </div>
         ),
         disableFilters: true,
-        width: 100,
+        width: 120,
       },
       {
         Header: `24h %`,

@@ -129,7 +129,11 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                   {headerGroup.headers.map((c, ii) => {
                     const column = c as unknown as TableColumn<Data>
                     return (
-                      <div className="p-2" {...column.getHeaderProps(column.getSortByToggleProps())} key={ii}>
+                      <div
+                        className="p-2 md:px-4 md:py-3"
+                        {...column.getHeaderProps(column.getSortByToggleProps())}
+                        key={ii}
+                      >
                         {column.render('Header')}
                         <div {...column} />
                         <ResizerComponent {...column.getResizerProps()} />

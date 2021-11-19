@@ -1,6 +1,6 @@
 import Davatar from '@davatar/react'
 
-import { ITotalStats, IAddressData } from '../../pages/[address]'
+import { ITotalStats, IAddressData } from '../../frontend/types'
 import { middleEllipses, convertNumberToRoundedString } from '../../lib/util'
 import DeltaDisplay from '../util/deltaDisplay'
 import useWeb3Container from '../../hooks/useWeb3User'

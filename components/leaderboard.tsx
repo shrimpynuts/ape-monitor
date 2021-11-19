@@ -46,7 +46,7 @@ const SingleLeaderboard = ({
         </div>
       ) : (
         <div className="flex flex-col space-y-2 mt-4">
-          {users.map((user: any, i: number) => (
+          {users?.map((user: any, i: number) => (
             <div className="flex justify-between " key={i}>
               <span className="flex-1">{getRankDisplay(i + 1)}</span>
               <Link href={`/${user.ensDomain || user.address}`}>

@@ -27,6 +27,7 @@ type IProps = {
   data: Data[]
   isMobile: boolean
   loading: boolean
+  dontIncludeSubrowCostBasis?: boolean
 }
 
 interface TableColumn<D extends object = {}>
@@ -86,7 +87,7 @@ const ResizerComponent: FC = (props) => {
   )
 }
 
-const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
+const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrowCostBasis = false }) => {
   const defaultColumn = {
     minWidth: 20,
     width: isMobile ? 100 : 200,
@@ -159,6 +160,9 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                       <tr
                         className="relative flex hover:bg-gray-100 dark:hover:bg-black transition-all cursor-pointer"
                         {...row.getRowProps()}
+                        style={{
+                          width: '100%',
+                        }}
                         key={i}
                         onClick={() => {
                           // If this row is already expanded, filter it out from the state of expanded row indexes
@@ -184,7 +188,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                             <tr>
                               <th className="flex px-6 text-left border-gray-300 dark:border-darkblue text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
                                 <div className="px-4 py-2 w-1/2">Name</div>
-                                <div className="px-4 py-2 w-1/4">Cost Basis</div>
+                                {!dontIncludeSubrowCostBasis && <div className="px-4 py-2 w-1/4">Cost Basis</div>}
                                 <div className="px-4 py-2 w-1/4">Opensea</div>
                               </th>
                             </tr>
@@ -199,16 +203,18 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                                       <span>{asset.name}</span>
                                     </div>
                                   </td>
-                                  <td className="w-1/4 px-4 py-2">
-                                    {asset.last_sale ? (
-                                      <div>
-                                        {web3.utils.fromWei(asset.last_sale.total_price)}{' '}
-                                        {asset.last_sale.payment_token.symbol}
-                                      </div>
-                                    ) : (
-                                      <div>Minted</div>
-                                    )}
-                                  </td>
+                                  {!dontIncludeSubrowCostBasis && (
+                                    <td className="w-1/4 px-4 py-2">
+                                      {asset.last_sale ? (
+                                        <div>
+                                          {web3.utils.fromWei(asset.last_sale.total_price)}{' '}
+                                          {asset.last_sale.payment_token.symbol}
+                                        </div>
+                                      ) : (
+                                        <div>Minted</div>
+                                      )}
+                                    </td>
+                                  )}
                                   <td className="w-1/4 px-4 py-2">
                                     <div className="flex items-center h-full">
                                       <a href={asset.permalink} target="_blank" rel="noreferrer">
@@ -219,8 +225,6 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                                 </tr>
                               )
                             })}
-
-                            <tr className=" relative flex px-6 divide-x divide-gray-300 dark:divide-gray-700"></tr>
                           </tbody>
                         </table>
                       )}

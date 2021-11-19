@@ -3,7 +3,7 @@ import { CellProps } from 'react-table'
 import useMobileDetect from 'use-mobile-detect-hook'
 
 import { convertNumberToRoundedString, getCostBasis } from '../lib/util'
-import { ICollection } from '../pages/[address]'
+import { ICollection } from '../frontend/types'
 import DeltaDisplay from './util/deltaDisplay'
 
 import Table from './table'

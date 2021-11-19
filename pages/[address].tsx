@@ -17,53 +17,14 @@ import {
 import Navbar from '../components/layout/navbar'
 import CollectionsTable from '../components/collectionsTable'
 import ProfileBanner from '../components/profile/profileBanner'
-import Trades from '../components/trades'
+import HighlightedTrades from '../components/highlightedTrades'
+import AllTrades from '../components/allTrades'
 
 import { INSERT_USER } from '../graphql/mutations'
 import useWeb3Container from '../hooks/useWeb3User'
+import { getServer } from '../lib/util'
 
-export interface ICollection {
-  stats: {
-    one_day_volume: number
-    one_day_change: number
-    one_day_sales: number
-    one_day_average_price: number
-    seven_day_volume: number
-    seven_day_change: number
-    seven_day_sales: number
-    seven_day_average_price: number
-    thirty_day_volume: number
-    thirty_day_change: number
-    thirty_day_sales: number
-    thirty_day_average_price: number
-    total_volume: number
-    total_sales: number
-    total_supply: number
-    count: number
-    num_owners: number
-    average_price: number
-    num_reports: number
-    market_cap: number
-    floor_price: number | undefined
-  }
-}
-
-export interface ITotalStats {
-  oneDayChange: number
-  totalValue: number
-  totalAssetCount: number
-  totalCostBasis: number
-}
-
-export interface IAddressData {
-  address: string
-  ensDomain?: string
-  addressFound: boolean
-}
-export interface IOpenseaData {
-  collections: ICollection[]
-  totalStats: ITotalStats
-}
+import { ITradeData, IAddressData, IOpenseaData } from '../frontend/types'
 
 const AddressPage: NextPage<IAddressData> = (addressData) => {
   const { wallet } = useWeb3Container.useContainer()
@@ -75,6 +36,9 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
   const { address, ensDomain, addressFound } = addressData
   const [loading, setLoading] = useState(addressFound)
   const [insertUser] = useMutation(INSERT_USER)
+
+  const [tradeData, setTradeData] = useState<ITradeData>()
+  const [tradesLoading, setTradesLoading] = useState(true)
 
   /**
    * Updates the users data in our database (only if connected and is the owner of this wallet)
@@ -110,6 +74,19 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
       setLoading(true)
       initialFetch()
     }
+  }, [address])
+
+  /**
+   * Fetches data from opensea at the /api/opensea endpoint and updates state client-side
+   */
+  useEffect(() => {
+    fetch(`${getServer()}/api/opensea/trades/${address}`)
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log({ data })
+        setTradeData(data)
+        setTradesLoading(false)
+      })
   }, [address])
 
   const metadataTitle = `${ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}\'s NFT Portfolio`
@@ -155,7 +132,13 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
         {/* Display historical trade data */}
         <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
           <div className="flex space-x-4 ">
-            <Trades address={address} />
+            <HighlightedTrades tradeData={tradeData} loading={tradesLoading} />
+          </div>
+        </div>
+
+        <div className="max-w-screen-lg m-auto overflow-hidden mt-8">
+          <div className="flex flex-col flex-wrap space-y-2 mx-4">
+            <AllTrades tradeData={tradeData} loading={tradesLoading} />
           </div>
         </div>
 

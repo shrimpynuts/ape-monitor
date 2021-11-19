@@ -5,8 +5,23 @@ export interface IOpenSeaEvent {
   [key: string]: any
 }
 
+// Fetch API key
+const openseaAPIKey = process.env.OPENSEA_API_KEY
+
+if (!openseaAPIKey) console.warn('Cannot find Opensea API Key (OPENSEA_API_KEY env variable)')
+
+const openseaFetchHeaders = {
+  headers: {
+    // Attach the opensea API key as a header if it's available
+    ...(openseaAPIKey && { 'X-API-KEY': openseaAPIKey }),
+  },
+}
+
 export const getCollectionsForOwner = async (ownerAddress: string) => {
-  const resp = await fetch(`https://api.opensea.io/api/v1/collections?asset_owner=${ownerAddress}&offset=0&limit=300`)
+  const resp = await fetch(
+    `https://api.opensea.io/api/v1/collections?asset_owner=${ownerAddress}&offset=0&limit=300`,
+    openseaFetchHeaders,
+  )
   const collections = await resp.json()
   return collections
 }
@@ -18,6 +33,7 @@ export const getAssetsForOwner = async (ownerAddress: string) => {
     // Fetch with address and the current offset set to the number of already fetched assets
     const resp = await fetch(
       `https://api.opensea.io/api/v1/assets?owner=${ownerAddress}&order_direction=desc&offset=${totalAssets.length}&limit=50`,
+      openseaFetchHeaders,
     )
     const { assets } = await resp.json()
     totalAssets = [...totalAssets, ...assets]
@@ -29,7 +45,7 @@ export const getAssetsForOwner = async (ownerAddress: string) => {
 }
 
 export const getCollectionStats = (slug: string) => {
-  return fetch(`https://api.opensea.io/api/v1/collection/${slug}/stats`)
+  return fetch(`https://api.opensea.io/api/v1/collection/${slug}/stats`, openseaFetchHeaders)
 }
 
 export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string) => {
@@ -110,6 +126,7 @@ export const getEventsForOwner = async (ownerAddress: string) => {
     // Fetch with address and the current offset set to the number of already fetched asset_events
     const { asset_events } = await fetch(
       `https://api.opensea.io/api/v1/events?account_address=${ownerAddress}&only_opensea=false&offset=${totalAssetEvents.length}&limit=${limit}`,
+      openseaFetchHeaders,
     ).then((resp) => resp.json())
     totalAssetEvents = [...totalAssetEvents, ...asset_events]
 

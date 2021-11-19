@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import { GET_LEADERBOARD } from '../graphql/queries'
 import Spinner from './spinner'
-import { middleEllipses, fixedNumber } from '../lib/util'
+import { middleEllipses, convertNumberToRoundedString } from '../lib/util'
 import Tooltip from '../components/tooltip'
 
 const getRankDisplay = (rank: number) => {

@@ -1,7 +1,7 @@
 import Davatar from '@davatar/react'
 
 import { ITotalStats, IAddressData } from '../pages/[address]'
-import { middleEllipses, fixedNumber } from '../lib/util'
+import { middleEllipses, convertNumberToRoundedString } from '../lib/util'
 import DeltaDisplay from '../components/deltaDisplay'
 import useWeb3Container from '../hooks/useWeb3User'
 import Tooltip from '../components/tooltip'

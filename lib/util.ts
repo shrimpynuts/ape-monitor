@@ -20,7 +20,10 @@ export function middleEllipses(str: string, cutoffDecimals: number, begginingDec
 }
 
 export function fixedNumber(n: number, decimalPoints?: number) {
-  return n ? parseFloat(n.toFixed(decimalPoints !== undefined ? decimalPoints : 2)) : 0
+  if (!n) return 0
+  const fixedNumber = parseFloat(n.toFixed(decimalPoints !== undefined ? decimalPoints : 2))
+  const numberWithCommas = fixedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return numberWithCommas
 }
 
 export function getServer() {

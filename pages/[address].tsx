@@ -6,7 +6,14 @@ import Head from 'next/head'
 import { Toaster } from 'react-hot-toast'
 import { useMutation } from '@apollo/client'
 
-import { middleEllipses, getOpenseaData, getNetworkAddress, isENSDomain, fixedNumber, getENSDomain } from '../lib/util'
+import {
+  middleEllipses,
+  getOpenseaData,
+  getNetworkAddress,
+  isENSDomain,
+  convertNumberToRoundedString,
+  getENSDomain,
+} from '../lib/util'
 import Navbar from '../components/navbar'
 import CollectionsTable from '../components/collectionsTable'
 import ProfileBanner from '../components/profileBanner'
@@ -138,9 +145,9 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
           <ProfileBanner
             ensName={ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}
             address={address}
-            costBasis={fixedNumber(totalStats.totalCostBasis)}
-            totalValue={fixedNumber(totalStats.totalValue)}
-            oneDayChange={fixedNumber(totalStats.oneDayChange)}
+            costBasis={convertNumberToRoundedString(totalStats.totalCostBasis)}
+            totalValue={convertNumberToRoundedString(totalStats.totalValue)}
+            oneDayChange={convertNumberToRoundedString(totalStats.oneDayChange)}
           />
         </div>
         <Toaster />

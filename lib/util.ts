@@ -19,8 +19,8 @@ export function middleEllipses(str: string, cutoffDecimals: number, begginingDec
   return str
 }
 
-export function fixedNumber(n: number, decimalPoints?: number) {
-  if (!n) return 0
+export function convertNumberToRoundedString(n: number, decimalPoints?: number) {
+  if (!n) return '0'
   const fixedNumber = parseFloat(n.toFixed(decimalPoints !== undefined ? decimalPoints : 2))
   const numberWithCommas = fixedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   return numberWithCommas

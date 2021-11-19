@@ -45,8 +45,8 @@ const ProfileDetails: React.FC<IProps> = ({
               <Tooltip text="Based on floor prices, discounting rarity" />
             </div>
             <div className="flex space-x-2 items-center flex-grow">
-              Total Value: {fixedNumber(totalValue)}Ξ &nbsp;{' '}
-              {ethPrice && <div>(${fixedNumber(ethPrice * totalValue, 0)}) </div>}
+              Total Value: {convertNumberToRoundedString(totalValue)}Ξ &nbsp;{' '}
+              {ethPrice && <div>(${convertNumberToRoundedString(ethPrice * totalValue, 0)}) </div>}
               <DeltaDisplay delta={oneDayChange} denomination="%" />
             </div>
           </h4>
@@ -54,8 +54,8 @@ const ProfileDetails: React.FC<IProps> = ({
           <h4 className="text-sm px-1 space-between md:px-4 relative flex space-x-2 items-center ">
             <Tooltip text="May be inaccurate due to mint costs" />
             <div className="flex space-x-2 items-center flex-grow">
-              <span>Total Cost Basis: {fixedNumber(totalCostBasis)}Ξ &nbsp; </span>
-              {ethPrice && <div>(${fixedNumber(totalCostBasis * ethPrice, 0)}) </div>}
+              <span>Total Cost Basis: {convertNumberToRoundedString(totalCostBasis)}Ξ &nbsp; </span>
+              {ethPrice && <div>(${convertNumberToRoundedString(totalCostBasis * ethPrice, 0)}) </div>}
             </div>
           </h4>
           {/* Price of Ethereum (if available) */}

@@ -2,7 +2,7 @@ import { useMemo, useCallback } from 'react'
 import { CellProps } from 'react-table'
 import useMobileDetect from 'use-mobile-detect-hook'
 
-import { fixedNumber, getCostBasis } from '../lib/util'
+import { convertNumberToRoundedString, getCostBasis } from '../lib/util'
 import { ICollection } from '../pages/[address]'
 import DeltaDisplay from './deltaDisplay'
 
@@ -55,7 +55,7 @@ function CollectionsTable({ collections, loading }: IProps) {
             {value ? (
               <span className="flex items-center justify-center space-x-2">
                 <img src="/eth-logo.svg" alt="eth logo" width="11" />
-                <span>{fixedNumber(value.floor_price)}</span>
+                <span>{convertNumberToRoundedString(value.floor_price)}</span>
               </span>
             ) : (
               ''
@@ -113,7 +113,7 @@ function CollectionsTable({ collections, loading }: IProps) {
             {value ? (
               <span className="flex justify-center space-x-2">
                 <img src="/eth-logo.svg" alt="eth logo" width="11" />
-                <span>{fixedNumber(value.total_volume)}</span>
+                <span>{convertNumberToRoundedString(value.total_volume)}</span>
               </span>
             ) : (
               ''
@@ -131,7 +131,7 @@ function CollectionsTable({ collections, loading }: IProps) {
           return (
             <div className="flex justify-center space-x-2">
               <img src="/eth-logo.svg" alt="eth logo" width="11" />
-              <span>{`${fixedNumber(costBasis.total)}`}</span>
+              <span>{`${convertNumberToRoundedString(costBasis.total)}`}</span>
             </div>
           )
         },

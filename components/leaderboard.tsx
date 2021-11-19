@@ -54,7 +54,9 @@ const SingleLeaderboard = ({
                   {user.ensDomain ? user.ensDomain : middleEllipses(user.address, 4, 6, 4)}
                 </span>
               </Link>
-              <span className="flex-1 text-right">{`${fixedNumber(user[accessor])}${denomination}`}</span>
+              <span className="flex-1 text-right">{`${convertNumberToRoundedString(
+                user[accessor],
+              )}${denomination}`}</span>
             </div>
           ))}
         </div>

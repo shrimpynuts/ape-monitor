@@ -4,7 +4,7 @@ import classNames from 'classnames'
 
 import { getServer } from '../lib/util'
 // import Spinner from './spinner'
-import { fixedNumber } from '../lib/util'
+import { convertNumberToRoundedString } from '../lib/util'
 import useWeb3Container from '../hooks/useWeb3User'
 
 interface ITradeData {
@@ -27,7 +27,7 @@ const SingleTrade = ({ trade, title }: { trade: any; title: string }) => {
     )
   }
 
-  const EthRow = ({ name, amount }: { name: string; amount: number }) => {
+  const EthRow = ({ name, amount }: { name: string; amount: string }) => {
     return (
       <Row name={name}>
         <img src="eth-logo.svg" width="10" />
@@ -58,8 +58,8 @@ const SingleTrade = ({ trade, title }: { trade: any; title: string }) => {
             <Row name="Volume">
               <span className="flex-1 text-right">{trade.assets.length}</span>
             </Row>
-            <EthRow name="Sale Price" amount={fixedNumber(trade.averageSalePrice)} />
-            <EthRow name="Buy Price" amount={fixedNumber(trade.averageBuyPrice)} />
+            <EthRow name="Sale Price" amount={convertNumberToRoundedString(trade.averageSalePrice)} />
+            <EthRow name="Buy Price" amount={convertNumberToRoundedString(trade.averageBuyPrice)} />
             <Row name="Hold Time">
               <span className="flex-1 text-right">{daysHeld} days</span>
             </Row>
@@ -68,22 +68,22 @@ const SingleTrade = ({ trade, title }: { trade: any; title: string }) => {
             className={classNames(
               'w-full py-4 flex items-center justify-center space-x-2 border-t border-solid border-gray-200 dark:border-darkblue',
               {
-                'text-green-600 dark:text-lightgreen': fixedNumber(trade.totalProfit) > 0,
-                'text-red-600 dark:text-lightred': fixedNumber(trade.totalProfit) < 0,
+                'text-green-600 dark:text-lightgreen': trade.totalProfit > 0,
+                'text-red-600 dark:text-lightred': trade.totalProfit < 0,
               },
             )}
           >
             {ethPrice !== undefined ? (
               <>
                 <span className="text-3xl font-semibold">
-                  {fixedNumber(trade.totalProfit) > 0 && <>+</>}
-                  {formatter.format(fixedNumber(trade.totalProfit * ethPrice))}
+                  {trade.totalProfit > 0 && <>+</>}
+                  {formatter.format(trade.totalProfit * ethPrice)}
                 </span>
               </>
             ) : (
               <>
                 <Image src="eth-logo.svg" alt="eth logo" width="13" />
-                <span className="text-3xl font-semibold">{fixedNumber(trade.totalProfit)}</span>
+                <span className="text-3xl font-semibold">{convertNumberToRoundedString(trade.totalProfit)}</span>
               </>
             )}
           </div>

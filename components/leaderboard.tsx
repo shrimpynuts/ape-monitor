@@ -34,8 +34,8 @@ const SingleLeaderboard = ({
 }) => {
   return (
     <div
-      className="flex flex-1 flex-col p-4 rounded
-    bg-gray-50 dark:bg-gray-800"
+      className="flex flex-1 flex-col p-4 
+      rounded-xl bg-white dark:bg-blackPearl border border-solid border-gray-300 dark:border-darkblue py-4 drop-shadow-md"
     >
       <h3 className="border-b border-gray-200 dark:border-gray-700 pb-2 font-bold text-center uppercase tracking-wide text-xs ">
         {title}

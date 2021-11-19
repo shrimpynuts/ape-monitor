@@ -1,8 +1,7 @@
 import web3 from 'web3'
-import { ethers } from 'ethers'
 
 import { alchemyProvider } from './ethersProvider'
-import { IOpenseaData } from '../pages/[address]'
+import { IOpenseaData } from '../frontend/types'
 
 /**
  * Inserts middle ellipses into a given string
@@ -26,10 +25,15 @@ export function convertNumberToRoundedString(n: number, decimalPoints?: number) 
   return numberWithCommas
 }
 
+function getDomainFromURL(url: string) {
+  var a = document.createElement('a')
+  a.href = url
+  return a.hostname
+}
+
 export function getServer() {
-  const dev = process.env.NODE_ENV !== 'production'
-  const server = dev ? 'http://localhost:3000' : 'https://www.apemonitor.com'
-  return server
+  const domain = window.location.href.split('/').slice(0, 3).join('/')
+  return domain
 }
 
 export function getCostBasis(collection: any) {
@@ -106,3 +110,12 @@ export function getFormattedDate(date: Date) {
 
   return month + '/' + day + '/' + year
 }
+
+export const usdFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+
+  // These options are needed to round to whole numbers if that's what you want.
+  //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+  //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+})

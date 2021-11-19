@@ -1,17 +1,11 @@
-import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import classNames from 'classnames'
 
-import { getServer } from '../lib/util'
-// import Spinner from './spinner'
-import { convertNumberToRoundedString } from '../lib/util'
+import { convertNumberToRoundedString, usdFormatter } from '../lib/util'
 import useWeb3Container from '../hooks/useWeb3User'
+import { ITradeData } from '../frontend/types'
 
-interface ITradeData {
-  [key: string]: any
-}
-
-const SingleTrade = ({ trade, title }: { trade: any; title: string }) => {
+const SingleHighlightedTrade = ({ trade, title }: { trade: any; title: string }) => {
   if (!trade) return <></>
   var daysHeld = Math.floor(trade.averageHoldTime / 1000 / (3600 * 24))
 
@@ -36,15 +30,6 @@ const SingleTrade = ({ trade, title }: { trade: any; title: string }) => {
       </Row>
     )
   }
-
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-
-    // These options are needed to round to whole numbers if that's what you want.
-    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-  })
 
   return (
     <div className="w-full">
@@ -78,7 +63,7 @@ const SingleTrade = ({ trade, title }: { trade: any; title: string }) => {
               <>
                 <span className="text-3xl font-semibold">
                   {trade.totalProfit > 0 && <>+</>}
-                  {formatter.format(trade.totalProfit * ethPrice)}
+                  {usdFormatter.format(trade.totalProfit * ethPrice)}
                 </span>
               </>
             ) : (
@@ -94,29 +79,19 @@ const SingleTrade = ({ trade, title }: { trade: any; title: string }) => {
   )
 }
 
-export default function Trades({ address }: { address: string }) {
-  const [tradeData, setTradeData] = useState<ITradeData>()
-  const [loading, setLoading] = useState(true)
+interface IProps {
+  tradeData: ITradeData | undefined
+  loading: boolean
+}
 
-  /**
-   * Fetches data from opensea at the /api/opensea endpoint and updates state client-side
-   */
-  useEffect(() => {
-    fetch(`${getServer()}/api/opensea/trades/${address}`)
-      .then((resp) => resp.json())
-      .then((data) => {
-        console.log({ data })
-        setTradeData(data)
-        setLoading(false)
-      })
-  }, [address])
-
+export default function HighlightedTrades({ tradeData, loading }: IProps) {
+  if (loading) return <></>
   return (
     <>
       {tradeData && (
         <div className="flex flex-1 space-x-12 m-auto max-w-3xl">
-          <SingleTrade title="💰 Best Flip" trade={tradeData.totalTradeStats.bestTrade} />
-          <SingleTrade title="🥲 Biggest L" trade={tradeData.totalTradeStats.worstTrade} />
+          <SingleHighlightedTrade title="💰 Best Flip" trade={tradeData.totalTradeStats.bestTrade} />
+          <SingleHighlightedTrade title="🥲 Biggest L" trade={tradeData.totalTradeStats.worstTrade} />
         </div>
       )}
     </>

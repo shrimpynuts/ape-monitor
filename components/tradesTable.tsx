@@ -14,8 +14,6 @@ interface IProps {
 }
 
 function TradesTable({ collections, loading }: IProps) {
-  if (!collections || collections.length === 0) return <></>
-
   // Detect if window is mobile
   const detectMobile = useMobileDetect()
   const isMobile = detectMobile.isMobile()
@@ -120,7 +118,9 @@ function TradesTable({ collections, loading }: IProps) {
     [isMobile, ethPrice],
   )
 
-  // sort the collections by floor price by default
+  if (!collections || collections.length === 0) return <></>
+
+  // Sort the collections by total profit by default
   const sortedCollections = collections.sort((collectionA, collectionB) => {
     if ((collectionA.totalProfit || 0) > (collectionB.totalProfit || 0)) {
       return -1

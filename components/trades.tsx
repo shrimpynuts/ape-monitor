@@ -12,6 +12,7 @@ interface ITradeData {
 }
 
 const SingleTrade = ({ trade, title }: { trade: any; title: string }) => {
+  if (!trade) return <></>
   var daysHeld = Math.floor(trade.averageHoldTime / 1000 / (3600 * 24))
 
   const { ethPrice } = useWeb3Container.useContainer()
@@ -112,14 +113,11 @@ export default function Trades({ address }: { address: string }) {
 
   return (
     <>
-      {tradeData ? (
+      {tradeData && (
         <div className="flex flex-1 space-x-12 m-auto max-w-3xl">
           <SingleTrade title="💰 Best Flip" trade={tradeData.totalTradeStats.bestTrade} />
           <SingleTrade title="🥲 Biggest L" trade={tradeData.totalTradeStats.worstTrade} />
         </div>
-      ) : (
-        // <Spinner />
-        <></>
       )}
     </>
   )

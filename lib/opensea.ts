@@ -30,16 +30,21 @@ export const getAssetsForOwner = async (ownerAddress: string) => {
   let totalAssets: any[] = []
   // Infinite loop until all assets are fetched
   while (1) {
-    // Fetch with address and the current offset set to the number of already fetched assets
-    const resp = await fetch(
-      `https://api.opensea.io/api/v1/assets?owner=${ownerAddress}&order_direction=desc&offset=${totalAssets.length}&limit=50`,
-      openseaFetchHeaders,
-    )
-    const { assets } = await resp.json()
-    totalAssets = [...totalAssets, ...assets]
+    // Construct request url
+    const openseaEndpoint = `https://api.opensea.io/api/v1/assets?owner=${ownerAddress}&order_direction=desc&offset=${totalAssets.length}&limit=50`
 
-    // If we get less than the limit of 50 assets, we know we've fetched everything
-    if (assets.length < 50) break
+    // Fetch with address and the current offset set to the number of already fetched assets
+    const resp = await fetch(openseaEndpoint, openseaFetchHeaders)
+    const { assets } = await resp.json()
+
+    if (assets) {
+      totalAssets = [...totalAssets, ...assets]
+      // If we get less than the limit of 50 assets, we know we've fetched everything
+      if (assets.length < 50) break
+    } else {
+      console.error(`Could not fetch events for endpoint: ${openseaEndpoint}`)
+      break
+    }
   }
   return totalAssets
 }
@@ -123,15 +128,20 @@ export const getEventsForOwner = async (ownerAddress: string) => {
   const limit = 300
   // Infinite loop until all asset_events are fetched
   while (1) {
-    // Fetch with address and the current offset set to the number of already fetched asset_events
-    const { asset_events } = await fetch(
-      `https://api.opensea.io/api/v1/events?account_address=${ownerAddress}&only_opensea=false&offset=${totalAssetEvents.length}&limit=${limit}`,
-      openseaFetchHeaders,
-    ).then((resp) => resp.json())
-    totalAssetEvents = [...totalAssetEvents, ...asset_events]
+    // Construct request url
+    const openseaEndpoint = `https://api.opensea.io/api/v1/events?account_address=${ownerAddress}&only_opensea=false&offset=${totalAssetEvents.length}&limit=${limit}`
 
-    // If we get less than the limit of 50 asset_events, we know we've fetched everything
-    if (asset_events.length < limit) break
+    // Fetch with address and the current offset set to the number of already fetched asset_events
+    const { asset_events } = await fetch(openseaEndpoint, openseaFetchHeaders).then((resp) => resp.json())
+
+    if (asset_events) {
+      totalAssetEvents = [...totalAssetEvents, ...asset_events]
+      // If we get less than the limit of 50 asset_events, we know we've fetched everything
+      if (asset_events.length < limit) break
+    } else {
+      console.error(`Could not fetch events for endpoint: ${openseaEndpoint}`)
+      break
+    }
   }
   return totalAssetEvents
 }

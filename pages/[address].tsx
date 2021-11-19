@@ -165,6 +165,7 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
             {tabs.map(({ display, index }) => {
               return (
                 <div
+                  key={index}
                   className={classNames(
                     'py-2 px-4 cursor-pointer rounded-xl border border-solid border-gray-300 dark:border-darkblue drop-shadow-md  ',
                     // Styling if tab is selected

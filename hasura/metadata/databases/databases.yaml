@@ -1,0 +1,13 @@
+- name: default
+  kind: postgres
+  configuration:
+    connection_info:
+      database_url: postgres://dcbokfyowlpmsn:63747c1deb6fab146596eac927587215c5d9d5bb2d9f4e6941a0b2e609f31919@ec2-52-54-237-144.compute-1.amazonaws.com:5432/d3np2t19c0k6bk
+      isolation_level: read-committed
+      pool_settings:
+        connection_lifetime: 600
+        idle_timeout: 180
+        max_connections: 15
+        retries: 1
+      use_prepared_statements: true
+  tables: "!include default/tables/tables.yaml"

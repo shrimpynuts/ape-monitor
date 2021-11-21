@@ -4,7 +4,7 @@ Web 3 Starter is a modern web 3 starter template project.
 
 Here's the full stack of frameworks/libraries used:
 
-- Next.js React 
+- Next.js React
 - TailwindCSS for styling
 - [HeadlessUI](https://headlessui.dev/) for Tailwind components
 - [use-wallet](https://github.com/aragon/use-wallet) to connect to Ethereum wallets
@@ -12,7 +12,6 @@ Here's the full stack of frameworks/libraries used:
 - [react-hot-toast](https://react-hot-toast.com/) for toast messages
 - [unstated-next](https://github.com/jamiebuilds/unstated-next) for state management
 - [next-themes](https://www.npmjs.com/package/next-themes) for dark mode theme
-
 
 ## How to Setup Development Environment
 
@@ -65,3 +64,23 @@ COIN_MARKETCAP_API_KEY=""
 - **[Tailwind UI](https://tailwindcss.com/docs)**
 - **[Tailwind UI Components](https://tailwindui.com/)**
 - **[Tailwind Community Components](https://tailwindcomponents.com/)**
+
+## Setting up Docker
+
+#### Setup Hasura locally
+
+## When you want to run migrations on production
+
+```bash
+hasura migrate apply --all-databases --endpoint "https://prod-apemonitor.herokuapp.com/" --admin-secret P@3SvzaJgW8t
+```
+
+```bash
+hasura metadata reload --endpoint "https://prod-apemonitor.herokuapp.com/" --admin-secret P@3SvzaJgW8t
+```
+
+# This is to work against staging locally
+
+```bash
+hasura console --endpoint "https://apemonitor-staging.herokuapp.com/" --admin-secret "vvf84Zj42XCq2I"
+```

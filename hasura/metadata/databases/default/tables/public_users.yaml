@@ -1,0 +1,39 @@
+table:
+  name: users
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - address
+    - ensDomain
+    - totalAssetCount
+    - totalCostBasis
+    - totalValue
+  role: public
+select_permissions:
+- permission:
+    columns:
+    - totalCostBasis
+    - totalValue
+    - id
+    - totalAssetCount
+    - address
+    - ensDomain
+    - created_at
+    - updated_at
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - address
+    - ensDomain
+    - totalAssetCount
+    - totalCostBasis
+    - totalValue
+    - updated_at
+    filter: {}
+  role: public

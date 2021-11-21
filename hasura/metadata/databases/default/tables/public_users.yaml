@@ -15,11 +15,14 @@ insert_permissions:
 select_permissions:
 - permission:
     columns:
-    - address
-    - ensDomain
-    - totalAssetCount
     - totalCostBasis
     - totalValue
+    - id
+    - totalAssetCount
+    - address
+    - ensDomain
+    - created_at
+    - updated_at
     filter: {}
   role: public
 update_permissions:

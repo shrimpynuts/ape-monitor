@@ -15,3 +15,19 @@ export const INSERT_USER = gql`
     }
   }
 `
+
+export const UPSERT_COLLECTION = gql`
+  mutation UpsertCollection($name: String!) {
+    insert_collections_one(
+      object: { name: $name }
+      on_conflict: { constraint: collections_pkey, update_columns: floor_price }
+    ) {
+      id
+      created_at
+      updated_at
+      name
+      floor_price
+      slug
+    }
+  }
+`

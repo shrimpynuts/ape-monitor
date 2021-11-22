@@ -1,6 +1,5 @@
 import web3 from 'web3'
 
-import { getCostBasis } from './util'
 export interface IOpenSeaEvent {
   [key: string]: any
 }
@@ -37,8 +36,10 @@ export const getAssetsForOwner = async (ownerAddress: string) => {
     const resp = await fetch(openseaEndpoint, openseaFetchHeaders)
     const { assets, detail } = await resp.json()
 
+    // This means the request was throttled
     if (detail) {
       console.error(`\nDetail: ${detail}\n`)
+      break
     }
 
     if (assets) {
@@ -55,14 +56,18 @@ export const getAssetsForOwner = async (ownerAddress: string) => {
 
 export const getCollectionStats = (slug: string) => {
   return fetch(`https://api.opensea.io/api/v1/collection/${slug}/stats`, openseaFetchHeaders)
+    .then((response) => response.json())
+    .then(({ stats }) => {
+      return stats
+    })
+    .catch(() => {
+      console.error(`Could not fetch collection: ${slug}\n\n`)
+    })
 }
 
 export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string) => {
-  console.time(`getAssetsForOwner for ${ownerAddress}`)
-
   // Get all assets for the given address
   const assets = await getAssetsForOwner(ownerAddress)
-  console.timeEnd(`getAssetsForOwner for ${ownerAddress}`)
 
   // Group all assets by collection slug
   const byCollection = assets.reduce((acc: any, asset: any) => {
@@ -74,8 +79,6 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
       image_thumbnail_url: asset.image_thumbnail_url,
       name: asset.name,
       permalink: asset.permalink,
-      // traits: asset.traits,
-      // token_metadata: asset.token_metadata,
       external_link: asset.external_link,
       listing_date: asset.listing_date,
       top_bid: asset.top_bid,
@@ -91,7 +94,6 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
       // Prune collection data
       const prunedCollection = {
         name: collectionData.name,
-        stats: collectionData.stats,
         slug: collectionData.slug,
         image_url: collectionData.image_url,
         twitter_username: collectionData.twitter_username,
@@ -103,27 +105,7 @@ export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string)
     return acc
   }, {})
 
-  console.time(`all getCollectionStats for ${ownerAddress}`)
-  // Add stats and costBasis to byCollections object
-  const results = await Promise.all(
-    Object.keys(byCollection).map(async (collectionSlug: any) => {
-      const collection = byCollection[collectionSlug]
-      return getCollectionStats(collectionSlug)
-        .then((response) => response.json())
-        .then(({ stats }) => {
-          return { ...collection, stats, costBasis: getCostBasis(collection) }
-        })
-        .catch(() => {
-          console.error(`Could not fetch collection: ${collectionSlug}\n\n`)
-
-          // TODO: handle failed stats gracefully
-          return { ...collection, stats: { error: 'could not fetch stats!' }, costBasis: null }
-        })
-    }),
-  )
-
-  console.timeEnd(`all getCollectionStats for ${ownerAddress}`)
-  return results
+  return byCollection
 }
 
 /**

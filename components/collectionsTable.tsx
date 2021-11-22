@@ -23,8 +23,6 @@ interface IProps {
 }
 
 function CollectionsTable({ collections, loading }: IProps) {
-  console.log({ collections })
-
   // Detect if window is mobile
   const detectMobile = useMobileDetect()
   const isMobile = detectMobile.isMobile()

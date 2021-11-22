@@ -105,7 +105,6 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
     fetch(`${getServer()}/api/opensea/trades/${address}`)
       .then((resp) => resp.json())
       .then((data) => {
-        console.log({ data })
         setTradeData(data)
         setTradesLoading(false)
       })

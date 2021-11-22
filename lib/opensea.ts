@@ -38,7 +38,7 @@ export const getAssetsForOwner = async (ownerAddress: string) => {
 
     // This means the request was throttled
     if (detail) {
-      console.error(`\nDetail: ${detail}\n`)
+      console.error(`\nGet assets for owner: ${detail}\n`)
       break
     }
 
@@ -54,15 +54,20 @@ export const getAssetsForOwner = async (ownerAddress: string) => {
   return totalAssets
 }
 
-export const getCollectionStats = (slug: string) => {
-  return fetch(`https://api.opensea.io/api/v1/collection/${slug}/stats`, openseaFetchHeaders)
-    .then((response) => response.json())
-    .then(({ stats }) => {
-      return stats
-    })
-    .catch(() => {
-      console.error(`Could not fetch collection: ${slug}\n\n`)
-    })
+export const getCollectionStats = async (slug: string) => {
+  try {
+    const { stats, detail } = await fetch(
+      `https://api.opensea.io/api/v1/collection/${slug}/stats`,
+      openseaFetchHeaders,
+    ).then((response) => response.json())
+
+    // This means the request was throttled
+    if (detail) return console.error(`\nGet collection: ${detail}\n`)
+
+    return stats
+  } catch (error) {
+    console.error(`Could not fetch collection: ${slug}\n\n`)
+  }
 }
 
 export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string) => {

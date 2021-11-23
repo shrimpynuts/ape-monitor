@@ -62,7 +62,7 @@ export const getCollectionStats = async (slug: string) => {
     ).then((response) => response.json())
 
     // This means the request was throttled
-    if (detail) return console.error(`\nGet collection: ${detail}\n`)
+    if (detail) return console.error(`\nGet collection stats: ${detail}\n`)
 
     return stats
   } catch (error) {

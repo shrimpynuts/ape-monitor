@@ -25,6 +25,9 @@ import {
   getENSDomain,
   fetchAllCollections,
   groupAssetsWithCollections,
+  calculateTotalCostBasis,
+  calculateTotalValue,
+  calculateTotalChange,
 } from '../lib/util'
 
 /**
@@ -160,15 +163,18 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
       </div>
 
       <div className="max-w-screen-lg m-auto dark:bg-blackPearl">
+        {/* Display profile banner */}
         <div className="relative bottom-14">
           <ProfileBanner
             ensName={ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}
             address={address}
-            costBasis={convertNumberToRoundedString(1)}
-            totalValue={convertNumberToRoundedString(1)}
-            oneDayChange={convertNumberToRoundedString(1)}
+            costBasis={convertNumberToRoundedString(calculateTotalCostBasis(collectionsWithAssets))}
+            totalValue={convertNumberToRoundedString(calculateTotalValue(collectionsWithAssets))}
+            oneDayChange={convertNumberToRoundedString(calculateTotalChange(collectionsWithAssets))}
           />
         </div>
+
+        {/* Toaster to give user feedback */}
         <Toaster
           toastOptions={{
             style: {

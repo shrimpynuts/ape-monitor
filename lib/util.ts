@@ -1,5 +1,3 @@
-import web3 from 'web3'
-
 import { alchemyProvider } from './ethersProvider'
 import { ICollection, IAsset, IAssetsGroupedByContract, ICollectionsWithAssets } from '../frontend/types'
 import toast from 'react-hot-toast'
@@ -19,35 +17,44 @@ export function middleEllipses(str: string, cutoffDecimals: number, begginingDec
   return str
 }
 
-export function convertNumberToRoundedString(n: number, decimalPoints?: number) {
+export function convertNumberToRoundedString(n: number, decimalPoints: number = 2) {
   if (!n) return '0'
-  const fixedNumber = parseFloat(n.toFixed(decimalPoints !== undefined ? decimalPoints : 2))
+  const fixedNumber = parseFloat(n.toFixed(decimalPoints))
   const numberWithCommas = fixedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   return numberWithCommas
+}
+
+/** Calculating profile totals */
+
+export function calculateTotalCostBasis(collectionsWithAssets: ICollectionsWithAssets) {
+  return Object.values(collectionsWithAssets).reduce((totalCostBasis: number, { assets }) => {
+    return totalCostBasis + calculateCostBasis(assets)
+  }, 0)
+}
+
+export function calculateTotalValue(collectionsWithAssets: ICollectionsWithAssets) {
+  return Object.values(collectionsWithAssets).reduce((totalValue: number, { assets, collection }) => {
+    // If collection value is not null, we multiply the num assets by floor price,
+    // otherwise consider this collection's value as 0
+    const collectionValue = collection.floor_price ? assets.length * collection.floor_price : 0
+    return totalValue + collectionValue
+  }, 0)
+}
+
+// TODO: Double check this total change calculation
+export function calculateTotalChange(collectionsWithAssets: ICollectionsWithAssets) {
+  return 1
+}
+
+export function calculateCostBasis(assets: IAsset[]) {
+  return assets.reduce((acc: number, asset: IAsset) => {
+    return asset.last_sale ? acc + asset.last_sale : acc
+  }, 0)
 }
 
 export function getServer() {
   const domain = window.location.href.split('/').slice(0, 3).join('/')
   return domain
-}
-
-export function getCostBasis(collection: any) {
-  return collection.assets?.reduce(
-    (acc: any, asset: any) => {
-      if (asset.last_sale) {
-        return {
-          total: acc.total + parseFloat(web3.utils.fromWei(asset.last_sale.total_price)),
-          symbol: asset.last_sale.payment_token.symbol,
-        }
-      } else {
-        return acc
-      }
-    },
-    {
-      total: 0,
-      symbol: '',
-    },
-  )
 }
 
 export const getNetworkAddress = async (ensDomain: string) => {

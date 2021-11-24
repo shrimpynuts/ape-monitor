@@ -120,23 +120,17 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrow
         <table {...getTableProps()} className="min-w-full">
           <thead className="bg-gray-100 dark:bg-blackPearl">
             <tr>
-              {headerGroups.map((headerGroup, i) => (
+              {headerGroups.map((headerGroup) => (
                 <th
                   className="flex text-left border-b border-gray-300 dark:border-darkblue text-xs font-bold uppercase text-gray-500 dark:text-white"
                   {...headerGroup.getHeaderGroupProps()}
                   style={{}}
-                  key={i}
                 >
                   {headerGroup.headers.map((c, ii) => {
                     const column = c as unknown as TableColumn<Data>
                     return (
-                      <div
-                        className="p-2 md:px-4 md:py-3"
-                        {...column.getHeaderProps(column.getSortByToggleProps())}
-                        key={ii}
-                      >
+                      <div className="p-2 md:px-4 md:py-3" {...column.getHeaderProps(column.getSortByToggleProps())}>
                         {column.render('Header')}
-                        <div {...column} />
                         <ResizerComponent {...column.getResizerProps()} />
                       </div>
                     )
@@ -147,9 +141,11 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrow
           </thead>
           <tbody className="bg-white -mb-2 text-gray-500 dark:text-gray-100 dark:bg-blackPearl dark:divide-darkblue">
             {loading ? (
-              <div className="p-32 flex flex-col justify-center items-center space-y-8">
-                <Spinner />
-              </div>
+              <tr className="p-32 flex flex-col justify-center items-center space-y-8">
+                <td>
+                  <Spinner />
+                </td>
+              </tr>
             ) : (
               <>
                 {rows.map((row, i) => {

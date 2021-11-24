@@ -5,34 +5,29 @@ import { openseaFetchHeaders } from './config'
 
 export const getAssetsForOwner = async (ownerAddress: string) => {
   let totalAssets: any[] = []
-  try {
-    // Infinite loop until all assets are fetched
-    while (1) {
-      // Construct request url
-      const openseaEndpoint = `https://api.opensea.io/api/v1/assets?owner=${ownerAddress}&order_direction=desc&offset=${totalAssets.length}&limit=50`
+  // Infinite loop until all assets are fetched
+  while (1) {
+    // Construct request url
+    const openseaEndpoint = `https://api.opensea.io/api/v1/assets?owner=${ownerAddress}&order_direction=desc&offset=${totalAssets.length}&limit=50`
 
-      // Fetch with address and the current offset set to the number of already fetched assets
-      const resp = await fetch(openseaEndpoint, openseaFetchHeaders)
-      const { assets, detail } = await resp.json()
+    // Fetch with address and the current offset set to the number of already fetched assets
+    const resp = await fetch(openseaEndpoint, openseaFetchHeaders)
+    const { assets, detail } = await resp.json()
 
-      // This means the request was throttled
-      if (detail) {
-        console.error(`\nGet assets for owner: ${detail}\n`)
-        break
-      }
-
-      if (assets) {
-        totalAssets = [...totalAssets, ...assets]
-        // If we get less than the limit of 50 assets, we know we've fetched everything
-        if (assets.length < 50) break
-      } else {
-        console.error(`Could not fetch events for endpoint: ${openseaEndpoint}\n\n`)
-        break
-      }
+    // This means the request was throttled
+    if (detail) {
+      console.error(`\nOpensea assets for owner ${ownerAddress}: ${detail}\n`)
+      throw new Error(detail)
     }
-  } catch (error) {
-    console.error(`\nError fetching assets for owner ${ownerAddress}, probably cloudflare protection:\n ${error}`)
-    return []
+
+    if (assets) {
+      totalAssets = [...totalAssets, ...assets]
+      // If we get less than the limit of 50 assets, we know we've fetched everything
+      if (assets.length < 50) break
+    } else {
+      console.error(`Could not fetch events for endpoint: ${openseaEndpoint}\n\n`)
+      break
+    }
   }
   return totalAssets
 }
@@ -41,13 +36,14 @@ export const getAssetsForOwner = async (ownerAddress: string) => {
  * Fetches the collection stats from the opensea API /collection/{slug}/stats endpoint
  */
 export const getCollectionStats = async (slug: string) => {
-  const { stats, detail } = await fetch(
-    `https://api.opensea.io/api/v1/collection/${slug}/stats`,
-    openseaFetchHeaders,
-  ).then((response) => response.json())
+  const url = `https://api.opensea.io/api/v1/collection/${slug}/stats`
+  const { stats, detail } = await fetch(url, openseaFetchHeaders).then((response) => response.json())
 
   // This means the request was throttled
-  if (detail) return console.error(`\nGet collection stats: ${detail}\n`)
+  if (detail) {
+    console.error(`\nOpensea collection stats ${slug}: ${detail}\n`)
+    return null
+  }
   return stats
 }
 

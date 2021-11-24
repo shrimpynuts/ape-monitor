@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 import { useMutation } from '@apollo/client'
 import { GetServerSideProps } from 'next'
-import { Toaster } from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
@@ -89,7 +89,15 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
   useEffect(() => {
     const initialFetch = async () => {
       // Fetch all assets
-      const { assets } = await fetch(`${getServer()}/api/opensea/assets/${address}`).then((res) => res.json())
+      const result = await fetch(`${getServer()}/api/opensea/assets/${address}`).then((res) => res.json())
+      const { assets, error } = result
+
+      // Handle error (in case we get throttled)
+      if (error) {
+        toast.error(error)
+        setLoading(false)
+        return
+      }
 
       // Fetch all corresponding collections for the given assets
       const collections = await fetchAllCollections(assets)
@@ -107,7 +115,7 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
       setLoading(true)
       initialFetch()
     }
-  }, [address])
+  }, [address, addressFound])
 
   // /**
   //  * Fetches trade data, storing in state
@@ -121,7 +129,9 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
   //     })
   // }, [address])
 
-  const metadataTitle = `${ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}\'s NFT Portfolio`
+  const metadataTitle = addressFound
+    ? `${ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}\'s NFT Portfolio`
+    : 'Oopsies!'
   return (
     <div className="pb-4 md:pb-12">
       <Head>
@@ -159,7 +169,13 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
             oneDayChange={convertNumberToRoundedString(1)}
           />
         </div>
-        <Toaster />
+        <Toaster
+          toastOptions={{
+            style: {
+              wordBreak: 'break-all',
+            },
+          }}
+        />
 
         {/* Display best trades */}
         <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">

@@ -6,7 +6,7 @@ import client from '../../../../backend/graphql-client'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 
 // To use sample/mock data in order not to make opensea /assets fetch, uncomment the two lines below
-// import sampleAssets from '../../../../mock/big-opensea-assets.json'
+// import sampleAssets from '../../../../mock/small-opensea-assets.json'
 // const { assets } = sampleAssets
 
 // Upserts a collection to our database without updating stats columns
@@ -48,7 +48,10 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
 
       upsertCollectionToDB(collection, client).catch((e) => {
         // It's fine if errors on the contract_address unique key, but otherwise, log it
-        if (!e.toString().includes('unique constraint "collections_contract_address_key')) {
+        if (
+          !e.toString().includes('unique constraint "collections_contract_address_key"') &&
+          !e.toString().includes('unique constraint "collections_slug_key"')
+        ) {
           console.error(`Error adding collection ${collection.slug} to DB: ${e}`)
         }
       })
@@ -61,7 +64,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json({ assets: prunedAssets })
   } catch (error) {
     // Return errors
-    return res.status(500).json({ error: `Error fetching assets for owner: ${error}` })
+    return res.status(500).json({ error: `Opensea API fetch all NFTs for ${ownerAddress}: ${error}` })
   }
 }
 

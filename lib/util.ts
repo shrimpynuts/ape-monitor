@@ -2,6 +2,7 @@ import web3 from 'web3'
 
 import { alchemyProvider } from './ethersProvider'
 import { ICollection, IAsset, IAssetsGroupedByContract, ICollectionsWithAssets } from '../frontend/types'
+import toast from 'react-hot-toast'
 
 /**
  * Inserts middle ellipses into a given string
@@ -82,16 +83,40 @@ export const fetchAllCollections = async (assets: IAsset[]): Promise<ICollection
   const assetsGroupedByContractAddress: IAssetsGroupedByContract = groupAssetsByContractAddress(assets)
 
   // Fetch the data for all contracts in parallel
-  const collections = await Promise.all(
-    Object.values(assetsGroupedByContractAddress).map((assetGroup) => {
-      // Just take the first asset in the group to get the contract address
-      const asset = assetGroup[0]
-      // Hit our own /api/collections endpoint for the collections data
-      return fetch(`${getServer()}/api/collection/${asset.contract_address}`).then((r) => r.json())
-    }),
-  )
+  try {
+    const collections = await Promise.all(
+      Object.values(assetsGroupedByContractAddress).map((assetGroup) => {
+        // Just take the first asset in the group to get the contract address
+        const asset = assetGroup[0]
+        // Hit our own /api/collections endpoint for the collections data
+        const collection = fetch(`${getServer()}/api/collection/${asset.contract_address}`)
+          .then((r) => r.json())
+          .catch((error) => {
+            console.log('DICK SHIT')
+            return { error }
+          })
+        return collection
+      }),
+    )
 
-  return collections
+    // Filter out the collections that error'ed
+    const validResults = collections.filter((result) => !result.error)
+
+    // Log error if collection fails to fetch all collections
+    const numCollectionsExpected = Object.keys(assetsGroupedByContractAddress).length
+    const numCollectionsFetched = validResults.length
+
+    console.log({ numCollectionsExpected, numCollectionsFetched })
+
+    if (numCollectionsFetched !== numCollectionsExpected) {
+      toast.error(`Error: could not fetch ${numCollectionsExpected - numCollectionsFetched} collections!`)
+    }
+
+    return validResults
+  } catch (e) {
+    console.log({ e })
+    return []
+  }
 }
 
 export const groupAssetsWithCollections: (assets: IAsset[], collections: ICollection[]) => ICollectionsWithAssets = (

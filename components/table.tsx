@@ -120,16 +120,21 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrow
         <table {...getTableProps()} className="min-w-full">
           <thead className="bg-gray-100 dark:bg-blackPearl">
             <tr>
-              {headerGroups.map((headerGroup) => (
+              {headerGroups.map((headerGroup, i) => (
                 <th
                   className="flex text-left border-b border-gray-300 dark:border-darkblue text-xs font-bold uppercase text-gray-500 dark:text-white"
                   {...headerGroup.getHeaderGroupProps()}
                   style={{}}
+                  key={i}
                 >
                   {headerGroup.headers.map((c, ii) => {
                     const column = c as unknown as TableColumn<Data>
                     return (
-                      <div className="p-2 md:px-4 md:py-3" {...column.getHeaderProps(column.getSortByToggleProps())}>
+                      <div
+                        className="p-2 md:px-4 md:py-3"
+                        {...column.getHeaderProps(column.getSortByToggleProps())}
+                        key={ii}
+                      >
                         {column.render('Header')}
                         <ResizerComponent {...column.getResizerProps()} />
                       </div>

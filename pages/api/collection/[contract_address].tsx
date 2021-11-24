@@ -88,7 +88,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // Add collection with stats to our own database
-    // await addCollectionToDB(collection, client)
+    // await addCollectionToDB(collectionWithStats, client)
 
     res.status(200).json(collectionWithStats)
   } else {

@@ -38,7 +38,10 @@ export const UPSERT_COLLECTION_WITH_STATS = gql`
 
 export const UPSERT_COLLECTION_WITHOUT_STATS = gql`
   mutation UpsertCollection($collection: collections_insert_input!) {
-    insert_collections_one(object: $collection, on_conflict: { constraint: collections_slug_key, update_columns: [] }) {
+    insert_collections_one(
+      object: $collection
+      on_conflict: { constraint: collections_contract_address_key, update_columns: [] }
+    ) {
       id
       updated_at
       slug

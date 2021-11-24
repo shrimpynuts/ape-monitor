@@ -16,8 +16,7 @@ const upsertCollectionToDB = async (
   collection: Omit<ICollection, 'updated_at' | 'created_at'>,
   client: ApolloClient<NormalizedCacheObject>,
 ) => {
-  console.log(`Upserting collection to db: ${collection.slug}`)
-  await client.mutate({
+  return client.mutate({
     mutation: UPSERT_COLLECTION_WITHOUT_STATS,
     variables: {
       collection,
@@ -44,7 +43,16 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
     const collections = pruneAndRemoveDuplicateCollections(assets)
 
     // Upsert each collection to the db
-    collections.forEach((collection) => upsertCollectionToDB(collection, client))
+    collections.forEach((collection) => {
+      // console.log(`Upserting collection to db: ${collection.slug}`)
+
+      upsertCollectionToDB(collection, client).catch((e) => {
+        // It's fine if errors on the contract_address unique key, but otherwise, log it
+        if (!e.toString().includes('unique constraint "collections_contract_address_key')) {
+          console.error(`Error adding collection ${collection.slug} to DB: ${e}`)
+        }
+      })
+    })
 
     // Prune Opensea assets into IAsset objects
     const prunedAssets = pruneAssets(assets)

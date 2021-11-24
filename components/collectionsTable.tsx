@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { CellProps } from 'react-table'
 import useMobileDetect from 'use-mobile-detect-hook'
 
-import { convertNumberToRoundedString, getCostBasis } from '../lib/util'
+import { convertNumberToRoundedString } from '../lib/util'
 import { ICollectionsWithAssets } from '../frontend/types'
 import DeltaDisplay from './util/deltaDisplay'
 

@@ -1,7 +1,7 @@
 import web3 from 'web3'
 
 import { alchemyProvider } from './ethersProvider'
-import { IOpenseaData } from '../frontend/types'
+import { ICollection, IAsset, IAssetsGroupedByContract, ICollectionsWithAssets } from '../frontend/types'
 
 /**
  * Inserts middle ellipses into a given string
@@ -23,12 +23,6 @@ export function convertNumberToRoundedString(n: number, decimalPoints?: number) 
   const fixedNumber = parseFloat(n.toFixed(decimalPoints !== undefined ? decimalPoints : 2))
   const numberWithCommas = fixedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   return numberWithCommas
-}
-
-function getDomainFromURL(url: string) {
-  var a = document.createElement('a')
-  a.href = url
-  return a.hostname
 }
 
 export function getServer() {
@@ -66,25 +60,58 @@ export const getENSDomain = async (address: string) => {
 
 export const isENSDomain = (address: string) => address.substr(address.length - 4) === '.eth'
 
-export const getOpenseaData: (address: string) => Promise<IOpenseaData> = async (address: string) => {
-  const resp = await fetch(`${getServer()}/api/opensea/assets/${address}`)
-  const { collections } = await resp.json()
-  const totalStats = collections.reduce(
-    (acc: any, collection: any) => {
-      const numOwned = collection.assets.length
-      const { total: singleCostBasis } = getCostBasis(collection)
-      const singleValue = collection.stats ? collection.assets.length * collection.stats.floor_price : 0
-      const singleOneDayChange = collection.stats ? numOwned * collection.stats.one_day_change : 0
-      return {
-        totalAssetCount: acc.totalAssetCount + numOwned,
-        totalValue: acc.totalValue + singleValue,
-        oneDayChange: acc.oneDayChange + singleOneDayChange,
-        totalCostBasis: acc.totalCostBasis + singleCostBasis,
-      }
-    },
-    { totalValue: 0, oneDayChange: 0, totalAssetCount: 0, totalCostBasis: 0 },
+/**
+ * Turns an array of IAsset[] into IAssetsGroupedByContract
+ */
+export const groupAssetsByContractAddress: (assets: IAsset[]) => IAssetsGroupedByContract = (assets) => {
+  return assets.reduce((acc: IAssetsGroupedByContract, asset: IAsset) => {
+    if (!acc[asset.contract_address]) {
+      acc[asset.contract_address] = [asset]
+    } else {
+      acc[asset.contract_address].push(asset)
+    }
+    return acc
+  }, {})
+}
+
+/**
+ * Hits our own /api/collections endpoint for all collections
+ */
+export const fetchAllCollections = async (assets: IAsset[]): Promise<ICollection[]> => {
+  // Group the assets by their contract address
+  const assetsGroupedByContractAddress: IAssetsGroupedByContract = groupAssetsByContractAddress(assets)
+
+  // Fetch the data for all contracts in parallel
+  const collections = await Promise.all(
+    Object.values(assetsGroupedByContractAddress).map((assetGroup) => {
+      // Just take the first asset in the group to get the contract address
+      const asset = assetGroup[0]
+      // Hit our own /api/collections endpoint for the collections data
+      return fetch(`${getServer()}/api/collection/${asset.contract_address}`).then((r) => r.json())
+    }),
   )
-  return { totalStats, collections }
+
+  return collections
+}
+
+export const groupAssetsWithCollections: (assets: IAsset[], collections: ICollection[]) => ICollectionsWithAssets = (
+  assets,
+  collections,
+) => {
+  // Group the assets by their contract address
+  const assetsGroupedByContractAddress: IAssetsGroupedByContract = groupAssetsByContractAddress(assets)
+
+  // Group the assets together with their collections
+  const collectionsWithAssets = collections.reduce((acc: ICollectionsWithAssets, collection: ICollection) => {
+    return {
+      ...acc,
+      [collection.contract_address]: {
+        collection,
+        assets: assetsGroupedByContractAddress[collection.contract_address],
+      },
+    }
+  }, {})
+  return collectionsWithAssets
 }
 
 /**

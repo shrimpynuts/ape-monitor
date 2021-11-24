@@ -1,42 +1,43 @@
 import { useState, useEffect } from 'react'
 
+import { useMutation } from '@apollo/client'
 import { GetServerSideProps } from 'next'
+import { Toaster } from 'react-hot-toast'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { Toaster } from 'react-hot-toast'
-import { useMutation } from '@apollo/client'
-import classNames from 'classnames'
+
+import { ITradeData, IAddressData, ICollectionsWithAssets } from '../frontend/types'
+import ProfileBanner from '../components/profile/profileBanner'
+import HighlightedTrades from '../components/highlightedTrades'
+import Navbar from '../components/layout/navbar'
+import AllTrades from '../components/allTrades'
+import TabOptions from '../components/tabOptions'
+import { INSERT_USER } from '../graphql/mutations'
+import useWeb3Container from '../hooks/useWeb3User'
+import CollectionsTable from '../components/collectionsTable'
 
 import {
   middleEllipses,
-  getOpenseaData,
+  getServer,
   getNetworkAddress,
   isENSDomain,
   convertNumberToRoundedString,
   getENSDomain,
+  fetchAllCollections,
+  groupAssetsWithCollections,
 } from '../lib/util'
-import Navbar from '../components/layout/navbar'
-import CollectionsTable from '../components/collectionsTable'
-import ProfileBanner from '../components/profile/profileBanner'
-import HighlightedTrades from '../components/highlightedTrades'
-import AllTrades from '../components/allTrades'
 
-import { INSERT_USER } from '../graphql/mutations'
-import useWeb3Container from '../hooks/useWeb3User'
-import { getServer } from '../lib/util'
-
-import { ITradeData, IAddressData, IOpenseaData } from '../frontend/types'
-
-const AddressPage: NextPage<IAddressData> = (addressData) => {
+/**
+ * This is the main "profile" page, which displays a given address's portfolio
+ * @param addressData Data about the given address from server side
+ */
+const ProfilePage: NextPage<IAddressData> = (addressData) => {
   const { wallet } = useWeb3Container.useContainer()
-  const [openseaData, setOpenseaData] = useState<IOpenseaData>({
-    collections: [],
-    totalStats: { oneDayChange: 0, totalValue: 0, totalAssetCount: 0, totalCostBasis: 0 },
-  })
-  const { collections, totalStats } = openseaData
   const { address, ensDomain, addressFound } = addressData
   const [loading, setLoading] = useState(addressFound)
   const [insertUser] = useMutation(INSERT_USER)
+
+  const [collectionsWithAssets, setCollectionsWithAssets] = useState<ICollectionsWithAssets>({})
 
   const [tradeData, setTradeData] = useState<ITradeData>()
   const [tradesLoading, setTradesLoading] = useState(true)
@@ -49,7 +50,7 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
       display: 'Current Portfolio',
       index: 0,
     },
-    // Only have the historical trades
+    // Only allow the previous trades tab if trade data is available
     ...(tradeData
       ? [
           {
@@ -59,59 +60,68 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
         ]
       : []),
   ]
-
   const [currentTab, setCurrentTab] = useState(tabs[0])
 
-  /**
-   * Updates the users data in our database (only if connected and is the owner of this wallet)
-   */
-  useEffect(() => {
-    // Make sure the user is connected and the address matches
-    if (wallet.isConnected() && wallet.account === address) {
-      // Upsert user into DB
-      insertUser({
-        variables: {
-          user: {
-            address: address,
-            ensDomain: ensDomain,
-            totalValue: openseaData.totalStats.totalValue,
-            totalAssetCount: openseaData.totalStats.totalAssetCount,
-            totalCostBasis: openseaData.totalStats.totalCostBasis,
-          },
-        },
-      }).catch(console.error)
-    }
-  }, [openseaData, wallet])
+  // /**
+  //  * Updates the users data in our database (only if connected and is the owner of this wallet)
+  //  */
+  // useEffect(() => {
+  //   // Make sure the user is connected and the address matches
+  //   if (wallet.isConnected() && wallet.account === address) {
+  //     // Upsert user into DB
+  //     insertUser({
+  //       variables: {
+  //         user: {
+  //           address: address,
+  //           ensDomain: ensDomain,
+  //           totalValue: openseaData.totalStats.totalValue,
+  //           totalAssetCount: openseaData.totalStats.totalAssetCount,
+  //           totalCostBasis: openseaData.totalStats.totalCostBasis,
+  //         },
+  //       },
+  //     }).catch(console.error)
+  //   }
+  // }, [openseaData, wallet])
 
   /**
-   * Fetches data from opensea at the /api/opensea endpoint and updates state client-side
+   * Fetches assets and collections, storing in state
    */
   useEffect(() => {
     const initialFetch = async () => {
-      const fetchedOpenseaData = await getOpenseaData(address)
-      setOpenseaData(fetchedOpenseaData)
+      // Fetch all assets
+      const { assets } = await fetch(`${getServer()}/api/opensea/assets/${address}`).then((res) => res.json())
+
+      // Fetch all corresponding collections for the given assets
+      const collections = await fetchAllCollections(assets)
+
+      // Group the assets together with their collections
+      const collectionsWithAssets = groupAssetsWithCollections(assets, collections)
+
+      // Update the state accordingly
+      setCollectionsWithAssets(collectionsWithAssets)
       setLoading(false)
     }
+
+    // Only make fetch if we have an address
     if (addressFound) {
       setLoading(true)
       initialFetch()
     }
   }, [address])
 
-  /**
-   * Fetches data from opensea at the /api/opensea endpoint and updates state client-side
-   */
-  useEffect(() => {
-    fetch(`${getServer()}/api/opensea/trades/${address}`)
-      .then((resp) => resp.json())
-      .then((data) => {
-        setTradeData(data)
-        setTradesLoading(false)
-      })
-  }, [address])
+  // /**
+  //  * Fetches trade data, storing in state
+  //  */
+  // useEffect(() => {
+  //   fetch(`${getServer()}/api/opensea/trades/${address}`)
+  //     .then((resp) => resp.json())
+  //     .then((data) => {
+  //       setTradeData(data)
+  //       setTradesLoading(false)
+  //     })
+  // }, [address])
 
   const metadataTitle = `${ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}\'s NFT Portfolio`
-
   return (
     <div className="pb-4 md:pb-12">
       <Head>
@@ -144,9 +154,9 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
           <ProfileBanner
             ensName={ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}
             address={address}
-            costBasis={convertNumberToRoundedString(totalStats.totalCostBasis)}
-            totalValue={convertNumberToRoundedString(totalStats.totalValue)}
-            oneDayChange={convertNumberToRoundedString(totalStats.oneDayChange)}
+            costBasis={convertNumberToRoundedString(1)}
+            totalValue={convertNumberToRoundedString(1)}
+            oneDayChange={convertNumberToRoundedString(1)}
           />
         </div>
         <Toaster />
@@ -159,40 +169,13 @@ const AddressPage: NextPage<IAddressData> = (addressData) => {
         </div>
 
         {/* Display all tab options */}
-        <div className="max-w-screen-lg m-auto overflow-hidden mt-8">
-          <div className="flex flex-wrap space-x-4 mx-4">
-            {tabs.map(({ display, index }) => {
-              return (
-                <div
-                  key={index}
-                  className={classNames(
-                    'py-2 px-4 cursor-pointer rounded-xl border border-solid border-gray-300 dark:border-darkblue drop-shadow-md  ',
-                    // Styling if tab is selected
-                    {
-                      'bg-gray-100 dark:bg-gray-850 ': currentTab.index === index,
-                    },
-                    // Styling if tab is not selected
-                    {
-                      'bg-white dark:bg-blackPearl hover:bg-gray-100 dark:hover:bg-gray-800':
-                        currentTab.index !== index,
-                    },
-                  )}
-                  onClick={() => {
-                    setCurrentTab(tabs[index])
-                  }}
-                >
-                  <span className="text-gray-600 dark:text-gray-50 ">{display}</span>
-                </div>
-              )
-            })}
-          </div>
-        </div>
+        <TabOptions tabs={tabs} setCurrentTab={setCurrentTab} currentTab={currentTab} />
 
         {/* Current portfolio tab */}
         {currentTab.index === 0 && (
           <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
             <div className="flex flex-col flex-wrap space-y-2 mx-4">
-              <CollectionsTable collections={collections} loading={loading} />
+              <CollectionsTable collectionsWithAssets={collectionsWithAssets} loading={loading} />
             </div>
           </div>
         )}
@@ -247,4 +230,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return { props: { address: networkAddress, ensDomain, addressFound: true } }
 }
 
-export default AddressPage
+export default ProfilePage

@@ -205,14 +205,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrow
                                   </td>
                                   {!dontIncludeSubrowCostBasis && (
                                     <td className="w-1/4 px-4 py-2">
-                                      {asset.last_sale ? (
-                                        <div>
-                                          {web3.utils.fromWei(asset.last_sale.total_price)}{' '}
-                                          {asset.last_sale.payment_token.symbol}
-                                        </div>
-                                      ) : (
-                                        <div>Minted</div>
-                                      )}
+                                      {asset.last_sale ? <div>{asset.last_sale}Ξ</div> : <div>Minted</div>}
                                     </td>
                                   )}
                                   <td className="w-1/4 px-4 py-2">

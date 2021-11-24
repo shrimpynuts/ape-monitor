@@ -212,7 +212,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   // Fetches the network address (starts with "0x") if given an ENS domain
   const networkAddress = isENSDomain(address) ? await getNetworkAddress(address) : address
-  if (!networkAddress) return error()
+  if (!networkAddress) {
+    console.error(`Could not find network address for ens domain ${address}`)
+    return error()
+  }
 
   // Fetch ENS domain if not given it
   const ensDomain = isENSDomain(address) ? address : await getENSDomain(address)

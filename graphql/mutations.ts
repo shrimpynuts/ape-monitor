@@ -22,7 +22,7 @@ export const UPSERT_COLLECTION_WITH_STATS = gql`
       object: $collection
       on_conflict: {
         constraint: collections_slug_key
-        update_columns: [floor_price, one_day_change, seven_day_change, thirty_day_change]
+        update_columns: [floor_price, one_day_change, seven_day_change, thirty_day_change, total_volume, market_cap]
       }
     ) {
       id
@@ -32,6 +32,8 @@ export const UPSERT_COLLECTION_WITH_STATS = gql`
       one_day_change
       seven_day_change
       thirty_day_change
+      total_volume
+      market_cap
     }
   }
 `

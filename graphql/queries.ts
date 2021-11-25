@@ -62,6 +62,8 @@ export const GET_COLLECTION_BY_CONTRACT_ADDRESS = gql`
       thirty_day_change
       twitter_username
       updated_at
+      total_volume
+      market_cap
     }
   }
 `

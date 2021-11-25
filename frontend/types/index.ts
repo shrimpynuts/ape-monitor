@@ -12,6 +12,8 @@ export interface ICollection {
   one_day_change?: number
   seven_day_change?: number
   thirty_day_change?: number
+  market_cap?: number
+  total_volume?: number
 }
 
 export interface IAsset {

@@ -90,20 +90,23 @@ function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
       },
       {
         Header: `Volume`,
-        accessor: 'stats',
+        accessor: `collection.total_volume`,
         id: 'Volume',
-        Cell: ({ cell: { value } }: CellProps<any>) => (
-          <div>
-            {value ? (
-              <span className="flex justify-start space-x-2">
-                <img src="/eth-logo.svg" alt="eth logo" width="11" />
-                <span>{convertNumberToRoundedString(value.total_volume)}</span>
-              </span>
-            ) : (
-              ''
-            )}
-          </div>
-        ),
+        Cell: ({ cell: { value } }: CellProps<any>) => {
+          console.log(value)
+          return (
+            <div>
+              {value !== null ? (
+                <span className="flex justify-start space-x-2">
+                  <img src="/eth-logo.svg" alt="eth logo" width="11" />
+                  <span>{convertNumberToRoundedString(value)}</span>
+                </span>
+              ) : (
+                ''
+              )}
+            </div>
+          )
+        },
         disableFilters: true,
         width: 120,
       },

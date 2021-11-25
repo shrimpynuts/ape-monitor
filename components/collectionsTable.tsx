@@ -7,6 +7,7 @@ import { ICollectionsWithAssets } from '../frontend/types'
 import DeltaDisplay from './util/deltaDisplay'
 
 import Table from './table'
+import Spinner from './util/spinner'
 interface IProps {
   collectionsWithAssets: ICollectionsWithAssets
   loading: boolean
@@ -153,7 +154,7 @@ function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
 
   return (
     <div className="w-full">
-      <Table columns={columns} data={sortedCollections} isMobile={isMobile} loading={loading} />
+      <Table columns={columns} data={sortedCollections} isMobile={isMobile} replaceTableBody={loading && <Spinner />} />
     </div>
   )
 }

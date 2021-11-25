@@ -10,7 +10,7 @@ import { ITradeData, IAddressData, ICollectionsWithAssets } from '../frontend/ty
 import ProfileBanner from '../components/profile/profileBanner'
 import HighlightedTrades from '../components/highlightedTrades'
 import Navbar from '../components/layout/navbar'
-import AllTrades from '../components/allTrades'
+import TradesTable from '../components/tradesTable'
 import TabOptions from '../components/tabOptions'
 import { INSERT_USER } from '../graphql/mutations'
 import useWeb3Container from '../hooks/useWeb3User'
@@ -121,17 +121,17 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
     }
   }, [address, addressFound])
 
-  // /**
-  //  * Fetches trade data, storing in state
-  //  */
-  // useEffect(() => {
-  //   fetch(`${getServer()}/api/opensea/trades/${address}`)
-  //     .then((resp) => resp.json())
-  //     .then((data) => {
-  //       setTradeData(data)
-  //       setTradesLoading(false)
-  //     })
-  // }, [address])
+  /**
+   * Fetches trade data, storing in state
+   */
+  useEffect(() => {
+    fetch(`${getServer()}/api/opensea/trades/${address}`)
+      .then((resp) => resp.json())
+      .then((data) => {
+        setTradeData(data)
+        setTradesLoading(false)
+      })
+  }, [address])
 
   const metadataTitle = addressFound
     ? `${ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}\'s NFT Portfolio`
@@ -207,7 +207,7 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
         {currentTab.index === 1 && (
           <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
             <div className="flex flex-col flex-wrap space-y-2 mx-4">
-              <AllTrades tradeData={tradeData} loading={tradesLoading} />
+              <TradesTable tradeData={tradeData} loading={tradesLoading} addressData={addressData} />
             </div>
           </div>
         )}

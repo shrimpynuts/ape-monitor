@@ -4,16 +4,19 @@ import { CellProps } from 'react-table'
 import useMobileDetect from 'use-mobile-detect-hook'
 
 import { convertNumberToRoundedString, usdFormatter } from '../lib/util'
+import { ITradeData, IAddressData } from '../frontend/types'
 import useWeb3Container from '../hooks/useWeb3User'
-
+import Spinner from './util/spinner'
+import Emoji from './util/emoji'
 import Table from './table'
 
 interface IProps {
-  collections: any[]
+  tradeData: ITradeData | undefined
   loading: boolean
+  addressData: IAddressData
 }
 
-function TradesTable({ collections, loading }: IProps) {
+function TradesTable({ tradeData, loading, addressData }: IProps) {
   // Detect if window is mobile
   const detectMobile = useMobileDetect()
   const isMobile = detectMobile.isMobile()
@@ -118,27 +121,35 @@ function TradesTable({ collections, loading }: IProps) {
     [isMobile, ethPrice],
   )
 
-  // Sort the collections by total profit by default
-  const sortedCollections = collections.sort((collectionA, collectionB) => {
-    if ((collectionA.totalProfit || 0) > (collectionB.totalProfit || 0)) {
-      return -1
-    }
+  const trades: any[] = tradeData ? Object.values(tradeData.tradesByCollection) : []
 
-    if ((collectionA.totalProfit || 0) < (collectionB.totalProfit || 0)) {
-      return 1
-    }
-
-    return 0
-  })
+  // If the trades data is still loading, make the table body a spinner
+  // Otherwise, if there is no trade data, the table body is text
+  // Else, there is no inner, and we display the trades table normally
+  let replaceTableBody
+  if (loading) {
+    replaceTableBody = <Spinner />
+  } else if (trades.length === 0) {
+    const name = addressData.ensDomain ? addressData.ensDomain : addressData.address
+    replaceTableBody = (
+      <div className="leading-2">
+        <h1 className="text-center mb-2">{name} hasn't ever sold.</h1>
+        <h2 className="text-center">
+          <Emoji className="text-4xl cursor-pointer" label="logo" symbol="💎" />
+          <Emoji className="text-4xl cursor-pointer" label="logo" symbol="🙌" />
+        </h2>
+      </div>
+    )
+  }
 
   return (
     <div className="w-full">
       <Table
         columns={columns}
-        data={sortedCollections}
+        data={trades}
         isMobile={isMobile}
-        loading={loading}
         dontIncludeSubrowCostBasis
+        replaceTableBody={replaceTableBody}
       />
     </div>
   )

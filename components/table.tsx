@@ -13,10 +13,6 @@ import {
 } from 'react-table'
 
 import { ExternalLinkIcon } from '@heroicons/react/solid'
-// import { RowLoader } from './loaders'
-import Spinner from './util/spinner'
-
-import web3 from 'web3'
 
 // https://codesandbox.io/s/react-table-typescript-xl7l4
 
@@ -26,8 +22,10 @@ type IProps = {
   columns: Column<Data>[]
   data: Data[]
   isMobile: boolean
-  loading: boolean
   dontIncludeSubrowCostBasis?: boolean
+  // JSX Element that replaces the table body if necessary
+  // Use for spinner or other displays that take up body
+  replaceTableBody?: React.ReactNode
 }
 
 interface TableColumn<D extends object = {}>
@@ -87,7 +85,7 @@ const ResizerComponent: FC = (props) => {
   )
 }
 
-const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrowCostBasis = false }) => {
+const Table: FC<IProps> = ({ columns, data, isMobile, replaceTableBody, dontIncludeSubrowCostBasis = false }) => {
   const defaultColumn = {
     minWidth: 20,
     width: isMobile ? 100 : 200,
@@ -145,11 +143,9 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrow
             </tr>
           </thead>
           <tbody className="bg-white -mb-2 text-gray-500 dark:text-gray-100 dark:bg-blackPearl dark:divide-darkblue">
-            {loading ? (
+            {replaceTableBody ? (
               <tr className="p-32 flex flex-col justify-center items-center space-y-8">
-                <td>
-                  <Spinner />
-                </td>
+                <td>{replaceTableBody}</td>
               </tr>
             ) : (
               <>

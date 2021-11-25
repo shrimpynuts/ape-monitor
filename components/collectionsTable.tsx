@@ -93,7 +93,6 @@ function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
         accessor: `collection.total_volume`,
         id: 'Volume',
         Cell: ({ cell: { value } }: CellProps<any>) => {
-          console.log(value)
           return (
             <div>
               {value !== null ? (

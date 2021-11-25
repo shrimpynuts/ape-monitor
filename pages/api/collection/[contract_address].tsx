@@ -144,6 +144,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
         seven_day_change: stats.seven_day_change,
         thirty_day_change: stats.thirty_day_change,
         total_volume: stats.total_volume,
+        market_cap: stats.market_cap,
       }
 
       // Add the data to our database

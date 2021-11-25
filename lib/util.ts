@@ -41,9 +41,35 @@ export function calculateTotalValue(collectionsWithAssets: ICollectionsWithAsset
   }, 0)
 }
 
+export function calculatePreviousDayTotalValue(collectionsWithAssets: ICollectionsWithAssets) {
+  const calculateYesterdaysFloorPrice = (floor_price: number, one_day_change: number | undefined) => {
+    one_day_change = one_day_change === undefined ? 0 : one_day_change
+    const percentage = one_day_change / 100
+    const yesterdaysFloorPrice = floor_price / (percentage + 1)
+    return yesterdaysFloorPrice
+  }
+  return Object.values(collectionsWithAssets).reduce((totalValue: number, { assets, collection }) => {
+    // If collection value is not null, we multiply the num assets by floor price,
+    // otherwise consider this collection's value as 0
+
+    const collectionValue = collection.floor_price
+      ? assets.length * calculateYesterdaysFloorPrice(collection.floor_price, collection.one_day_change)
+      : 0
+    return totalValue + collectionValue
+  }, 0)
+}
+
 // TODO: Double check this total change calculation
 export function calculateTotalChange(collectionsWithAssets: ICollectionsWithAssets) {
-  return 1
+  const totalValue = calculateTotalValue(collectionsWithAssets)
+  const previousDayValue = calculatePreviousDayTotalValue(collectionsWithAssets)
+  const percentChange = ((previousDayValue - totalValue) / Math.abs(totalValue)) * 100
+
+  if (previousDayValue > totalValue) {
+    return percentChange * -1
+  } else {
+    return percentChange
+  }
 }
 
 export function calculateCostBasis(assets: IAsset[]) {

@@ -159,7 +159,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrow
                   return (
                     <>
                       <tr
-                        className="relative flex hover:bg-gray-100 dark:hover:bg-black transition-all cursor-pointer"
+                        className="relative flex select-none hover:bg-gray-100 dark:hover:bg-black transition-all cursor-pointer"
                         {...row.getRowProps()}
                         style={{
                           width: '100%',
@@ -184,7 +184,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrow
                         })}
                       </tr>
                       {isExpanded && (
-                        <table className="table-fixed min-w-full divide-y divide-gray-300 dark:divide-darkblue">
+                        <table className="select-none table-fixed min-w-full divide-y divide-gray-300 dark:divide-darkblue">
                           <thead className="border-t border-gray-300 dark:border-darkblue bg-gray-100 dark:bg-blackPearl">
                             <tr>
                               <th className="flex px-6 text-left border-gray-300 dark:border-darkblue text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">

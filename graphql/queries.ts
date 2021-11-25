@@ -45,6 +45,14 @@ export const GET_COLLECTION_BY_SLUG = gql`
     }
   }
 `
+export const GET_MOST_STALE_COLLECTIONS = gql`
+  query GetMostStaleCollections {
+    collections(order_by: { updated_at: asc }) {
+      contract_address
+      updated_at
+    }
+  }
+`
 
 export const GET_COLLECTION_BY_CONTRACT_ADDRESS = gql`
   query GetCollectionByContractAddress($contract_address: String!) {

@@ -1,27 +1,46 @@
 export interface ICollection {
-  stats: {
-    one_day_volume: number
-    one_day_change: number
-    one_day_sales: number
-    one_day_average_price: number
-    seven_day_volume: number
-    seven_day_change: number
-    seven_day_sales: number
-    seven_day_average_price: number
-    thirty_day_volume: number
-    thirty_day_change: number
-    thirty_day_sales: number
-    thirty_day_average_price: number
-    total_volume: number
-    total_sales: number
-    total_supply: number
-    count: number
-    num_owners: number
-    average_price: number
-    num_reports: number
-    market_cap: number
-    floor_price: number | undefined
+  created_at: string
+  updated_at: string
+  name: string
+  contract_address: string
+  slug: string
+  twitter_username?: string
+  discord_url?: string
+  external_url?: string
+  image_url?: string
+  floor_price?: number
+  one_day_change?: number
+  seven_day_change?: number
+  thirty_day_change?: number
+  market_cap?: number
+  total_volume?: number
+}
+
+export interface IAsset {
+  name: string
+  contract_address: string
+  token_id: string
+  description?: string
+  image_url?: string
+  link?: string
+
+  // Only when fetching assets from Opensea
+  last_sale?: number
+}
+
+export interface ICollectionsWithAssets {
+  [contractAddress: string]: {
+    collection: ICollection
+    assets: IAsset[]
   }
+}
+
+export interface IOpenSeaEvent {
+  [key: string]: any
+}
+
+export interface IAssetsGroupedByContract {
+  [contract_address: string]: IAsset[]
 }
 
 export interface ITotalStats {
@@ -36,11 +55,6 @@ export interface IAddressData {
   ensDomain?: string
   addressFound: boolean
 }
-export interface IOpenseaData {
-  collections: ICollection[]
-  totalStats: ITotalStats
-}
-
 export interface ITradeData {
   [key: string]: any
 }

@@ -13,10 +13,6 @@ import {
 } from 'react-table'
 
 import { ExternalLinkIcon } from '@heroicons/react/solid'
-// import { RowLoader } from './loaders'
-import Spinner from './util/spinner'
-
-import web3 from 'web3'
 
 // https://codesandbox.io/s/react-table-typescript-xl7l4
 
@@ -26,8 +22,10 @@ type IProps = {
   columns: Column<Data>[]
   data: Data[]
   isMobile: boolean
-  loading: boolean
   dontIncludeSubrowCostBasis?: boolean
+  // JSX Element that replaces the table body if necessary
+  // Use for spinner or other displays that take up body
+  replaceTableBody?: React.ReactNode
 }
 
 interface TableColumn<D extends object = {}>
@@ -87,7 +85,7 @@ const ResizerComponent: FC = (props) => {
   )
 }
 
-const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrowCostBasis = false }) => {
+const Table: FC<IProps> = ({ columns, data, isMobile, replaceTableBody, dontIncludeSubrowCostBasis = false }) => {
   const defaultColumn = {
     minWidth: 20,
     width: isMobile ? 100 : 200,
@@ -136,7 +134,6 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrow
                         key={ii}
                       >
                         {column.render('Header')}
-                        <div {...column} />
                         <ResizerComponent {...column.getResizerProps()} />
                       </div>
                     )
@@ -146,10 +143,10 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrow
             </tr>
           </thead>
           <tbody className="bg-white -mb-2 text-gray-500 dark:text-gray-100 dark:bg-blackPearl dark:divide-darkblue">
-            {loading ? (
-              <div className="p-32 flex flex-col justify-center items-center space-y-8">
-                <Spinner />
-              </div>
+            {replaceTableBody ? (
+              <tr className="p-32 flex flex-col justify-center items-center space-y-8">
+                <td>{replaceTableBody}</td>
+              </tr>
             ) : (
               <>
                 {rows.map((row, i) => {
@@ -158,7 +155,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrow
                   return (
                     <>
                       <tr
-                        className="relative flex hover:bg-gray-100 dark:hover:bg-black transition-all cursor-pointer"
+                        className="relative flex select-none hover:bg-gray-100 dark:hover:bg-black transition-all cursor-pointer"
                         {...row.getRowProps()}
                         style={{
                           width: '100%',
@@ -183,7 +180,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrow
                         })}
                       </tr>
                       {isExpanded && (
-                        <table className="table-fixed min-w-full divide-y divide-gray-300 dark:divide-darkblue">
+                        <table className="select-none table-fixed min-w-full divide-y divide-gray-300 dark:divide-darkblue">
                           <thead className="border-t border-gray-300 dark:border-darkblue bg-gray-100 dark:bg-blackPearl">
                             <tr>
                               <th className="flex px-6 text-left border-gray-300 dark:border-darkblue text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
@@ -205,14 +202,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading, dontIncludeSubrow
                                   </td>
                                   {!dontIncludeSubrowCostBasis && (
                                     <td className="w-1/4 px-4 py-2">
-                                      {asset.last_sale ? (
-                                        <div>
-                                          {web3.utils.fromWei(asset.last_sale.total_price)}{' '}
-                                          {asset.last_sale.payment_token.symbol}
-                                        </div>
-                                      ) : (
-                                        <div>Minted</div>
-                                      )}
+                                      {asset.last_sale ? <div>{asset.last_sale}Ξ</div> : <div>Minted</div>}
                                     </td>
                                   )}
                                   <td className="w-1/4 px-4 py-2">

@@ -1,61 +1,46 @@
-import { useMemo, useCallback } from 'react'
+import { useMemo } from 'react'
 import { CellProps } from 'react-table'
 import useMobileDetect from 'use-mobile-detect-hook'
 
-import { convertNumberToRoundedString, getCostBasis } from '../lib/util'
-import { ICollection } from '../frontend/types'
+import { convertNumberToRoundedString, calculateCostBasis } from '../lib/util'
+import { ICollectionsWithAssets } from '../frontend/types'
 import DeltaDisplay from './util/deltaDisplay'
 
 import Table from './table'
-
-/**
- * The possible timespans for opensea price delta data
- */
-const timespans = [
-  { value: '24h', dataPrefix: 'one_day', display: '24hr' },
-  { value: '7d', dataPrefix: 'seven_day', display: '7 Day' },
-  { value: '30d', dataPrefix: 'thirty_day', display: '30 Day' },
-]
-
+import Spinner from './util/spinner'
 interface IProps {
-  collections: ICollection[]
+  collectionsWithAssets: ICollectionsWithAssets
   loading: boolean
 }
 
-function CollectionsTable({ collections, loading }: IProps) {
+function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
   // Detect if window is mobile
   const detectMobile = useMobileDetect()
   const isMobile = detectMobile.isMobile()
-
-  const costBasisSortType = useCallback(({ values: valuesA }: any, { values: valuesB }: any) => {
-    const costBasisA = valuesA.costBasis ? valuesA.costBasis.total : 0
-    const costBasisB = valuesB.costBasis ? valuesB.costBasis.total : 0
-    return costBasisA > costBasisB ? 1 : -1
-  }, [])
 
   const columns = useMemo(
     () => [
       {
         Header: `Collection`,
-        accessor: 'name',
+        accessor: 'collection.name',
         width: isMobile ? 200 : 250,
         Cell: ({ cell: { value, row } }: CellProps<any>) => (
           <div className="flex items-center space-x-3 overflow-ellipsis">
-            <img src={row.original.image_url} className="h-8 w-8 rounded-full" />
+            <img src={row.original.collection.image_url} className="h-8 w-8 rounded-full" />
             <span className="overflow-ellipsis overflow-hidden">{value}</span>
           </div>
         ),
       },
       {
         Header: `Floor Price`,
-        accessor: 'stats',
+        accessor: 'collection.floor_price',
         id: 'floor_price',
         Cell: ({ cell: { value } }: CellProps<any>) => (
           <div>
             {value ? (
               <span className="flex items-center justify-start space-x-2">
                 <img src="/eth-logo.svg" alt="eth logo" width="11" />
-                <span>{convertNumberToRoundedString(value.floor_price)}</span>
+                <span>{convertNumberToRoundedString(value)}</span>
               </span>
             ) : (
               ''
@@ -67,11 +52,11 @@ function CollectionsTable({ collections, loading }: IProps) {
       },
       {
         Header: `24h %`,
-        accessor: `stats.one_day_change`,
+        accessor: `collection.one_day_change`,
         Cell: ({ cell: { value } }: CellProps<any>) => {
           return (
             <div className="flex justify-start">
-              <span>{<DeltaDisplay delta={value} denomination="%" />}</span>
+              <span>{value && <DeltaDisplay delta={value} denomination="%" />}</span>
             </div>
           )
         },
@@ -80,11 +65,11 @@ function CollectionsTable({ collections, loading }: IProps) {
       },
       {
         Header: `7d %`,
-        accessor: `stats.seven_day_change`,
+        accessor: `collection.seven_day_change`,
         Cell: ({ cell: { value } }: CellProps<any>) => {
           return (
             <div className="flex justify-start">
-              <span>{<DeltaDisplay delta={value} denomination="%" />}</span>
+              <span>{value && <DeltaDisplay delta={value} denomination="%" />}</span>
             </div>
           )
         },
@@ -93,11 +78,11 @@ function CollectionsTable({ collections, loading }: IProps) {
       },
       {
         Header: `30d %`,
-        accessor: `stats.thirty_day_change`,
+        accessor: `collection.thirty_day_change`,
         Cell: ({ cell: { value } }: CellProps<any>) => {
           return (
             <div className="flex justify-start">
-              <span>{<DeltaDisplay delta={value} denomination="%" />}</span>
+              <span>{value && <DeltaDisplay delta={value} denomination="%" />}</span>
             </div>
           )
         },
@@ -106,20 +91,22 @@ function CollectionsTable({ collections, loading }: IProps) {
       },
       {
         Header: `Volume`,
-        accessor: 'stats',
+        accessor: `collection.total_volume`,
         id: 'Volume',
-        Cell: ({ cell: { value } }: CellProps<any>) => (
-          <div>
-            {value ? (
-              <span className="flex justify-start space-x-2">
-                <img src="/eth-logo.svg" alt="eth logo" width="11" />
-                <span>{convertNumberToRoundedString(value.total_volume)}</span>
-              </span>
-            ) : (
-              ''
-            )}
-          </div>
-        ),
+        Cell: ({ cell: { value } }: CellProps<any>) => {
+          return (
+            <div>
+              {value !== null ? (
+                <span className="flex justify-start space-x-2">
+                  <img src="/eth-logo.svg" alt="eth logo" width="11" />
+                  <span>{convertNumberToRoundedString(value)}</span>
+                </span>
+              ) : (
+                ''
+              )}
+            </div>
+          )
+        },
         disableFilters: true,
         width: 120,
       },
@@ -127,11 +114,11 @@ function CollectionsTable({ collections, loading }: IProps) {
         Header: `Total Spent`,
         accessor: 'assets',
         Cell: ({ cell: { row } }: CellProps<any>) => {
-          const costBasis = getCostBasis(row.original)
+          const costBasis = calculateCostBasis(row.original.assets)
           return (
             <div className="flex justify-start space-x-2">
               <img src="/eth-logo.svg" alt="eth logo" width="11" />
-              <span>{`${convertNumberToRoundedString(costBasis.total)}`}</span>
+              <span>{`${convertNumberToRoundedString(costBasis)}`}</span>
             </div>
           )
         },
@@ -156,22 +143,18 @@ function CollectionsTable({ collections, loading }: IProps) {
     [isMobile],
   )
 
-  // sort the collections by floor price by default
-  const sortedCollections = collections.sort((collectionA, collectionB) => {
-    if ((collectionA.stats?.floor_price || 0) > (collectionB.stats?.floor_price || 0)) {
-      return -1
-    }
-
-    if ((collectionA.stats?.floor_price || 0) < (collectionB.stats?.floor_price || 0)) {
-      return 1
-    }
-
-    return 0
-  })
+  // Sort the collections by floor price by default
+  const sortedCollections = Object.values(collectionsWithAssets).sort(
+    ({ collection: collectionA }, { collection: collectionB }) => {
+      if ((collectionA?.floor_price || 0) > (collectionB?.floor_price || 0)) return -1
+      if ((collectionA?.floor_price || 0) < (collectionB?.floor_price || 0)) return 1
+      return 0
+    },
+  )
 
   return (
     <div className="w-full">
-      <Table columns={columns} data={sortedCollections} isMobile={isMobile} loading={loading} />
+      <Table columns={columns} data={sortedCollections} isMobile={isMobile} replaceTableBody={loading && <Spinner />} />
     </div>
   )
 }

@@ -28,6 +28,7 @@ import {
   calculateTotalCostBasis,
   calculateTotalValue,
   calculateTotalChange,
+  calculateTotalAssetCount,
 } from '../lib/util'
 
 /**
@@ -65,26 +66,26 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
   ]
   const [currentTab, setCurrentTab] = useState(tabs[0])
 
-  // /**
-  //  * Updates the users data in our database (only if connected and is the owner of this wallet)
-  //  */
-  // useEffect(() => {
-  //   // Make sure the user is connected and the address matches
-  //   if (wallet.isConnected() && wallet.account === address) {
-  //     // Upsert user into DB
-  //     insertUser({
-  //       variables: {
-  //         user: {
-  //           address: address,
-  //           ensDomain: ensDomain,
-  //           totalValue: openseaData.totalStats.totalValue,
-  //           totalAssetCount: openseaData.totalStats.totalAssetCount,
-  //           totalCostBasis: openseaData.totalStats.totalCostBasis,
-  //         },
-  //       },
-  //     }).catch(console.error)
-  //   }
-  // }, [openseaData, wallet])
+  /**
+   * Updates the users data in our database (only if connected and is the owner of this wallet)
+   */
+  useEffect(() => {
+    // Make sure the user is connected and the address matches
+    if (wallet.isConnected() && wallet.account === address) {
+      // Upsert user into DB
+      insertUser({
+        variables: {
+          user: {
+            address: address,
+            ensDomain: ensDomain,
+            totalCostBasis: calculateTotalCostBasis(collectionsWithAssets),
+            totalValue: calculateTotalValue(collectionsWithAssets),
+            totalAssetCount: calculateTotalAssetCount(collectionsWithAssets),
+          },
+        },
+      }).catch(console.error)
+    }
+  }, [collectionsWithAssets, wallet])
 
   /**
    * Fetches assets and collections, storing in state

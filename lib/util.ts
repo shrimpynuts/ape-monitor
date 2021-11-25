@@ -26,6 +26,12 @@ export function convertNumberToRoundedString(n: number, decimalPoints: number = 
 
 /** Calculating profile totals */
 
+export function calculateTotalAssetCount(collectionsWithAssets: ICollectionsWithAssets) {
+  return Object.values(collectionsWithAssets).reduce((totalAssetCount: number, { assets }) => {
+    return totalAssetCount + assets.length
+  }, 0)
+}
+
 export function calculateTotalCostBasis(collectionsWithAssets: ICollectionsWithAssets) {
   return Object.values(collectionsWithAssets).reduce((totalCostBasis: number, { assets }) => {
     return totalCostBasis + calculateCostBasis(assets)

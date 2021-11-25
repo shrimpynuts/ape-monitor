@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { CellProps } from 'react-table'
 import useMobileDetect from 'use-mobile-detect-hook'
 
-import { convertNumberToRoundedString } from '../lib/util'
+import { convertNumberToRoundedString, calculateCostBasis } from '../lib/util'
 import { ICollectionsWithAssets } from '../frontend/types'
 import DeltaDisplay from './util/deltaDisplay'
 
@@ -113,13 +113,11 @@ function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
         Header: `Total Spent`,
         accessor: 'assets',
         Cell: ({ cell: { row } }: CellProps<any>) => {
-          // const costBasis = getCostBasis(row.original)
+          const costBasis = calculateCostBasis(row.original.assets)
           return (
             <div className="flex justify-start space-x-2">
-              {
-                // <img src="/eth-logo.svg" alt="eth logo" width="11" />
-                // <span>{`${convertNumberToRoundedString(costBasis.total)}`}</span>
-              }
+              <img src="/eth-logo.svg" alt="eth logo" width="11" />
+              <span>{`${convertNumberToRoundedString(costBasis)}`}</span>
             </div>
           )
         },

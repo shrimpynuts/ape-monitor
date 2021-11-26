@@ -133,7 +133,7 @@ function TradesTable({ tradeData, loading, addressData }: IProps) {
     const name = addressData.ensDomain ? addressData.ensDomain : addressData.address
     replaceTableBody = (
       <div className="leading-2">
-        <h1 className="text-center mb-2">{name} hasn never ever sold.</h1>
+        <h1 className="text-center mb-2">{name} has never flipped an NFT.</h1>
         <h2 className="text-center">
           <Emoji className="text-4xl cursor-pointer" label="logo" symbol="💎" />
           <Emoji className="text-4xl cursor-pointer" label="logo" symbol="🙌" />

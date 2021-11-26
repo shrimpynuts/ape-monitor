@@ -4,7 +4,7 @@ import {
   getTradesByCollectionAndTradeStatsForOwner,
   unbundleEvents,
   getEventsBySuccessfulSalesAndBuys,
-} from '../../../../lib/opensea'
+} from '../../../../lib/opensea/trades'
 
 /**
  * Fetches the sales of the given address using the Opensea API.

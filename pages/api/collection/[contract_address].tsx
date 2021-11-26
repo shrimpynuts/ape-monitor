@@ -112,10 +112,6 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
     const collection = data.collections[0]
     const slug = collection.slug
 
-    // Determine if data is stale (more than an hour old)
-    const ONE_HOUR = 60 * 60 * 1000
-    const isStaleData = Date.now() - new Date(collection.updated_at).getTime() > ONE_HOUR
-
     // Check if stats data has never been fetched
     const statsWasNeverFetched = collection.floor_price === null || collection.one_day_change === null
 

@@ -3,7 +3,7 @@ import { Dialog, Transition } from '@headlessui/react'
 
 import Image from 'next/image'
 
-import useWeb3Container from '../hooks/useWeb3User'
+import useWeb3Container from '../../hooks/useWeb3User'
 
 interface IProps {
   isOpen: boolean

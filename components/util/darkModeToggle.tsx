@@ -1,7 +1,7 @@
 import { useTheme } from 'next-themes'
 
 import Switch from './switch'
-import { getNextTheme } from '../lib/util'
+import { getNextTheme } from '../../lib/util'
 
 /**
  * Button to toggle dark/light mode.

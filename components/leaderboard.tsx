@@ -2,9 +2,9 @@ import { useQuery } from '@apollo/client'
 import Link from 'next/link'
 
 import { GET_LEADERBOARD } from '../graphql/queries'
-import Spinner from './spinner'
-import { middleEllipses, fixedNumber } from '../lib/util'
-import Tooltip from '../components/tooltip'
+import Spinner from './util/spinner'
+import { middleEllipses, convertNumberToRoundedString } from '../lib/util'
+import Tooltip from './util/tooltip'
 
 const getRankDisplay = (rank: number) => {
   switch (rank) {
@@ -34,8 +34,8 @@ const SingleLeaderboard = ({
 }) => {
   return (
     <div
-      className="flex flex-1 flex-col p-4 rounded
-    bg-gray-50 dark:bg-gray-800"
+      className="flex flex-1 flex-col p-4 
+      rounded-xl bg-white dark:bg-blackPearl border border-solid border-gray-300 dark:border-darkblue py-4 drop-shadow-md"
     >
       <h3 className="border-b border-gray-200 dark:border-gray-700 pb-2 font-bold text-center uppercase tracking-wide text-xs ">
         {title}
@@ -46,7 +46,7 @@ const SingleLeaderboard = ({
         </div>
       ) : (
         <div className="flex flex-col space-y-2 mt-4">
-          {users.map((user: any, i: number) => (
+          {users?.map((user: any, i: number) => (
             <div className="flex justify-between " key={i}>
               <span className="flex-1">{getRankDisplay(i + 1)}</span>
               <Link href={`/${user.ensDomain || user.address}`}>
@@ -54,7 +54,9 @@ const SingleLeaderboard = ({
                   {user.ensDomain ? user.ensDomain : middleEllipses(user.address, 4, 6, 4)}
                 </span>
               </Link>
-              <span className="flex-1 text-right">{`${fixedNumber(user[accessor])}${denomination}`}</span>
+              <span className="flex-1 text-right">{`${convertNumberToRoundedString(
+                user[accessor],
+              )}${denomination}`}</span>
             </div>
           ))}
         </div>

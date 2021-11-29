@@ -13,10 +13,6 @@ import {
 } from 'react-table'
 
 import { ExternalLinkIcon } from '@heroicons/react/solid'
-// import { RowLoader } from './loaders'
-import Spinner from './spinner'
-
-import web3 from 'web3'
 
 // https://codesandbox.io/s/react-table-typescript-xl7l4
 
@@ -26,7 +22,10 @@ type IProps = {
   columns: Column<Data>[]
   data: Data[]
   isMobile: boolean
-  loading: boolean
+  dontIncludeSubrowCostBasis?: boolean
+  // JSX Element that replaces the table body if necessary
+  // Use for spinner or other displays that take up body
+  replaceTableBody?: React.ReactNode
 }
 
 interface TableColumn<D extends object = {}>
@@ -86,7 +85,7 @@ const ResizerComponent: FC = (props) => {
   )
 }
 
-const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
+const Table: FC<IProps> = ({ columns, data, isMobile, replaceTableBody, dontIncludeSubrowCostBasis = false }) => {
   const defaultColumn = {
     minWidth: 20,
     width: isMobile ? 100 : 200,
@@ -121,7 +120,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
             <tr>
               {headerGroups.map((headerGroup, i) => (
                 <th
-                  className="flex px-5 pb-1 text-left border-b border-gray-300 dark:border-darkblue text-xs font-bold uppercase text-gray-500 dark:text-white"
+                  className="flex text-left border-b border-gray-300 dark:border-darkblue text-xs font-bold uppercase text-gray-500 dark:text-white"
                   {...headerGroup.getHeaderGroupProps()}
                   style={{}}
                   key={i}
@@ -129,9 +128,12 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                   {headerGroup.headers.map((c, ii) => {
                     const column = c as unknown as TableColumn<Data>
                     return (
-                      <div className="p-2" {...column.getHeaderProps(column.getSortByToggleProps())} key={ii}>
+                      <div
+                        className="p-2 md:px-4 md:py-3"
+                        {...column.getHeaderProps(column.getSortByToggleProps())}
+                        key={ii}
+                      >
                         {column.render('Header')}
-                        <div {...column} />
                         <ResizerComponent {...column.getResizerProps()} />
                       </div>
                     )
@@ -141,10 +143,10 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
             </tr>
           </thead>
           <tbody className="bg-white -mb-2 text-gray-500 dark:text-gray-100 dark:bg-blackPearl dark:divide-darkblue">
-            {loading ? (
-              <div className="p-32 flex flex-col justify-center items-center space-y-8">
-                <Spinner />
-              </div>
+            {replaceTableBody ? (
+              <tr className="p-32 flex flex-col justify-center items-center space-y-8">
+                <td>{replaceTableBody}</td>
+              </tr>
             ) : (
               <>
                 {rows.map((row, i) => {
@@ -153,8 +155,11 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                   return (
                     <>
                       <tr
-                        className="relative flex hover:bg-gray-100 dark:hover:bg-black transition-all cursor-pointer"
+                        className="relative flex select-none hover:bg-gray-100 dark:hover:bg-black transition-all cursor-pointer"
                         {...row.getRowProps()}
+                        style={{
+                          width: '100%',
+                        }}
                         key={i}
                         onClick={() => {
                           // If this row is already expanded, filter it out from the state of expanded row indexes
@@ -175,12 +180,12 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                         })}
                       </tr>
                       {isExpanded && (
-                        <table className="table-fixed min-w-full divide-y divide-gray-300 dark:divide-darkblue">
+                        <table className="select-none table-fixed min-w-full divide-y divide-gray-300 dark:divide-darkblue">
                           <thead className="border-t border-gray-300 dark:border-darkblue bg-gray-100 dark:bg-blackPearl">
                             <tr>
                               <th className="flex px-6 text-left border-gray-300 dark:border-darkblue text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
                                 <div className="px-4 py-2 w-1/2">Name</div>
-                                <div className="px-4 py-2 w-1/4">Cost Basis</div>
+                                {!dontIncludeSubrowCostBasis && <div className="px-4 py-2 w-1/4">Cost Basis</div>}
                                 <div className="px-4 py-2 w-1/4">Opensea</div>
                               </th>
                             </tr>
@@ -195,16 +200,11 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                                       <span>{asset.name}</span>
                                     </div>
                                   </td>
-                                  <td className="w-1/4 px-4 py-2">
-                                    {asset.last_sale ? (
-                                      <div>
-                                        {web3.utils.fromWei(asset.last_sale.total_price)}{' '}
-                                        {asset.last_sale.payment_token.symbol}
-                                      </div>
-                                    ) : (
-                                      <div>Minted</div>
-                                    )}
-                                  </td>
+                                  {!dontIncludeSubrowCostBasis && (
+                                    <td className="w-1/4 px-4 py-2">
+                                      {asset.last_sale ? <div>{asset.last_sale}Ξ</div> : <div>Minted</div>}
+                                    </td>
+                                  )}
                                   <td className="w-1/4 px-4 py-2">
                                     <div className="flex items-center h-full">
                                       <a href={asset.permalink} target="_blank" rel="noreferrer">
@@ -215,8 +215,6 @@ const Table: FC<IProps> = ({ columns, data, isMobile, loading }) => {
                                 </tr>
                               )
                             })}
-
-                            <tr className=" relative flex px-6 divide-x divide-gray-300 dark:divide-gray-700"></tr>
                           </tbody>
                         </table>
                       )}

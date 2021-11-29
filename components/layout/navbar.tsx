@@ -5,14 +5,14 @@ import Link from 'next/link'
 import { LogoutIcon } from '@heroicons/react/solid'
 import { useRouter } from 'next/router'
 
-import useWeb3Container from '../hooks/useWeb3User'
-import AddressPill from './addressPill'
-import Button from './button'
+import useWeb3Container from '../../hooks/useWeb3User'
+import AddressPill from '../util/addressPill'
+import Button from '../util/button'
 import ConnectModal from './connectWalletModal'
-import Searchbar from '../components/searchbar'
-import DarkModeToggle from './darkModeToggle'
-import Emoji from './emoji'
-import { getServer } from '../lib/util'
+import Searchbar from '../searchbar'
+import DarkModeToggle from '../util/darkModeToggle'
+import Emoji from '../util/emoji'
+import { getServer } from '../../lib/util'
 
 interface IProps {
   displaySearchbar?: boolean

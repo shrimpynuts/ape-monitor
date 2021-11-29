@@ -1,103 +1,7 @@
 import web3 from 'web3'
 
-import { getCostBasis } from './util'
-export interface IOpenSeaEvent {
-  [key: string]: any
-}
-
-export const getCollectionsForOwner = async (ownerAddress: string) => {
-  const resp = await fetch(`https://api.opensea.io/api/v1/collections?asset_owner=${ownerAddress}&offset=0&limit=300`)
-  const collections = await resp.json()
-  return collections
-}
-
-export const getAssetsForOwner = async (ownerAddress: string) => {
-  let totalAssets: any[] = []
-  // Infinite loop until all assets are fetched
-  while (1) {
-    // Fetch with address and the current offset set to the number of already fetched assets
-    const resp = await fetch(
-      `https://api.opensea.io/api/v1/assets?owner=${ownerAddress}&order_direction=desc&offset=${totalAssets.length}&limit=50`,
-    )
-    const { assets } = await resp.json()
-    totalAssets = [...totalAssets, ...assets]
-
-    // If we get less than the limit of 50 assets, we know we've fetched everything
-    if (assets.length < 50) break
-  }
-  return totalAssets
-}
-
-export const getCollectionStats = (slug: string) => {
-  return fetch(`https://api.opensea.io/api/v1/collection/${slug}/stats`)
-}
-
-export const getAssetsGroupedByCollectionForOwner = async (ownerAddress: string) => {
-  console.time(`getAssetsForOwner for ${ownerAddress}`)
-
-  // Get all assets for the given address
-  const assets = await getAssetsForOwner(ownerAddress)
-  console.timeEnd(`getAssetsForOwner for ${ownerAddress}`)
-
-  // Group all assets by collection slug
-  const byCollection = assets.reduce((acc: any, asset: any) => {
-    const slug = asset.collection.slug
-
-    // Prune the asset data
-    const prunedAsset = {
-      last_sale: asset.last_sale,
-      image_thumbnail_url: asset.image_thumbnail_url,
-      name: asset.name,
-      permalink: asset.permalink,
-      // traits: asset.traits,
-      // token_metadata: asset.token_metadata,
-      external_link: asset.external_link,
-      listing_date: asset.listing_date,
-      top_bid: asset.top_bid,
-      description: asset.description,
-    }
-
-    if (acc[slug]) {
-      acc[slug].assets.push(prunedAsset)
-    } else {
-      // Store collection data
-      const collectionData = asset.collection
-
-      // Prune collection data
-      const prunedCollection = {
-        name: collectionData.name,
-        stats: collectionData.stats,
-        slug: collectionData.slug,
-        image_url: collectionData.image_url,
-        twitter_username: collectionData.twitter_username,
-        discord_url: collectionData.discord_url,
-        external_url: collectionData.external_url,
-      }
-      acc[slug] = { ...prunedCollection, assets: [prunedAsset] }
-    }
-    return acc
-  }, {})
-
-  console.time(`all getCollectionStats for ${ownerAddress}`)
-  // Add stats and costBasis to byCollections object
-  const results = await Promise.all(
-    Object.keys(byCollection).map(async (collectionSlug: any) => {
-      const collection = byCollection[collectionSlug]
-      return getCollectionStats(collectionSlug)
-        .then((response) => response.json())
-        .then(({ stats }) => {
-          return { ...collection, stats, costBasis: getCostBasis(collection) }
-        })
-        .catch(() => {
-          // TODO: handle failed stats gracefully
-          return { ...collection, stats: { error: 'could not fetch stats!' }, costBasis: null }
-        })
-    }),
-  )
-
-  console.timeEnd(`all getCollectionStats for ${ownerAddress}`)
-  return results
-}
+import { IOpenSeaEvent } from '../../frontend/types'
+import { openseaFetchHeaders } from './config'
 
 /**
  * Fetches the events (buy/sells) for a given address
@@ -107,14 +11,20 @@ export const getEventsForOwner = async (ownerAddress: string) => {
   const limit = 300
   // Infinite loop until all asset_events are fetched
   while (1) {
-    // Fetch with address and the current offset set to the number of already fetched asset_events
-    const { asset_events } = await fetch(
-      `https://api.opensea.io/api/v1/events?account_address=${ownerAddress}&only_opensea=false&offset=${totalAssetEvents.length}&limit=${limit}`,
-    ).then((resp) => resp.json())
-    totalAssetEvents = [...totalAssetEvents, ...asset_events]
+    // Construct request url
+    const openseaEndpoint = `https://api.opensea.io/api/v1/events?account_address=${ownerAddress}&only_opensea=false&offset=${totalAssetEvents.length}&limit=${limit}`
 
-    // If we get less than the limit of 50 asset_events, we know we've fetched everything
-    if (asset_events.length < limit) break
+    // Fetch with address and the current offset set to the number of already fetched asset_events
+    const { asset_events } = await fetch(openseaEndpoint, openseaFetchHeaders).then((resp) => resp.json())
+
+    if (asset_events) {
+      totalAssetEvents = [...totalAssetEvents, ...asset_events]
+      // If we get less than the limit of 50 asset_events, we know we've fetched everything
+      if (asset_events.length < limit) break
+    } else {
+      console.error(`\n\nCould not fetch events for endpoint: ${openseaEndpoint}\n\n`)
+      break
+    }
   }
   return totalAssetEvents
 }

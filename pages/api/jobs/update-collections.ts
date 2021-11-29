@@ -3,6 +3,8 @@ import { getCollectionStats } from '../../../lib/opensea/collections'
 import { UPSERT_COLLECTION_WITH_STATS } from '../../../graphql/mutations'
 import { GET_MOST_STALE_COLLECTIONS } from '../../../graphql/queries'
 import client from '../../../backend/graphql-client'
+import { fetchOpenseaCollectionFromContractAddress } from '../../../backend/opensea-helpers'
+import { serialLoopFlow } from '../../../backend/utils'
 import { ICollection } from '../../../frontend/types'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 
@@ -20,40 +22,20 @@ const addCollectionToDB = async (
   })
 }
 
-const fetchOpenseaCollectionFromContractAddress = async (
-  contractAddress: string,
-): Promise<Omit<ICollection, 'created_at' | 'updated_at'>> => {
-  const result = await fetch(`https://api.opensea.io/api/v1/asset_contract/${contractAddress}`).then((res) =>
-    res.json(),
-  )
-  const { collection, detail } = result
-
-  // This means request was throttled
-  if (detail) {
-    console.error(`Request for opensea asset_contract ${contractAddress}: ${detail}`)
-    throw new Error(detail)
-  }
-
-  const prunedCollection = {
-    contract_address: contractAddress,
-    name: collection.name,
-    slug: collection.slug,
-    image_url: collection.image_url,
-    twitter_username: collection.twitter_username,
-    discord_url: collection.discord_url,
-    external_url: collection.external_url,
-  }
-  return prunedCollection
-}
-
 const updateStaleOpenSeaCollection = async ({ contractAddress, i }: { contractAddress: string; i: string }) => {
   if (debug) console.log(`\nUpdating stale collection item ${i} for: ${contractAddress}`)
   try {
-    const collection = await fetchOpenseaCollectionFromContractAddress(contractAddress)
+    let collection
+    try {
+      collection = await fetchOpenseaCollectionFromContractAddress(contractAddress)
+    } catch (e) {
+      return
+    }
     if (debug) console.log(`  Fetching opensea collection stats for ${collection.slug}`)
 
     // Fetch stats
     const stats = await getCollectionStats(collection.slug)
+    if (stats == null) return
 
     // Add stats data to our old collection data
     const collectionWithStats = {
@@ -72,12 +54,6 @@ const updateStaleOpenSeaCollection = async ({ contractAddress, i }: { contractAd
     // Catches error in case the request for opensea contract_address fails
   } catch (error: any) {
     console.log(error)
-  }
-}
-
-export async function serialLoopFlow(jobs: any, doJob: Function) {
-  for (const job of jobs) {
-    await doJob(job)
   }
 }
 

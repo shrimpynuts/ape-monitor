@@ -25,7 +25,13 @@ const addCollectionToDB = async (
 const updateStaleOpenSeaCollection = async ({ contractAddress, i }: { contractAddress: string; i: string }) => {
   if (debug) console.log(`\nUpdating stale collection item ${i} for: ${contractAddress}`)
   try {
-    const collection = await fetchOpenseaCollectionFromContractAddress(contractAddress)
+    let collection
+    try {
+      collection = await fetchOpenseaCollectionFromContractAddress(contractAddress)
+    } catch (e) {
+      console.log(`There was an issue fetching the opensea contract.`)
+      return
+    }
     if (debug) console.log(`  Fetching opensea collection stats for ${collection.slug}`)
 
     // Fetch stats

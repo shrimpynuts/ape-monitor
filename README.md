@@ -65,22 +65,33 @@ COIN_MARKETCAP_API_KEY=""
 - **[Tailwind UI Components](https://tailwindui.com/)**
 - **[Tailwind Community Components](https://tailwindcomponents.com/)**
 
-## Setting up Docker
+## How do I start the hasura console?
 
-#### Setup Hasura locally
+1. Go to `hasura/config.yaml` and commment in the staging `admin_secret` & `endpoint` values.
 
-## When you want to run migrations on production
+2. Go to `hasura/metadata/databases/databases.yaml` and comment in the staging `database_url` value.
+
+From inside the `/hasura` directory, run the following command:
 
 ```bash
-hasura migrate apply --all-databases --endpoint "https://prod-apemonitor.herokuapp.com/" --admin-secret P@3SvzaJgW8t
+$ hasura console
 ```
 
+## How do I run migrations on production?
+
+1. Go to `hasura/config.yaml` and commment in the production `admin_secret` & `endpoint` values.
+
+2. Go to `hasura/metadata/databases/databases.yaml` and comment in the `database_url` value.
+
+3. Run this command to apply migrations
+
 ```bash
-hasura metadata reload --endpoint "https://prod-apemonitor.herokuapp.com/" --admin-secret P@3SvzaJgW8t
+$ hasura migrate apply --all-databases
 ```
 
-# This is to work against staging locally
+4. Run the following two commands to apply metadata/permissions
 
 ```bash
-hasura console --endpoint "https://apemonitor-staging.herokuapp.com/" --admin-secret "vvf84Zj42XCq2I"
+$ hasura metadata apply --endpoint
+$ hasura metadata reload --endpoint
 ```

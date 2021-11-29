@@ -29,13 +29,13 @@ const updateStaleOpenSeaCollection = async ({ contractAddress, i }: { contractAd
     try {
       collection = await fetchOpenseaCollectionFromContractAddress(contractAddress)
     } catch (e) {
-      console.log(`There was an issue fetching the opensea contract.`)
       return
     }
     if (debug) console.log(`  Fetching opensea collection stats for ${collection.slug}`)
 
     // Fetch stats
     const stats = await getCollectionStats(collection.slug)
+    if (stats == null) return
 
     // Add stats data to our old collection data
     const collectionWithStats = {

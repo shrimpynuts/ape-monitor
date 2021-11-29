@@ -25,11 +25,17 @@ const addCollectionToDB = async (
 const updateStaleOpenSeaCollection = async ({ contractAddress, i }: { contractAddress: string; i: string }) => {
   if (debug) console.log(`\nUpdating stale collection item ${i} for: ${contractAddress}`)
   try {
-    const collection = await fetchOpenseaCollectionFromContractAddress(contractAddress)
+    let collection
+    try {
+      collection = await fetchOpenseaCollectionFromContractAddress(contractAddress)
+    } catch (e) {
+      return
+    }
     if (debug) console.log(`  Fetching opensea collection stats for ${collection.slug}`)
 
     // Fetch stats
     const stats = await getCollectionStats(collection.slug)
+    if (stats == null) return
 
     // Add stats data to our old collection data
     const collectionWithStats = {

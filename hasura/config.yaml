@@ -1,6 +1,4 @@
 version: 3
-# endpoint: https://prod-apemonitor.herokuapp.com/
-# admin_secret: P@3SvzaJgW8t
 endpoint: https://apemonitor-staging.herokuapp.com/
 admin_secret: vvf84Zj42XCq2I
 metadata_directory: metadata

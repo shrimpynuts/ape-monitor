@@ -43,7 +43,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
       address: ownerAddress,
     })
 
-    // If there are no results, that means the user doesn't know any NFTs
+    // If there are no results, that means the user doesn't own any NFTs
     if (assets.result === undefined) {
       return res.status(200).json({ assets: [] })
     }
@@ -70,7 +70,6 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
     const prunedAssets = pruneAssets(assets.result)
     // Return assets
     return res.status(200).json({ assets: prunedAssets })
-    // Return assets
   } catch (error) {
     // Return errors
     return res.status(500).json({ error: `Opensea API fetch all NFTs for ${ownerAddress}: ${error}` })

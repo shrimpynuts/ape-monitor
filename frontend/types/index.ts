@@ -3,7 +3,7 @@ export interface ICollection {
   updated_at: string
   name: string
   contract_address: string
-  slug: string
+  slug?: string
   twitter_username?: string
   discord_url?: string
   external_url?: string

@@ -71,7 +71,7 @@ const SingleHighlightedTrade = ({ trade, title }: { trade: any; title: string })
               </>
             ) : (
               <>
-                <Image src="eth-logo.svg" alt="eth logo" width="13" />
+                <img src="eth-logo.svg" alt="eth logo" width="13" height="13" />
                 <span className="text-3xl font-semibold">{convertNumberToRoundedString(trade.totalProfit)}</span>
               </>
             )}

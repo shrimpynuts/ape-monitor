@@ -17,7 +17,7 @@ export function middleEllipses(str: string, cutoffDecimals: number, begginingDec
   return str
 }
 
-export function convertNumberToRoundedString(n: number, decimalPoints: number = 2) {
+export function convertNumberToRoundedString(n: number | undefined, decimalPoints: number = 2) {
   if (!n) return '0'
   const fixedNumber = parseFloat(n.toFixed(decimalPoints))
   const numberWithCommas = fixedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -210,3 +210,16 @@ export const usdFormatter = new Intl.NumberFormat('en-US', {
   //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 })
+
+export const getRankDisplay = (rank: number) => {
+  switch (rank) {
+    case 1:
+      return '🥇'
+    case 2:
+      return '🥈'
+    case 3:
+      return '🥉'
+    default:
+      return `${rank}`
+  }
+}

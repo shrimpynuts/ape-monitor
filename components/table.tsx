@@ -26,6 +26,9 @@ type IProps = {
   // JSX Element that replaces the table body if necessary
   // Use for spinner or other displays that take up body
   replaceTableBody?: React.ReactNode
+
+  // If you don't want to allow users to open subrows at all
+  dontIncludeSubrows?: boolean
 }
 
 interface TableColumn<D extends object = {}>
@@ -85,7 +88,14 @@ const ResizerComponent: FC = (props) => {
   )
 }
 
-const Table: FC<IProps> = ({ columns, data, isMobile, replaceTableBody, dontIncludeSubrowCostBasis = false }) => {
+const Table: FC<IProps> = ({
+  columns,
+  data,
+  isMobile,
+  replaceTableBody,
+  dontIncludeSubrows = false,
+  dontIncludeSubrowCostBasis = false,
+}) => {
   const defaultColumn = {
     minWidth: 20,
     width: isMobile ? 100 : 200,
@@ -179,7 +189,7 @@ const Table: FC<IProps> = ({ columns, data, isMobile, replaceTableBody, dontIncl
                           )
                         })}
                       </tr>
-                      {isExpanded && (
+                      {isExpanded && !dontIncludeSubrows && (
                         <table className="select-none table-fixed min-w-full divide-y divide-gray-300 dark:divide-darkblue">
                           <thead className="border-t border-gray-300 dark:border-darkblue bg-gray-100 dark:bg-blackPearl">
                             <tr>

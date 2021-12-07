@@ -96,11 +96,7 @@ export const GET_TOP_COLLECTIONS = gql`
       market_cap
     }
 
-    totalVolume: collections(
-      order_by: { total_volume: desc_nulls_last }
-      limit: 10
-      where: { floor_price: { _neq: "0" }, updated_at: { _gte: $lastUpdated } }
-    ) {
+    totalVolume: collections(order_by: { total_volume: desc_nulls_last }, limit: 10) {
       contract_address
       discord_url
       created_at
@@ -117,11 +113,7 @@ export const GET_TOP_COLLECTIONS = gql`
       total_volume
       market_cap
     }
-    floorPrice: collections(
-      order_by: { floor_price: desc_nulls_last }
-      limit: 10
-      where: { floor_price: { _neq: "0" }, updated_at: { _gte: $lastUpdated } }
-    ) {
+    floorPrice: collections(order_by: { floor_price: desc_nulls_last }, limit: 10) {
       contract_address
       discord_url
       created_at
@@ -138,11 +130,7 @@ export const GET_TOP_COLLECTIONS = gql`
       total_volume
       market_cap
     }
-    marketCap: collections(
-      order_by: { market_cap: desc_nulls_last }
-      limit: 10
-      where: { floor_price: { _neq: "0" }, updated_at: { _gte: $lastUpdated } }
-    ) {
+    marketCap: collections(order_by: { market_cap: desc_nulls_last }, limit: 10) {
       contract_address
       discord_url
       created_at
@@ -162,7 +150,7 @@ export const GET_TOP_COLLECTIONS = gql`
     oneDayChange: collections(
       order_by: { one_day_change: desc_nulls_last }
       limit: 10
-      where: { floor_price: { _neq: "0" }, updated_at: { _gte: $lastUpdated } }
+      where: { updated_at: { _gte: $lastUpdated } }
     ) {
       contract_address
       discord_url

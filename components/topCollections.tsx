@@ -54,9 +54,15 @@ const SingleTopCollections = ({
                   </a>
                 </Link>
               </div>
-              <span className="flex-1 text-right">{`${convertNumberToRoundedString(
-                collection[accessor],
-              )}${denomination}`}</span>
+              {accessor === 'one_day_change' ? (
+                <span>
+                  {collection[accessor] !== undefined && <DeltaDisplay delta={collection[accessor]} denomination="%" />}
+                </span>
+              ) : (
+                <span className="flex-1 text-right">{`${convertNumberToRoundedString(
+                  collection[accessor],
+                )}${denomination}`}</span>
+              )}
             </div>
           ))}
         </div>
@@ -70,7 +76,7 @@ function TopCollections({}: IProps) {
   const isMobile = detectMobile.isMobile()
 
   const yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
-  const { data, loading } = useQuery(GET_TOP_COLLECTIONS, {
+  const { data, loading, error } = useQuery(GET_TOP_COLLECTIONS, {
     variables: {
       lastUpdated: yesterday.toUTCString(),
     },

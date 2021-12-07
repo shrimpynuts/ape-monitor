@@ -8,6 +8,7 @@ import Leaderboard from '../components/leaderboard'
 import Searchbar from '../components/searchbar'
 import Navbar from '../components/layout/navbar'
 import Button from '../components/util/button'
+import TopCollections from '../components/topCollections'
 
 function getRandomInt(max: number) {
   return Math.floor(Math.random() * max) + 1
@@ -62,10 +63,14 @@ const Home: NextPage = () => {
               <Button onClick={onConnectClick}>Connect to Wallet</Button>
             </>
           )}
-          <img className="m-auto sm:w-full md:w-96" src={`/apes/ape${getRandomInt(8)}.gif`} />
         </div>
         <div className="w-full md:mx-auto md:w-2/3 my-8">
           <Leaderboard />
+        </div>
+      </div>
+      <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
+        <div className="flex flex-col flex-wrap space-y-2 mx-4">
+          <TopCollections />
         </div>
       </div>
     </div>

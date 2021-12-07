@@ -68,7 +68,7 @@ const Home: NextPage = () => {
           <Leaderboard />
         </div>
       </div>
-      <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
+      <div className=" m-auto overflow-hidden mt-4">
         <div className="flex flex-col flex-wrap space-y-2 mx-4">
           <TopCollections />
         </div>

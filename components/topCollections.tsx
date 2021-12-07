@@ -2,8 +2,9 @@ import { useMemo } from 'react'
 import { CellProps } from 'react-table'
 import useMobileDetect from 'use-mobile-detect-hook'
 import { useQuery } from '@apollo/client'
+import Link from 'next/link'
 
-import { convertNumberToRoundedString, calculateCostBasis } from '../lib/util'
+import { convertNumberToRoundedString, getRankDisplay } from '../lib/util'
 import { ICollection } from '../frontend/types'
 import DeltaDisplay from './util/deltaDisplay'
 import { GET_TOP_COLLECTIONS } from '../graphql/queries'
@@ -13,8 +14,58 @@ import Spinner from './util/spinner'
 
 interface IProps {}
 
-function CollectionsTable({}: IProps) {
-  // Detect if window is mobile
+const SingleTopCollections = ({
+  collections,
+  loading,
+  title,
+  accessor,
+  denomination,
+}: {
+  title: string
+  collections: ICollection[]
+  loading: boolean
+  accessor: 'one_day_change' | 'total_volume' | 'market_cap' | 'floor_price'
+  denomination: string
+}) => {
+  return (
+    <div
+      className="flex flex-1 flex-col p-4 
+      rounded-xl bg-white dark:bg-blackPearl border border-solid border-gray-300 dark:border-darkblue py-4 drop-shadow-md"
+    >
+      <h3 className="border-b border-gray-200 dark:border-gray-700 pb-2 font-bold text-center uppercase tracking-wide text-xs ">
+        {title}
+      </h3>
+      {loading ? (
+        <div className="py-8">
+          <Spinner />
+        </div>
+      ) : (
+        <div className="flex flex-col space-y-2 mt-4">
+          {collections?.map((collection, i: number) => (
+            <div className="flex justify-between " key={i}>
+              <div className="flex space-x-4">
+                <span className="flex-1 w-4 text-center">{getRankDisplay(i + 1)}</span>
+                <Link href={`https://opensea.io/collection/${collection.slug}`} passHref>
+                  <a target="_blank" rel="noreferrer">
+                    <p className="flex-1 cursor-pointer hover:text-yellow-600 hover:font-bold truncate w-52 md:w-36">
+                      <img src={collection.image_url} className="h-8 w-8 rounded-full inline mr-2" />
+                      {collection.name}
+                    </p>
+                  </a>
+                </Link>
+              </div>
+              <span className="flex-1 text-right">{`${convertNumberToRoundedString(
+                collection[accessor],
+              )}${denomination}`}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function TopCollections({}: IProps) {
   const detectMobile = useMobileDetect()
   const isMobile = detectMobile.isMobile()
 
@@ -154,6 +205,40 @@ function CollectionsTable({}: IProps) {
         <h1 className="text-center relative text-xl font-bold tracking-wide">Top Collections</h1>
       </div>
 
+      <div className="flex flex-col md:flex-row space-between space-y-4 md:space-y-0 md:space-x-4 mt-4">
+        <SingleTopCollections
+          title="One Day Change"
+          collections={data?.oneDayChange}
+          denomination="Ξ"
+          accessor={'one_day_change'}
+          loading={loading}
+        />
+        <SingleTopCollections
+          title="Total Volume"
+          collections={data?.totalVolume}
+          denomination="Ξ"
+          accessor={'total_volume'}
+          loading={loading}
+        />
+        <SingleTopCollections
+          title="Market Cap"
+          collections={data?.marketCap}
+          denomination="Ξ"
+          accessor={'market_cap'}
+          loading={loading}
+        />
+        <SingleTopCollections
+          title="Floor Price"
+          collections={data?.floorPrice}
+          denomination="Ξ"
+          accessor={'floor_price'}
+          loading={loading}
+        />
+      </div>
+
+      <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full mt-4">
+        <h1 className="text-center relative text-xl font-bold tracking-wide">All Collections</h1>
+      </div>
       <div className="mt-4">
         <Table
           columns={columns}
@@ -167,4 +252,4 @@ function CollectionsTable({}: IProps) {
   )
 }
 
-export default CollectionsTable
+export default TopCollections

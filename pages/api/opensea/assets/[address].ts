@@ -3,6 +3,7 @@ import { ICollection } from '../../../../frontend/types'
 import { pruneAndRemoveDuplicateCollections, getAssetsForOwner, pruneAssets } from '../../../../lib/opensea/collections'
 import { UPSERT_COLLECTION_WITHOUT_STATS } from '../../../../graphql/mutations'
 import client from '../../../../backend/graphql-client'
+import Moralis from '../../../../backend/moralisFactory'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 
 // To use sample/mock data in order not to make opensea /assets fetch, uncomment the two lines below
@@ -37,10 +38,18 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     // Fetch all assets from Opensea
-    const assets = await getAssetsForOwner(ownerAddress)
+    const assets = await Moralis.Web3API.account.getNFTs({
+      chain: 'eth',
+      address: ownerAddress,
+    })
+
+    // If there are no results, that means the user doesn't own any NFTs
+    if (assets.result === undefined) {
+      return res.status(200).json({ assets: [] })
+    }
 
     // Separate the collections from the assets
-    const collections = pruneAndRemoveDuplicateCollections(assets)
+    const collections = pruneAndRemoveDuplicateCollections(assets.result)
 
     // Upsert each collection to the db
     collections.forEach((collection) => {
@@ -57,9 +66,8 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
       })
     })
 
-    // Prune Opensea assets into IAsset objects
-    const prunedAssets = pruneAssets(assets)
-
+    // Prune the response from Moralis assets into IAsset objects
+    const prunedAssets = pruneAssets(assets.result)
     // Return assets
     return res.status(200).json({ assets: prunedAssets })
   } catch (error) {

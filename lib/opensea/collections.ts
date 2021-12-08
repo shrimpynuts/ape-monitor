@@ -55,21 +55,21 @@ export const pruneAndRemoveDuplicateCollections = (assets: any[]): Omit<ICollect
   // Create an object where the key is the collection slug and the value is the pruned collection data
   const byCollection = assets.reduce(
     (acc: { [key: string]: Omit<ICollection, 'updated_at' | 'created_at'> }, asset: any) => {
-      const { collection } = asset
+      const { token_address } = asset
 
       // Add the pruned collection to the accumulated object if not already there
-      if (!acc[collection.slug]) {
+      if (!acc[token_address]) {
         // Prune the collection
         const prunedCollection: Omit<ICollection, 'updated_at' | 'created_at'> = {
-          contract_address: asset.asset_contract.address,
-          name: collection.name,
-          slug: collection.slug,
-          image_url: collection.image_url,
-          twitter_username: collection.twitter_username,
-          discord_url: collection.discord_url,
-          external_url: collection.external_url,
+          contract_address: asset.token_address,
+          name: asset.name,
+          // slug: collection.slug,
+          // image_url: collection.image_url,
+          // twitter_username: collection.twitter_username,
+          // discord_url: collection.discord_url,
+          // external_url: collection.external_url,
         }
-        acc[collection.slug] = prunedCollection
+        acc[token_address] = prunedCollection
       }
 
       return acc
@@ -87,12 +87,8 @@ export const pruneAssets = (openseaAssets: any[]): IAsset[] => {
   return openseaAssets.map((asset) => {
     return {
       name: asset.name,
-      contract_address: asset.asset_contract.address,
-      description: asset.description,
-      image_url: asset.image_url,
-      link: asset.permalink,
+      contract_address: asset.token_address,
       token_id: asset.token_id,
-      last_sale: asset.last_sale ? parseFloat(web3.utils.fromWei(asset.last_sale.total_price)) : undefined,
     }
   })
 }

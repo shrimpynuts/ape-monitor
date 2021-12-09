@@ -92,6 +92,6 @@ $ hasura migrate apply --all-databases
 4. Run the following two commands to apply metadata/permissions
 
 ```bash
-$ hasura metadata apply --endpoint
-$ hasura metadata reload --endpoint
+$ hasura metadata apply --endpoint 'https://apemonitor-production.herokuapp.com/'
+$ hasura metadata reload --endpoint 'https://apemonitor-production.herokuapp.com/'
 ```

@@ -10,10 +10,6 @@ import Navbar from '../components/layout/navbar'
 import Button from '../components/util/button'
 import TopCollections from '../components/topCollections'
 
-function getRandomInt(max: number) {
-  return Math.floor(Math.random() * max) + 1
-}
-
 const Home: NextPage = () => {
   const { wallet } = useWeb3Container.useContainer()
   const [modalIsOpen, setModalIsOpen] = useState(false)

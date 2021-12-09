@@ -1,3 +1,24 @@
 table:
   name: collections
   schema: public
+select_permissions:
+- permission:
+    columns:
+    - id
+    - created_at
+    - updated_at
+    - name
+    - slug
+    - floor_price
+    - twitter_username
+    - discord_url
+    - external_url
+    - image_url
+    - one_day_change
+    - seven_day_change
+    - thirty_day_change
+    - contract_address
+    - total_volume
+    - market_cap
+    filter: {}
+  role: public

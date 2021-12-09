@@ -1,23 +1,10 @@
 import { useQuery } from '@apollo/client'
 import Link from 'next/link'
 
+import { middleEllipses, convertNumberToRoundedString, getRankDisplay } from '../lib/util'
 import { GET_LEADERBOARD } from '../graphql/queries'
 import Spinner from './util/spinner'
-import { middleEllipses, convertNumberToRoundedString } from '../lib/util'
 import Tooltip from './util/tooltip'
-
-const getRankDisplay = (rank: number) => {
-  switch (rank) {
-    case 1:
-      return '🥇'
-    case 2:
-      return '🥈'
-    case 3:
-      return '🥉'
-    default:
-      return `${rank}`
-  }
-}
 
 const SingleLeaderboard = ({
   users,

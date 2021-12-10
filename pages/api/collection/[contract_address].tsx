@@ -22,7 +22,7 @@ const addCollectionToDB = async (
 
 const fetchOpenseaCollectionFromContractAddress = async (
   contractAddress: string,
-): Promise<Omit<ICollection, 'created_at' | 'updated_at'>> => {
+): Promise<Omit<ICollection, 'created_at' | 'updated_at' | 'is_stats_fetched'>> => {
   const result = await fetch(`https://api.opensea.io/api/v1/asset_contract/${contractAddress}`).then((res) =>
     res.json(),
   )
@@ -76,37 +76,37 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
     if (debug) console.log(`Fetching opensea collection for address ${contractAddress}`)
 
     // Use the contract address to fetch opensea collection data
-    try {
-      const collection = await fetchOpenseaCollectionFromContractAddress(contractAddress)
-      if (debug) console.log(`Fetching opensea collection stats for ${contractAddress}/${collection.slug}`)
+    // try {
+    //   const collection = await fetchOpenseaCollectionFromContractAddress(contractAddress)
+    //   if (debug) console.log(`Fetching opensea collection stats for ${contractAddress}/${collection.slug}`)
 
-      // Fetch stats
-      const stats = await getCollectionStats(collection.slug)
-      if (stats === null) {
-        // If we get an error fetching stats, just return the collection without the stats
-        return res.status(200).json(collection)
-      }
+    //   // Fetch stats
+    //   const stats = await getCollectionStats(collection.slug)
+    //   if (stats === null) {
+    //     // If we get an error fetching stats, just return the collection without the stats
+    //     return res.status(200).json(collection)
+    //   }
 
-      // Add stats data to our old collection data
-      const collectionWithStats = {
-        ...collection,
-        floor_price: stats.floor_price,
-        one_day_change: stats.one_day_change,
-        seven_day_change: stats.seven_day_change,
-        thirty_day_change: stats.thirty_day_change,
-        total_volume: stats.total_volume,
-        market_cap: stats.market_cap,
-      }
+    //   // Add stats data to our old collection data
+    //   const collectionWithStats = {
+    //     ...collection,
+    //     floor_price: stats.floor_price,
+    //     one_day_change: stats.one_day_change,
+    //     seven_day_change: stats.seven_day_change,
+    //     thirty_day_change: stats.thirty_day_change,
+    //     total_volume: stats.total_volume,
+    //     market_cap: stats.market_cap,
+    //   }
 
-      // Add collection with stats to our own database
-      await addCollectionToDB(collectionWithStats, client)
+    //   // Add collection with stats to our own database
+    //   await addCollectionToDB(collectionWithStats, client)
 
-      res.status(200).json(collectionWithStats)
+    //   res.status(200).json(collectionWithStats)
 
-      // Catches error in case the request for opensea contract_address fails
-    } catch (error: any) {
-      return res.status(500).json({ error: error.toString() })
-    }
+    //   // Catches error in case the request for opensea contract_address fails
+    // } catch (error: any) {
+    //   return res.status(500).json({ error: error.toString() })
+    // }
   } else {
     // Grab the desired collection
     const collection = data.collections[0]

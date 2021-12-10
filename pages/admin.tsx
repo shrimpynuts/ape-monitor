@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { Toaster } from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 
 import useWeb3Container from '../hooks/useWeb3User'
 import Navbar from '../components/layout/navbar'
@@ -9,7 +9,7 @@ import Button from '../components/util/button'
 import { GET_COLLECTIONS_ADMIN_STATS } from '../graphql/queries'
 import { useQuery } from '@apollo/client'
 import Spinner from '../components/util/spinner'
-import { getFormattedDate } from '../lib/util'
+import { getFormattedDate, getServer } from '../lib/util'
 
 const AdminPage: NextPage = () => {
   const { wallet } = useWeb3Container.useContainer()
@@ -33,6 +33,16 @@ const AdminPage: NextPage = () => {
 
   const onRefetchClick = async () => {
     refetch({ lastUpdated: yesterday.toUTCString() })
+  }
+
+  const onFetchClick = async () => {
+    console.log(`Hitting ${getServer()}/api/jobs/update-collections`)
+    fetch(`${getServer()}/api/jobs/update-collections`)
+      .then((resp) => resp.json())
+      .then((value) => {
+        console.log({ value })
+        toast(value)
+      })
   }
 
   const adminAccounts = ['0xf725a0353dbB6aAd2a4692D49DDa0bE241f45fD0', '0xd6CB70a88bB0D8fB1be377bD3E48e603528AdB54']
@@ -63,17 +73,37 @@ const AdminPage: NextPage = () => {
           </div>
         )}
         {data && (
-          <div className="w-full md:mx-auto md:w-2/3 my-8 flex flex-col">
-            <span># of Collections: {data.total.aggregate.count}</span>
-            <span>floor_price == null: {data.floor_price_null.aggregate.count}</span>
-            <span>one_day_change == null: {data.one_day_change_null.aggregate.count}</span>
-            <span>is_stats_fetched == true: {data.is_stats_fetched_true.aggregate.count}</span>
-            <span>
-              Stale since {getFormattedDate(yesterday)}: {data.stale.aggregate.count}
-            </span>
+          <div className="w-full md:mx-auto md:w-2/3 my-8 flex flex-col ">
+            <div
+              className="md:mx-auto md:w-1/2 my-8 flex flex-col
+              py-2 sm:rounded-lg mb-2 shadow border border-solid border-gray-300 dark:border-darkblue
+              divide-y divide-gray-300 dark:divide-darkblue"
+            >
+              <div className="flex justify-between p-2">
+                <span># of Collections</span>
+                <span>{data.total.aggregate.count}</span>
+              </div>
+              <div className="flex justify-between p-2">
+                <span>floor_price == null</span>
+                <span>{data.floor_price_null.aggregate.count}</span>
+              </div>
+              <div className="flex justify-between p-2">
+                <span>one_day_change == null</span>
+                <span>{data.one_day_change_null.aggregate.count}</span>
+              </div>
+              <div className="flex justify-between p-2">
+                <span>is_stats_fetched == true</span>
+                <span>{data.is_stats_fetched_true.aggregate.count}</span>
+              </div>{' '}
+              <div className="flex justify-between p-2">
+                <span>Stale since {getFormattedDate(yesterday)}</span>
+                <span>{data.stale.aggregate.count}</span>
+              </div>
+            </div>
 
-            <div className="mt-4">
+            <div className="mt-4 flex space-x-4">
               <Button onClick={onRefetchClick}>Refetch</Button>
+              <Button onClick={onFetchClick}>/api/jobs/update-collections</Button>
             </div>
           </div>
         )}

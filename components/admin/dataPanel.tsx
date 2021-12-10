@@ -2,6 +2,15 @@ import Moment from 'react-moment'
 
 import { lastUpdated1, lastUpdated2, lastUpdated3 } from '../../pages/admin'
 
+const SingleCollectionStatistic = ({ metric, total }: { metric: number; total: number }) => {
+  return (
+    <div className="flex items-center space-x-2">
+      <span className="font-light text-xs">({metric})</span>
+      <span className="font-bold">{((metric / total) * 100).toFixed(2)}%</span>
+    </div>
+  )
+}
+
 export default function DataPanel({ data }: any) {
   const total = data.total.aggregate.count
 
@@ -20,24 +29,15 @@ export default function DataPanel({ data }: any) {
         </div>
         <div className="flex justify-between p-4">
           <span className="font-mono bg-gray-800 p-1 rounded">one_day_change == null</span>
-          <span>
-            {((one_day_change_null.aggregate.count / total) * 100).toFixed(2)}% ({one_day_change_null.aggregate.count}{' '}
-            collections)
-          </span>
+          <SingleCollectionStatistic metric={one_day_change_null.aggregate.count} total={total} />
         </div>
         <div className="flex justify-between p-4">
           <span className="font-mono bg-gray-800 p-1 rounded">is_stats_fetched == true</span>
-          <span>
-            {((is_stats_fetched_true.aggregate.count / total) * 100).toFixed(2)}% (
-            {is_stats_fetched_true.aggregate.count} collections)
-          </span>
+          <SingleCollectionStatistic metric={is_stats_fetched_true.aggregate.count} total={total} />
         </div>
         <div className="flex justify-between p-4">
           <span className="font-mono bg-gray-800 p-1 rounded">floor_price == null</span>
-          <span>
-            {((floor_price_null.aggregate.count / total) * 100).toFixed(2)}% ({floor_price_null.aggregate.count}{' '}
-            collections)
-          </span>
+          <SingleCollectionStatistic metric={floor_price_null.aggregate.count} total={total} />
         </div>
       </div>
 
@@ -50,25 +50,19 @@ export default function DataPanel({ data }: any) {
           <span>
             Up-to-date since <Moment fromNow>{lastUpdated1}</Moment>
           </span>
-          <span>
-            {((stale1.aggregate.count / total) * 100).toFixed(2)}% ({stale1.aggregate.count} collections)
-          </span>
+          <SingleCollectionStatistic metric={stale1.aggregate.count} total={total} />
         </div>
         <div className="flex justify-between p-4">
           <span>
             Up-to-date since <Moment fromNow>{lastUpdated2}</Moment>
           </span>
-          <span>
-            {((stale2.aggregate.count / total) * 100).toFixed(2)}% ({stale2.aggregate.count} collections)
-          </span>
+          <SingleCollectionStatistic metric={stale2.aggregate.count} total={total} />
         </div>
         <div className="flex justify-between p-4">
           <span>
             Up-to-date since <Moment fromNow>{lastUpdated3}</Moment>
           </span>
-          <span>
-            {((stale3.aggregate.count / total) * 100).toFixed(2)}% ({stale3.aggregate.count} collections)
-          </span>
+          <SingleCollectionStatistic metric={stale3.aggregate.count} total={total} />
         </div>
       </div>
     </div>

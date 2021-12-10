@@ -1,7 +1,5 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 
-// https://prod-apemonitor.herokuapp.com/
-
 const herokuUri = process.env.NEXT_PUBLIC_HEROKU_URI
 
 if (typeof herokuUri === 'undefined' || herokuUri === '') {

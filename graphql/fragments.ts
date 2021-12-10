@@ -2,21 +2,31 @@ import { gql } from '@apollo/client'
 
 export const CORE_COLLECTION_FIELDS = gql`
   fragment CoreCollectionFields on collections {
-    contract_address
-    discord_url
+    # metadata
     created_at
-    external_url
-    floor_price
-    image_url
+    updated_at
+
+    # required
+    contract_address
+
+    # opensea collection data
     name
+    slug
+    image_url
+    discord_url
+    external_url
+    twitter_username
+
+    # stats
+    floor_price
     one_day_change
     seven_day_change
-    slug
     thirty_day_change
-    twitter_username
-    updated_at
     total_volume
     market_cap
+
+    # default false
+    is_stats_fetched
   }
 `
 

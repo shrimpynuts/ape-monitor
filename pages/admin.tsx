@@ -3,24 +3,30 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import toast, { Toaster } from 'react-hot-toast'
 
+import { GET_COLLECTIONS_ADMIN_STATS } from '../graphql/queries'
+import AdminDataPanel from '../components/admin/dataPanel'
 import useWeb3Container from '../hooks/useWeb3User'
 import Navbar from '../components/layout/navbar'
-import Button from '../components/util/button'
-import { GET_COLLECTIONS_ADMIN_STATS } from '../graphql/queries'
-import { useQuery } from '@apollo/client'
 import Spinner from '../components/util/spinner'
-import { getFormattedDate, getServer } from '../lib/util'
+import Tooltip from '../components/util/tooltip'
+import Button from '../components/util/button'
+import { useQuery } from '@apollo/client'
+import { getServer } from '../lib/util'
+
+export const lastUpdated1 = new Date(new Date().getTime() - 1 * 60 * 60 * 1000)
+export const lastUpdated2 = new Date(new Date().getTime() - 3 * 60 * 60 * 1000)
+export const lastUpdated3 = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
 
 const AdminPage: NextPage = () => {
   const { wallet } = useWeb3Container.useContainer()
   const [modalIsOpen, setModalIsOpen] = useState(false)
 
-  const yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
-  const { data, loading, error, refetch } = useQuery(GET_COLLECTIONS_ADMIN_STATS, {
-    variables: {
-      lastUpdated: yesterday.toUTCString(),
-    },
-  })
+  const variables = {
+    lastUpdated1: lastUpdated1.toUTCString(),
+    lastUpdated2: lastUpdated2.toUTCString(),
+    lastUpdated3: lastUpdated3.toUTCString(),
+  }
+  const { data, loading, refetch: refresh } = useQuery(GET_COLLECTIONS_ADMIN_STATS, { variables })
 
   useEffect(() => {
     wallet.connect('injected')
@@ -28,21 +34,34 @@ const AdminPage: NextPage = () => {
 
   const onConnectClick = () => {
     wallet.connect('injected')
-    // setModalIsOpen(true)
   }
 
-  const onRefetchClick = async () => {
-    refetch({ lastUpdated: yesterday.toUTCString() })
+  const onRefreshClick = async () => {
+    toast.promise(refresh(variables), {
+      loading: 'Refreshing...',
+      success: 'Done refreshing.',
+      error: (err) => err.toString(),
+    })
   }
 
   const onFetchClick = async () => {
-    console.log(`Hitting ${getServer()}/api/jobs/update-collections`)
-    fetch(`${getServer()}/api/jobs/update-collections`)
-      .then((resp) => resp.json())
-      .then((value) => {
-        console.log({ value })
-        toast(value)
-      })
+    toast.promise(
+      fetch(`${getServer()}/api/jobs/update-collections`)
+        .then((resp) => resp.json())
+        .then((value) => {
+          const { error, message } = value
+          if (error) throw Error(message)
+          return message
+        }),
+      {
+        loading: 'Fetching...',
+        success: (data) => {
+          refresh(variables)
+          return data
+        },
+        error: (err) => err.toString(),
+      },
+    )
   }
 
   const adminAccounts = ['0xf725a0353dbB6aAd2a4692D49DDa0bE241f45fD0', '0xd6CB70a88bB0D8fB1be377bD3E48e603528AdB54']
@@ -72,38 +91,20 @@ const AdminPage: NextPage = () => {
             <Spinner />
           </div>
         )}
-        {data && (
-          <div className="w-full md:mx-auto md:w-2/3 my-8 flex flex-col ">
-            <div
-              className="md:mx-auto md:w-1/2 my-8 flex flex-col
-              py-2 sm:rounded-lg mb-2 shadow border border-solid border-gray-300 dark:border-darkblue
-              divide-y divide-gray-300 dark:divide-darkblue"
-            >
-              <div className="flex justify-between p-2">
-                <span># of Collections</span>
-                <span>{data.total.aggregate.count}</span>
-              </div>
-              <div className="flex justify-between p-2">
-                <span>floor_price == null</span>
-                <span>{data.floor_price_null.aggregate.count}</span>
-              </div>
-              <div className="flex justify-between p-2">
-                <span>one_day_change == null</span>
-                <span>{data.one_day_change_null.aggregate.count}</span>
-              </div>
-              <div className="flex justify-between p-2">
-                <span>is_stats_fetched == true</span>
-                <span>{data.is_stats_fetched_true.aggregate.count}</span>
-              </div>{' '}
-              <div className="flex justify-between p-2">
-                <span>Stale since {getFormattedDate(yesterday)}</span>
-                <span>{data.stale.aggregate.count}</span>
-              </div>
-            </div>
+        {isAdmin && data && (
+          <div className="w-full md:mx-auto my-8 flex flex-col ">
+            <AdminDataPanel data={data} />
 
-            <div className="mt-4 flex space-x-4">
-              <Button onClick={onRefetchClick}>Refetch</Button>
-              <Button onClick={onFetchClick}>/api/jobs/update-collections</Button>
+            <div className="flex flex-col space-y-4 mt-4 items-start w-1/2 mx-auto">
+              <div className="flex relative space-x-2 items-center justify-center">
+                <Tooltip width={64} text="Refreshes this admin panel" />
+                <Button onClick={onRefreshClick}>Refresh</Button>
+              </div>
+
+              <div className="flex relative space-x-2 items-center justify-center">
+                <Tooltip width={64} text="Hits /api/jobs/update-collections" />
+                <Button onClick={onFetchClick}>Update Collections</Button>
+              </div>
             </div>
           </div>
         )}

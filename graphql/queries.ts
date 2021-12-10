@@ -25,10 +25,10 @@ export const GET_COLLECTION_BY_SLUG = gql`
   }
 `
 export const GET_MOST_STALE_COLLECTIONS = gql`
+  ${CORE_COLLECTION_FIELDS}
   query GetMostStaleCollections {
-    collections(order_by: { updated_at: asc }) {
-      contract_address
-      updated_at
+    collections(order_by: { updated_at: asc }, where: { is_stats_fetched: { _eq: false } }) {
+      ...CoreCollectionFields
     }
   }
 `
@@ -70,7 +70,11 @@ export const GET_TOP_COLLECTIONS = gql`
 
 export const GET_COLLECTIONS_ADMIN_STATS = gql`
   ${COLLECTIONS_AGGREGATE_COUNT}
-  query GetCollectionsAdminStats($lastUpdated: timestamptz!) {
+  query GetCollectionsAdminStats(
+    $lastUpdated1: timestamptz!
+    $lastUpdated2: timestamptz!
+    $lastUpdated3: timestamptz!
+  ) {
     is_stats_fetched_true: collections_aggregate(where: { is_stats_fetched: { _eq: true } }) {
       ...CollectionsAggregateCount
     }
@@ -80,7 +84,13 @@ export const GET_COLLECTIONS_ADMIN_STATS = gql`
     one_day_change_null: collections_aggregate(where: { one_day_change: { _is_null: true } }) {
       ...CollectionsAggregateCount
     }
-    stale: collections_aggregate(where: { updated_at: { _gte: $lastUpdated } }) {
+    stale1: collections_aggregate(where: { updated_at: { _gte: $lastUpdated1 } }) {
+      ...CollectionsAggregateCount
+    }
+    stale2: collections_aggregate(where: { updated_at: { _gte: $lastUpdated2 } }) {
+      ...CollectionsAggregateCount
+    }
+    stale3: collections_aggregate(where: { updated_at: { _gte: $lastUpdated3 } }) {
       ...CollectionsAggregateCount
     }
     total: collections_aggregate {

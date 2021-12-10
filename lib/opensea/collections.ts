@@ -37,7 +37,18 @@ export const getAssetsForOwner = async (ownerAddress: string) => {
  */
 export const getCollectionStats = async (slug: string) => {
   const url = `https://api.opensea.io/api/v1/collection/${slug}/stats`
-  const { stats, detail } = await fetch(url, openseaFetchHeaders).then((response) => response.json())
+  console.log(`   Making Opensea API Call: ${url}`)
+  const { stats, detail, error } = await fetch(url, openseaFetchHeaders)
+    .then((response) => response.json())
+    .catch((error) => {
+      return { error }
+    })
+
+  // This could mean that the collection under this slug no longer exists (404)
+  if (error) {
+    console.error(`Error fetching stats for slug ${slug}: ${error.toString()}`)
+    return null
+  }
 
   // This means the request was throttled
   if (detail) {
@@ -51,16 +62,18 @@ export const getCollectionStats = async (slug: string) => {
  * Extracts ICollection's from Opensea assets
  * @param assets Opensea asset data returned from /assets endpoint
  */
-export const pruneAndRemoveDuplicateCollections = (assets: any[]): Omit<ICollection, 'updated_at' | 'created_at'>[] => {
+export const pruneAndRemoveDuplicateCollections = (
+  assets: any[],
+): Omit<ICollection, 'updated_at' | 'created_at' | 'is_stats_fetched'>[] => {
   // Create an object where the key is the collection slug and the value is the pruned collection data
   const byCollection = assets.reduce(
-    (acc: { [key: string]: Omit<ICollection, 'updated_at' | 'created_at'> }, asset: any) => {
+    (acc: { [key: string]: Omit<ICollection, 'updated_at' | 'created_at' | 'is_stats_fetched'> }, asset: any) => {
       const { collection } = asset
 
       // Add the pruned collection to the accumulated object if not already there
       if (!acc[collection.slug]) {
         // Prune the collection
-        const prunedCollection: Omit<ICollection, 'updated_at' | 'created_at'> = {
+        const prunedCollection: Omit<ICollection, 'updated_at' | 'created_at' | 'is_stats_fetched'> = {
           contract_address: asset.asset_contract.address,
           name: collection.name,
           slug: collection.slug,

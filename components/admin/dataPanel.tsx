@@ -20,15 +20,24 @@ export default function DataPanel({ data }: any) {
         </div>
         <div className="flex justify-between p-4">
           <span className="font-mono bg-gray-800 p-1 rounded">one_day_change == null</span>
-          <span>{one_day_change_null.aggregate.count} collections</span>
+          <span>
+            {((one_day_change_null.aggregate.count / total) * 100).toFixed(2)}% ({one_day_change_null.aggregate.count}{' '}
+            collections)
+          </span>
         </div>
         <div className="flex justify-between p-4">
           <span className="font-mono bg-gray-800 p-1 rounded">is_stats_fetched == true</span>
-          <span>{is_stats_fetched_true.aggregate.count} collections</span>
+          <span>
+            {((is_stats_fetched_true.aggregate.count / total) * 100).toFixed(2)}% (
+            {is_stats_fetched_true.aggregate.count} collections)
+          </span>
         </div>
         <div className="flex justify-between p-4">
           <span className="font-mono bg-gray-800 p-1 rounded">floor_price == null</span>
-          <span>{floor_price_null.aggregate.count} collections</span>
+          <span>
+            {((floor_price_null.aggregate.count / total) * 100).toFixed(2)}% ({floor_price_null.aggregate.count}{' '}
+            collections)
+          </span>
         </div>
       </div>
 

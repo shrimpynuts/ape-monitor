@@ -1,47 +1,26 @@
 import { gql } from '@apollo/client'
+import { CORE_COLLECTION_FIELDS, CORE_USER_FIELDS } from './fragments'
 
 export const GET_LEADERBOARD = gql`
+  ${CORE_USER_FIELDS}
   query GetLeaderboard {
     totalAssetCount: users(order_by: { totalAssetCount: desc }, limit: 5) {
-      ensDomain
-      address
-      totalAssetCount
-      totalCostBasis
-      totalValue
+      ...CoreUserFields
     }
     totalValue: users(order_by: { totalValue: desc }, limit: 5) {
-      ensDomain
-      address
-      totalAssetCount
-      totalCostBasis
-      totalValue
+      ...CoreUserFields
     }
     totalCostBasis: users(order_by: { totalCostBasis: desc }, limit: 5) {
-      ensDomain
-      address
-      totalAssetCount
-      totalCostBasis
-      totalValue
+      ...CoreUserFields
     }
   }
 `
 
 export const GET_COLLECTION_BY_SLUG = gql`
+  ${CORE_COLLECTION_FIELDS}
   query GetCollectionBySlug($slug: String!) {
     collections(where: { slug: { _eq: $slug } }) {
-      contract_address
-      discord_url
-      created_at
-      external_url
-      floor_price
-      image_url
-      name
-      one_day_change
-      seven_day_change
-      slug
-      thirty_day_change
-      twitter_username
-      updated_at
+      ...CoreCollectionFields
     }
   }
 `
@@ -55,118 +34,36 @@ export const GET_MOST_STALE_COLLECTIONS = gql`
 `
 
 export const GET_COLLECTION_BY_CONTRACT_ADDRESS = gql`
+  ${CORE_COLLECTION_FIELDS}
   query GetCollectionByContractAddress($contract_address: String!) {
     collections(where: { contract_address: { _eq: $contract_address } }) {
-      contract_address
-      discord_url
-      created_at
-      external_url
-      floor_price
-      image_url
-      name
-      one_day_change
-      seven_day_change
-      slug
-      thirty_day_change
-      twitter_username
-      updated_at
-      total_volume
-      market_cap
+      ...CoreCollectionFields
     }
   }
 `
 
 export const GET_TOP_COLLECTIONS = gql`
+  ${CORE_COLLECTION_FIELDS}
   query GetTopCollections($lastUpdated: timestamptz!) {
     collections(order_by: { one_day_change: desc_nulls_last }, limit: 30) {
-      contract_address
-      discord_url
-      created_at
-      external_url
-      floor_price
-      image_url
-      name
-      one_day_change
-      seven_day_change
-      slug
-      thirty_day_change
-      twitter_username
-      updated_at
-      total_volume
-      market_cap
+      ...CoreCollectionFields
     }
 
     totalVolume: collections(order_by: { total_volume: desc_nulls_last }, limit: 10) {
-      contract_address
-      discord_url
-      created_at
-      external_url
-      floor_price
-      image_url
-      name
-      one_day_change
-      seven_day_change
-      slug
-      thirty_day_change
-      twitter_username
-      updated_at
-      total_volume
-      market_cap
+      ...CoreCollectionFields
     }
     floorPrice: collections(order_by: { floor_price: desc_nulls_last }, limit: 10) {
-      contract_address
-      discord_url
-      created_at
-      external_url
-      floor_price
-      image_url
-      name
-      one_day_change
-      seven_day_change
-      slug
-      thirty_day_change
-      twitter_username
-      updated_at
-      total_volume
-      market_cap
+      ...CoreCollectionFields
     }
     marketCap: collections(order_by: { market_cap: desc_nulls_last }, limit: 10) {
-      contract_address
-      discord_url
-      created_at
-      external_url
-      floor_price
-      image_url
-      name
-      one_day_change
-      seven_day_change
-      slug
-      thirty_day_change
-      twitter_username
-      updated_at
-      total_volume
-      market_cap
+      ...CoreCollectionFields
     }
     oneDayChange: collections(
       order_by: { one_day_change: desc_nulls_last }
       limit: 10
       where: { updated_at: { _gte: $lastUpdated } }
     ) {
-      contract_address
-      discord_url
-      created_at
-      external_url
-      floor_price
-      image_url
-      name
-      one_day_change
-      seven_day_change
-      slug
-      thirty_day_change
-      twitter_username
-      updated_at
-      total_volume
-      market_cap
+      ...CoreCollectionFields
     }
   }
 `

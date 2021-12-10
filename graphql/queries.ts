@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { CORE_COLLECTION_FIELDS, CORE_USER_FIELDS } from './fragments'
+import { CORE_COLLECTION_FIELDS, CORE_USER_FIELDS, COLLECTIONS_AGGREGATE_COUNT } from './fragments'
 
 export const GET_LEADERBOARD = gql`
   ${CORE_USER_FIELDS}
@@ -67,3 +67,43 @@ export const GET_TOP_COLLECTIONS = gql`
     }
   }
 `
+
+export const GET_COLLECTIONS_ADMIN_STATS = gql`
+  ${COLLECTIONS_AGGREGATE_COUNT}
+  query GetCollectionsAdminStats($lastUpdated: timestamptz!) {
+    is_stats_fetched_true: collections_aggregate(where: { is_stats_fetched: { _eq: true } }) {
+      ...CollectionsAggregateCount
+    }
+    floor_price_null: collections_aggregate(where: { floor_price: { _is_null: true } }) {
+      ...CollectionsAggregateCount
+    }
+    one_day_change_null: collections_aggregate(where: { one_day_change: { _is_null: true } }) {
+      ...CollectionsAggregateCount
+    }
+    stale: collections_aggregate(where: { updated_at: { _gte: $lastUpdated } }) {
+      ...CollectionsAggregateCount
+    }
+    total: collections_aggregate {
+      ...CollectionsAggregateCount
+    }
+  }
+`
+
+export const GET_COLLECTIONS_AGGREGATE_COUNT = gql`
+  query GetCollectionsAggregateCount($where: collections_bool_exp!) {
+    test: collections_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+`
+
+// Example variable arguments for GET_COLLECTIONS_AGGREGATE_COUNT
+// variables: {
+//   "where": {
+//     "one_day_change": {
+//       "_is_null": true
+//     }
+//   }
+// }

@@ -29,3 +29,10 @@ export const CORE_USER_FIELDS = gql`
     totalValue
   }
 `
+export const COLLECTIONS_AGGREGATE_COUNT = gql`
+  fragment CollectionsAggregateCount on collections_aggregate {
+    aggregate {
+      count
+    }
+  }
+`

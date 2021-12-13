@@ -89,7 +89,7 @@ const AdminPage: NextPage = () => {
         )}
         {isConnected && !isAdmin && (
           <div className="flex flex-col items-center w-full md:mx-auto md:w-96 space-y-4 mt-64">
-            <h1 className="text ">You're not connected to an admin address.</h1>
+            <h1 className="text ">You are not connected to an admin address.</h1>
           </div>
         )}
         {loading && (

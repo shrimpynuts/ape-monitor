@@ -1,4 +1,5 @@
 import Modal from '../layout/modal'
+import MintForm from './mintForm'
 
 interface IProps {
   isOpen: boolean
@@ -11,7 +12,7 @@ const MintModal: React.FC<IProps> = ({ isOpen, setIsOpen }) => {
   }
   return (
     <Modal isOpen={isOpen} onClose={closeModal}>
-      <div>Hello, world.</div>
+      <MintForm />
     </Modal>
   )
 }

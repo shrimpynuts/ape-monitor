@@ -65,6 +65,7 @@ const AdminPage: NextPage = () => {
   }
 
   const adminAccounts = ['0xf725a0353dbB6aAd2a4692D49DDa0bE241f45fD0', '0xd6CB70a88bB0D8fB1be377bD3E48e603528AdB54']
+  const isConnected = wallet.isConnected()
   const isAdmin = wallet.account ? adminAccounts.includes(wallet.account) : false
 
   return (
@@ -80,10 +81,15 @@ const AdminPage: NextPage = () => {
         redirectToProfileOnConnect={false}
       />
       <div className="px-4 w-full mt-4">
-        {!isAdmin && (
+        {!isConnected && !isAdmin && (
           <div className="flex flex-col items-center w-full md:mx-auto md:w-96 space-y-4 mt-64">
             <h1 className="text-2xl ">Admin Panel</h1>
             <Button onClick={onConnectClick}>Connect to Wallet</Button>
+          </div>
+        )}
+        {isConnected && !isAdmin && (
+          <div className="flex flex-col items-center w-full md:mx-auto md:w-96 space-y-4 mt-64">
+            <h1 className="text ">You're not connected to an admin address.</h1>
           </div>
         )}
         {loading && (
@@ -92,7 +98,7 @@ const AdminPage: NextPage = () => {
           </div>
         )}
         {isAdmin && data && (
-          <div className="w-full md:mx-auto my-8 flex flex-col ">
+          <div className="w-full md:mx-auto flex flex-col ">
             <AdminDataPanel data={data} />
 
             <div className="flex flex-col space-y-4 mt-4 items-start w-1/2 mx-auto">

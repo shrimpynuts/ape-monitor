@@ -17,9 +17,9 @@ export default function DataPanel({ data }: any) {
   const { one_day_change_null, is_stats_fetched_true, floor_price_null, stale1, stale2, stale3 } = data
 
   return (
-    <div className="w-full md:mx-auto my-8 flex flex-col ">
+    <div className="w-full md:mx-auto flex flex-col ">
       <div
-        className="md:mx-auto md:w-1/2 my-8 flex flex-col
+        className="md:mx-auto md:w-1/2 flex flex-col
       sm:rounded-lg mb-2 shadow border border-solid border-gray-300 dark:border-darkblue
       divide-y divide-gray-300 dark:divide-darkblue"
       >

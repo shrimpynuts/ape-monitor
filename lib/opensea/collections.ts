@@ -109,3 +109,34 @@ export const pruneAssets = (openseaAssets: any[]): IAsset[] => {
     }
   })
 }
+
+/**
+ * Takes a contract address and fetches the collection data from opensea
+ * @param contractAddress the address of the nft collection
+ * @returns a pruned opensea collection
+ */
+export const fetchOpenseaCollectionFromContractAddress = async (
+  contractAddress: string,
+): Promise<Omit<ICollection, 'created_at' | 'updated_at' | 'is_stats_fetched'>> => {
+  const result = await fetch(`https://api.opensea.io/api/v1/asset_contract/${contractAddress}`).then((res) =>
+    res.json(),
+  )
+  const { collection, detail } = result
+
+  // This means request was throttled
+  if (detail) {
+    console.error(`Request for opensea asset_contract ${contractAddress}: ${detail}`)
+    throw new Error(detail)
+  }
+
+  const prunedCollection = {
+    contract_address: contractAddress,
+    name: collection.name,
+    slug: collection.slug,
+    image_url: collection.image_url,
+    twitter_username: collection.twitter_username,
+    discord_url: collection.discord_url,
+    external_url: collection.external_url,
+  }
+  return prunedCollection
+}

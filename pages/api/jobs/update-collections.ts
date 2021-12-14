@@ -7,8 +7,6 @@ import { fetchOpenseaCollectionFromContractAddress } from '../../../backend/open
 import { ICollection } from '../../../frontend/types'
 import { ApolloClient, DocumentNode, NormalizedCacheObject } from '@apollo/client'
 
-const moment = require('moment')
-
 const debug = true
 const log = (message?: any) => debug && console.log(message)
 
@@ -37,7 +35,7 @@ const upsertCollectionToDB = async (
 }
 
 const updateCollection = async (givenCollection: ICollection) => {
-  const { name, slug: givenSlug, updated_at, contract_address } = givenCollection
+  const { slug: givenSlug, contract_address } = givenCollection
   // Fetch the basic collection data if never fetched before
   let collection: Omit<ICollection, 'updated_at' | 'created_at' | 'is_stats_fetched'> = givenCollection
   if (!givenSlug) {
@@ -99,8 +97,8 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Take the top JOB_LIMIT collections in terms of total_volume
   const selectedCollections = collections
-    // If you want to filter for a single collection
-    // .filter(({ contract_address }: ICollection) => contract_address === '0x6d2208aac56b97d222092da900a42ed5f1e7e12e')
+    // Uncomment if you want to filter for a single collection
+    // .filter(({ slug }: ICollection) => slug === 'mechanized-abstractions')
     // Sort by the total volume
     .sort((collectionA: any, collectionB: any) =>
       collectionA.total_volume ? collectionB.total_volume - collectionA.total_volume : 1,

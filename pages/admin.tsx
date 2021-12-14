@@ -59,7 +59,7 @@ const AdminPage: NextPage = () => {
           return message
         }),
       {
-        loading: 'Fetching...',
+        loading: 'Updating collections...',
         success: (data) => {
           refresh(variables)
           return data

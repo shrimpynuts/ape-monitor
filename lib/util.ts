@@ -144,8 +144,6 @@ export const fetchAllCollections = async (assets: IAsset[]): Promise<ICollection
     const numCollectionsExpected = Object.keys(assetsGroupedByContractAddress).length
     const numCollectionsFetched = validResults.length
 
-    console.log({ numCollectionsExpected, numCollectionsFetched })
-
     if (numCollectionsFetched !== numCollectionsExpected) {
       toast.error(`Error: could not fetch ${numCollectionsExpected - numCollectionsFetched} collections!`)
     }

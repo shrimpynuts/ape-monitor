@@ -22,8 +22,6 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   // Grab the desired collection
   const collection = data.collections[0]
 
-  console.log({ [collection.slug]: collection.floor_price })
-
   // Return cached collection data
   res.status(200).json(collection)
 }

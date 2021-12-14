@@ -85,6 +85,9 @@ export const GET_COLLECTIONS_ADMIN_STATS = gql`
     one_day_change_null: collections_aggregate(where: { one_day_change: { _is_null: true } }) {
       ...CollectionsAggregateCount
     }
+    slug_null: collections_aggregate(where: { slug: { _is_null: true } }) {
+      ...CollectionsAggregateCount
+    }
     stale1: collections_aggregate(where: { updated_at: { _gte: $lastUpdated1 } }) {
       ...CollectionsAggregateCount
     }

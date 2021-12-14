@@ -53,7 +53,7 @@ export const getCollectionStats = async (slug: string) => {
   // This means the request was throttled
   if (detail) {
     console.error(`\nOpensea collection stats ${slug}: ${detail}\n`)
-    return null
+    throw new Error(`Opensea throttled request for ${slug} (${url})`)
   }
   return stats
 }

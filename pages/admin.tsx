@@ -13,10 +13,13 @@ import Button from '../components/util/button'
 import { useQuery } from '@apollo/client'
 import { getServer } from '../lib/util'
 
-export const lastUpdated1 = new Date(new Date().getTime() - 1 * 60 * 60 * 1000) // 1 hour
-export const lastUpdated2 = new Date(new Date().getTime() - 3 * 60 * 60 * 1000) // 3 hours
-export const lastUpdated3 = new Date(new Date().getTime() - 24 * 60 * 60 * 1000) // 1 day
-export const lastUpdated4 = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 7) // 7 days
+// Dates used for retrieving the staleness of data
+const oneHour = 60 * 60 * 1000
+const oneDay = 24 * oneHour
+export const lastUpdated1 = new Date(new Date().getTime() - oneHour) // 1 hour
+export const lastUpdated2 = new Date(new Date().getTime() - oneDay) // 1 day
+export const lastUpdated3 = new Date(new Date().getTime() - oneDay * 3) // 3 days
+export const lastUpdated4 = new Date(new Date().getTime() - oneDay * 7) // 7 days
 
 const AdminPage: NextPage = () => {
   const { wallet } = useWeb3Container.useContainer()

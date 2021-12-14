@@ -1,12 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getCollectionStats } from '../../../lib/opensea/collections'
 import { UPSERT_COLLECTION_WITH_STATS, UPSERT_COLLECTION_WITHOUT_STATS } from '../../../graphql/mutations'
-import { GET_COLLECTION_BY_CONTRACT_ADDRESS } from '../../../graphql/queries'
 import { GET_MOST_STALE_COLLECTIONS } from '../../../graphql/queries'
 import client from '../../../backend/graphql-client'
 import { fetchOpenseaCollectionFromContractAddress } from '../../../backend/opensea-helpers'
 import { ICollection } from '../../../frontend/types'
 import { ApolloClient, DocumentNode, NormalizedCacheObject } from '@apollo/client'
+
+const moment = require('moment')
 
 const debug = true
 const log = (message?: any) => debug && console.log(message)
@@ -37,44 +38,39 @@ const upsertCollectionToDB = async (
 
 const updateCollection = async (givenCollection: ICollection) => {
   const { name, slug: givenSlug, updated_at, contract_address } = givenCollection
-  log(`\n🔘 Updating collection: ${name || contract_address}`)
-  try {
-    // Fetch the basic collection data if never fetched before
-    let collection: Omit<ICollection, 'updated_at' | 'created_at' | 'is_stats_fetched'> = givenCollection
-    if (!givenSlug) {
-      // Get collection data from opensea using contract address
-      collection = await fetchOpenseaCollectionFromContractAddress(contract_address)
-      console.log('Saving collection without stats')
-      // Add the basic collection data to our database without stats
-      await upsertCollectionToDB(UPSERT_COLLECTION_WITHOUT_STATS, collection, client)
+  // Fetch the basic collection data if never fetched before
+  let collection: Omit<ICollection, 'updated_at' | 'created_at' | 'is_stats_fetched'> = givenCollection
+  if (!givenSlug) {
+    // Get collection data from opensea using contract address
+    collection = await fetchOpenseaCollectionFromContractAddress(contract_address)
+    console.log('Saving collection without stats')
+    // Add the basic collection data to our database without stats
+    await upsertCollectionToDB(UPSERT_COLLECTION_WITHOUT_STATS, collection, client)
+  }
+
+  if (collection.slug) {
+    // Fetch stats
+    log(`   Fetching opensea collection stats for ${collection.slug}`)
+    const stats = await getCollectionStats(collection.slug)
+    if (stats == null) {
+      console.error('Could not get stats for collection, getCollectionStats returned null')
+      return
+    }
+    // Add stats data to our old collection data
+    const collectionWithStats = {
+      ...collection,
+      floor_price: stats.floor_price,
+      one_day_change: stats.one_day_change,
+      seven_day_change: stats.seven_day_change,
+      thirty_day_change: stats.thirty_day_change,
+      total_volume: stats.total_volume,
+      market_cap: stats.market_cap,
+      is_stats_fetched: true,
     }
 
-    if (collection.slug) {
-      // Fetch stats
-      log(`   Fetching opensea collection stats for ${collection.slug}`)
-      const stats = await getCollectionStats(collection.slug)
-      if (stats == null) {
-        console.error('Could not get stats for collection, getCollectionStats returned null')
-        return
-      }
-      // Add stats data to our old collection data
-      const collectionWithStats = {
-        ...collection,
-        floor_price: stats.floor_price,
-        one_day_change: stats.one_day_change,
-        seven_day_change: stats.seven_day_change,
-        thirty_day_change: stats.thirty_day_change,
-        total_volume: stats.total_volume,
-        market_cap: stats.market_cap,
-        is_stats_fetched: true,
-      }
-
-      console.log('Saving collection with stats')
-      // Add collection with stats to our own database
-      await upsertCollectionToDB(UPSERT_COLLECTION_WITH_STATS, collectionWithStats, client)
-    }
-  } catch (error: any) {
-    console.error(error)
+    console.log('Saving collection with stats')
+    // Add collection with stats to our own database
+    await upsertCollectionToDB(UPSERT_COLLECTION_WITH_STATS, collectionWithStats, client)
   }
 }
 
@@ -83,31 +79,55 @@ const updateCollection = async (givenCollection: ICollection) => {
  */
 const request = async (req: NextApiRequest, res: NextApiResponse) => {
   log(`\n   Job: update-collections started 🚀\n`)
+  const startJobDate = new Date().getTime()
+
+  // Number of collections to query from our database each run
+  const QUERY_LIMIT = 600
+
+  // Number of collections to query from opensea each run of this job
+  const JOB_LIMIT = 100
 
   // Fetch the collections object in our DB
   const {
     data: { collections },
   } = await client.query({
     query: GET_MOST_STALE_COLLECTIONS,
+    variables: {
+      limit: QUERY_LIMIT,
+    },
   })
 
-  // Filter and sort collections for the ones we want to update
-  const selectedCollections = collections.slice(0, 3)
-  // .filter(({ contract_address }: ICollection) => contract_address === '0x6d2208aac56b97d222092da900a42ed5f1e7e12e')
+  // Take the top JOB_LIMIT collections in terms of total_volume
+  const selectedCollections = collections
+    // If you want to filter for a single collection
+    // .filter(({ contract_address }: ICollection) => contract_address === '0x6d2208aac56b97d222092da900a42ed5f1e7e12e')
+    // Sort by the total volume
+    .sort((collectionA: any, collectionB: any) =>
+      collectionA.total_volume ? collectionB.total_volume - collectionA.total_volume : 1,
+    )
+    // Update only LIMIT in a single job
+    .slice(0, JOB_LIMIT)
 
-  // Update each of the selected collections
+  // Run updateCollection for each collection, while counting how many updates work
   let index = 0
   for (const collection of selectedCollections) {
     try {
+      log(`\n🔘 ${index} Updating collection: ${collection.name || collection.contract_address}`)
       await updateCollection(collection)
       index += 1
-    } catch (e) {
-      console.error(e)
+    } catch (e: any) {
+      console.error(e.message)
+      break
     }
   }
 
-  log(`\n   Job: update-collections completed ✅\n`)
-  res.status(200).json({ error: false, message: `Successfully fetched ${index} collection(s)` })
+  const endJobDate = new Date().getTime()
+  var durationInSeconds = Math.abs(endJobDate - startJobDate) / 1000
+
+  log(`\n   Job: update-collections completed in ${durationInSeconds}s ✅\n`)
+  res
+    .status(200)
+    .json({ error: false, message: `Successfully fetched ${index} collection(s) in ${durationInSeconds}s` })
 }
 
 export default request

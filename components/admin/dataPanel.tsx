@@ -1,6 +1,6 @@
 import Moment from 'react-moment'
 
-import { lastUpdated1, lastUpdated2, lastUpdated3 } from '../../pages/admin'
+import { lastUpdated1, lastUpdated2, lastUpdated3, lastUpdated4 } from '../../pages/admin'
 
 const SingleCollectionStatistic = ({ metric, total }: { metric: number; total: number }) => {
   return (
@@ -14,7 +14,7 @@ const SingleCollectionStatistic = ({ metric, total }: { metric: number; total: n
 export default function DataPanel({ data }: any) {
   const total = data.total.aggregate.count
 
-  const { one_day_change_null, is_stats_fetched_true, floor_price_null, stale1, stale2, stale3 } = data
+  const { one_day_change_null, is_stats_fetched_true, floor_price_null, stale1, stale2, stale3, stale4 } = data
 
   return (
     <div className="w-full md:mx-auto flex flex-col ">
@@ -63,6 +63,12 @@ export default function DataPanel({ data }: any) {
             Up-to-date since <Moment fromNow>{lastUpdated3}</Moment>
           </span>
           <SingleCollectionStatistic metric={stale3.aggregate.count} total={total} />
+        </div>
+        <div className="flex justify-between p-4">
+          <span>
+            Up-to-date since <Moment fromNow>{lastUpdated4}</Moment>
+          </span>
+          <SingleCollectionStatistic metric={stale4.aggregate.count} total={total} />
         </div>
       </div>
     </div>

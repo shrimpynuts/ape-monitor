@@ -26,8 +26,8 @@ export const GET_COLLECTION_BY_SLUG = gql`
 `
 export const GET_MOST_STALE_COLLECTIONS = gql`
   ${CORE_COLLECTION_FIELDS}
-  query GetMostStaleCollections {
-    collections(order_by: { updated_at: asc }, where: { is_stats_fetched: { _eq: false } }) {
+  query GetMostStaleCollections($limit: Int!) {
+    collections(order_by: { updated_at: asc }, limit: $limit) {
       ...CoreCollectionFields
     }
   }
@@ -74,6 +74,7 @@ export const GET_COLLECTIONS_ADMIN_STATS = gql`
     $lastUpdated1: timestamptz!
     $lastUpdated2: timestamptz!
     $lastUpdated3: timestamptz!
+    $lastUpdated4: timestamptz!
   ) {
     is_stats_fetched_true: collections_aggregate(where: { is_stats_fetched: { _eq: true } }) {
       ...CollectionsAggregateCount
@@ -93,6 +94,9 @@ export const GET_COLLECTIONS_ADMIN_STATS = gql`
     stale3: collections_aggregate(where: { updated_at: { _gte: $lastUpdated3 } }) {
       ...CollectionsAggregateCount
     }
+    stale4: collections_aggregate(where: { updated_at: { _gte: $lastUpdated4 } }) {
+      ...CollectionsAggregateCount
+    }
     total: collections_aggregate {
       ...CollectionsAggregateCount
     }
@@ -108,12 +112,3 @@ export const GET_COLLECTIONS_AGGREGATE_COUNT = gql`
     }
   }
 `
-
-// Example variable arguments for GET_COLLECTIONS_AGGREGATE_COUNT
-// variables: {
-//   "where": {
-//     "one_day_change": {
-//       "_is_null": true
-//     }
-//   }
-// }

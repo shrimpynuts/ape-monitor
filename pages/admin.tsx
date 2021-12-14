@@ -13,9 +13,10 @@ import Button from '../components/util/button'
 import { useQuery } from '@apollo/client'
 import { getServer } from '../lib/util'
 
-export const lastUpdated1 = new Date(new Date().getTime() - 1 * 60 * 60 * 1000)
-export const lastUpdated2 = new Date(new Date().getTime() - 3 * 60 * 60 * 1000)
-export const lastUpdated3 = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
+export const lastUpdated1 = new Date(new Date().getTime() - 1 * 60 * 60 * 1000) // 1 hour
+export const lastUpdated2 = new Date(new Date().getTime() - 3 * 60 * 60 * 1000) // 3 hours
+export const lastUpdated3 = new Date(new Date().getTime() - 24 * 60 * 60 * 1000) // 1 day
+export const lastUpdated4 = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 7) // 7 days
 
 const AdminPage: NextPage = () => {
   const { wallet } = useWeb3Container.useContainer()
@@ -25,6 +26,7 @@ const AdminPage: NextPage = () => {
     lastUpdated1: lastUpdated1.toUTCString(),
     lastUpdated2: lastUpdated2.toUTCString(),
     lastUpdated3: lastUpdated3.toUTCString(),
+    lastUpdated4: lastUpdated4.toUTCString(),
   }
   const { data, loading, refetch: refresh } = useQuery(GET_COLLECTIONS_ADMIN_STATS, { variables })
 

@@ -45,7 +45,7 @@ export const UPSERT_COLLECTION_WITHOUT_STATS = gql`
       object: $collection
       on_conflict: {
         constraint: collections_contract_address_key
-        update_columns: [discord_url, updated_at, external_url, floor_price, image_url, name, slug, twitter_username]
+        update_columns: [discord_url, updated_at, external_url, image_url, name, slug, twitter_username]
       }
     ) {
       updated_at

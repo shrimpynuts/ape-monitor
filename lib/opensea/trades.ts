@@ -189,7 +189,7 @@ export const getTradesByCollectionAndTradeStatsForOwner = (
     ...Object.values(tradesByCollection).map((collection: any) => Number(collection.totalProfit)),
   )
   const bestTradeCollection = Object.values(tradesByCollection).filter(
-    (collection: any) => collection.totalProfit == maxProfit,
+    (collection: any) => collection.totalProfit == maxProfit && collection.totalProfit > 0,
   )[0]
 
   // Calculate worst trade based on collection averages
@@ -197,7 +197,7 @@ export const getTradesByCollectionAndTradeStatsForOwner = (
     ...Object.values(tradesByCollection).map((collection: any) => Number(collection.totalProfit)),
   )
   const worstTradeCollection = Object.values(tradesByCollection).filter(
-    (collection: any) => collection.totalProfit == minProfit,
+    (collection: any) => collection.totalProfit == minProfit && collection.totalProfit < 0,
   )[0]
 
   // Create total stats object

@@ -61,7 +61,8 @@ const AdminPage: NextPage = () => {
       {
         loading: 'Updating collections...',
         success: (data) => {
-          refresh(variables)
+          // Refresh stats when done updating collections
+          // refresh(variables)
           return data
         },
         error: (err) => err.toString(),

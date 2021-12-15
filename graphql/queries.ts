@@ -27,7 +27,12 @@ export const GET_COLLECTION_BY_SLUG = gql`
 export const GET_MOST_STALE_COLLECTIONS = gql`
   ${CORE_COLLECTION_FIELDS}
   query GetMostStaleCollections($limit: Int!, $offset: Int = 0) {
-    collections(order_by: { updated_at: asc }, limit: $limit, offset: $offset) {
+    collections(
+      where: { error_fetching: { _eq: false } }
+      order_by: { updated_at: asc }
+      limit: $limit
+      offset: $offset
+    ) {
       ...CoreCollectionFields
     }
   }

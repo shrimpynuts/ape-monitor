@@ -64,7 +64,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json({ assets: prunedAssets })
   } catch (error) {
     // Return errors
-    return res.status(500).json({ error: `Opensea API fetch all NFTs for ${ownerAddress}: ${error}` })
+    return res.status(500).json({ error: `Opensea API: ${error}` })
   }
 }
 

@@ -10,7 +10,7 @@ const Spinner = () => {
         rounded-full
       "
       >
-        <Emoji className="cursor-pointer" label="logo" symbol="🍌" />
+        <Emoji className="" label="logo" symbol="🍌" />
       </div>
       <style jsx>
         {`

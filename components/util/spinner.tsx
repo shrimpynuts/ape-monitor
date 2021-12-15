@@ -16,7 +16,7 @@ const Spinner = () => {
         {`
           .loader {
             border-top-color: white;
-            animation: spinner 1.4s linear infinite;
+            animation: spinner 1s linear infinite;
           }
 
           @keyframes spinner {

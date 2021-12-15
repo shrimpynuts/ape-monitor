@@ -11,6 +11,7 @@ import { GET_TOP_COLLECTIONS } from '../graphql/queries'
 
 import Table from './table'
 import Spinner from './util/spinner'
+import Tooltip from './util/tooltip'
 
 interface IProps {}
 
@@ -243,7 +244,8 @@ function TopCollections({}: IProps) {
       </div>
 
       <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full mt-4">
-        <h1 className="text-center relative text-xl font-bold tracking-wide">All Collections</h1>
+        <Tooltip width={64} text="Based on 24 hour change" />
+        <h1 className="text-center relative text-xl font-bold tracking-wide">Trending Collections</h1>
       </div>
       <div className="mt-4">
         <Table

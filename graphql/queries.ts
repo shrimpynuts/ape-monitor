@@ -79,6 +79,9 @@ export const GET_COLLECTIONS_ADMIN_STATS = gql`
     is_stats_fetched_true: collections_aggregate(where: { is_stats_fetched: { _eq: true } }) {
       ...CollectionsAggregateCount
     }
+    error_fetching_true: collections_aggregate(where: { error_fetching: { _eq: true } }) {
+      ...CollectionsAggregateCount
+    }
     floor_price_null: collections_aggregate(where: { floor_price: { _is_null: true } }) {
       ...CollectionsAggregateCount
     }

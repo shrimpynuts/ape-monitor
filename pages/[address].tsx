@@ -42,6 +42,9 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
   const [insertUser] = useMutation(INSERT_USER)
 
   const [collectionsWithAssets, setCollectionsWithAssets] = useState<ICollectionsWithAssets>({})
+  const totalCostBasis = calculateTotalCostBasis(collectionsWithAssets)
+  const totalValue = calculateTotalValue(collectionsWithAssets)
+  const totalAssetCount = calculateTotalAssetCount(collectionsWithAssets)
 
   const [tradeData, setTradeData] = useState<ITradeData>()
   const [tradesLoading, setTradesLoading] = useState(true)
@@ -71,21 +74,20 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
    */
   useEffect(() => {
     // Make sure the user is connected and the address matches
-    if (wallet.isConnected() && wallet.account === address) {
+    if (addressFound) {
       // Upsert user into DB
-      insertUser({
-        variables: {
-          user: {
-            address: address,
-            ensDomain: ensDomain,
-            totalCostBasis: calculateTotalCostBasis(collectionsWithAssets),
-            totalValue: calculateTotalValue(collectionsWithAssets),
-            totalAssetCount: calculateTotalAssetCount(collectionsWithAssets),
-          },
-        },
-      }).catch(console.error)
+      console.log(`Inserting new user ${address} ${ensDomain && `/ ${ensDomain}`}`)
+      const newUser = {
+        address: address,
+        ensDomain: ensDomain,
+        totalCostBasis,
+        totalValue,
+        totalAssetCount,
+      }
+      console.log({ newUser })
+      insertUser({ variables: { user: newUser } }).catch(console.error)
     }
-  }, [collectionsWithAssets, wallet])
+  }, [address, ensDomain, addressFound, collectionsWithAssets])
 
   /**
    * Fetches assets and collections, storing in state
@@ -131,6 +133,9 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
         setTradeData(data)
         setTradesLoading(false)
       })
+      .catch(() => {
+        toast.error(`Opensea throttled request for trades!`)
+      })
   }, [address])
 
   const metadataTitle = addressFound
@@ -169,8 +174,8 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
           <ProfileBanner
             ensName={ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}
             address={address}
-            costBasis={convertNumberToRoundedString(calculateTotalCostBasis(collectionsWithAssets))}
-            totalValue={convertNumberToRoundedString(calculateTotalValue(collectionsWithAssets))}
+            costBasis={convertNumberToRoundedString(totalCostBasis)}
+            totalValue={convertNumberToRoundedString(totalValue)}
             oneDayChange={convertNumberToRoundedString(calculateTotalChange(collectionsWithAssets))}
           />
         </div>

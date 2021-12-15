@@ -35,6 +35,8 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   const { address: ownerAddress } = req.query
   if (typeof ownerAddress !== 'string') return res.status(400).json({ error: 'ownerAddress must be given' })
 
+  console.log(`\n 🎯 Hit assets/ endpoint for ${ownerAddress}`)
+
   try {
     // Fetch all assets from Opensea
     const assets = await getAssetsForOwner(ownerAddress)
@@ -64,7 +66,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json({ assets: prunedAssets })
   } catch (error) {
     // Return errors
-    return res.status(500).json({ error: `Opensea API fetch all NFTs for ${ownerAddress}: ${error}` })
+    return res.status(500).json({ error: `Opensea API: ${error}` })
   }
 }
 

@@ -1,13 +1,14 @@
 import { useMemo } from 'react'
 import { CellProps } from 'react-table'
 import useMobileDetect from 'use-mobile-detect-hook'
+import { ExternalLinkIcon } from '@heroicons/react/solid'
 
 import { convertNumberToRoundedString, calculateCostBasis } from '../lib/util'
 import { ICollectionsWithAssets } from '../frontend/types'
 import DeltaDisplay from './util/deltaDisplay'
-
-import Table from './table'
 import Spinner from './util/spinner'
+import Table from './table'
+
 interface IProps {
   collectionsWithAssets: ICollectionsWithAssets
   loading: boolean
@@ -30,6 +31,24 @@ function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
             <span className="overflow-ellipsis overflow-hidden">{value}</span>
           </div>
         ),
+      },
+      {
+        Header: ``,
+        accessor: 'collection.slug',
+        id: 'opensea_link',
+        Cell: ({ cell: { value } }: CellProps<any>) => (
+          <div>
+            {value ? (
+              <a href={`https://opensea.io/collection/${value}`} target="_blank" rel="noreferrer">
+                <ExternalLinkIcon className="h-8 w-4" />
+              </a>
+            ) : (
+              ''
+            )}
+          </div>
+        ),
+        disableFilters: true,
+        width: 40,
       },
       {
         Header: `Floor Price`,

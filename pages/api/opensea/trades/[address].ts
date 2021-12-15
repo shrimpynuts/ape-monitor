@@ -15,6 +15,8 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (typeof givenAddress !== 'string') return res.status(400).json({ error: 'address must be given' })
 
+  console.log(`\n 🎯 Hit events/ endpoint for ${givenAddress}`)
+
   // Use lower case address
   const ownerAddress = givenAddress.toLowerCase()
 

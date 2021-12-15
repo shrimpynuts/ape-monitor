@@ -12,17 +12,18 @@ export const getEventsForOwner = async (ownerAddress: string) => {
   // Infinite loop until all asset_events are fetched
   while (1) {
     // Construct request url
-    const openseaEndpoint = `https://api.opensea.io/api/v1/events?account_address=${ownerAddress}&only_opensea=false&offset=${totalAssetEvents.length}&limit=${limit}`
+    const url = `https://api.opensea.io/api/v1/events?account_address=${ownerAddress}&only_opensea=false&offset=${totalAssetEvents.length}&limit=${limit}`
+    console.log(`   Making Opensea API Call: ${url}`)
 
     // Fetch with address and the current offset set to the number of already fetched asset_events
-    const { asset_events } = await fetch(openseaEndpoint, openseaFetchHeaders).then((resp) => resp.json())
+    const { asset_events } = await fetch(url, openseaFetchHeaders).then((resp) => resp.json())
 
     if (asset_events) {
       totalAssetEvents = [...totalAssetEvents, ...asset_events]
       // If we get less than the limit of 50 asset_events, we know we've fetched everything
       if (asset_events.length < limit) break
     } else {
-      console.error(`\n\nCould not fetch events for endpoint: ${openseaEndpoint}\n\n`)
+      console.error(`Could not fetch events for endpoint: ${url}`)
       break
     }
   }
@@ -30,7 +31,7 @@ export const getEventsForOwner = async (ownerAddress: string) => {
 }
 
 export const unbundleEvent = (bundledEvent: IOpenSeaEvent) => {
-  console.warn(`\n\nReached unbundle event!!!\n ${{ bundledEvent }}\n\n`)
+  console.warn(`Reached unbundle event!!!`)
   if (bundledEvent.asset_bundle) {
     return bundledEvent.asset_bundle.assets.map((asset: any) => {
       return {

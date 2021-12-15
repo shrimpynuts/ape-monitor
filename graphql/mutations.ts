@@ -52,3 +52,14 @@ export const UPSERT_COLLECTION_WITHOUT_STATS = gql`
     }
   }
 `
+
+export const SET_COLLECTION_ERROR_FETCHING = gql`
+  mutation SetCollectionErrorFetching($contract_address: String!, $error_fetching: Boolean!) {
+    update_collections_by_pk(
+      pk_columns: { contract_address: $contract_address }
+      _set: { error_fetching: $error_fetching }
+    ) {
+      error_fetching
+    }
+  }
+`

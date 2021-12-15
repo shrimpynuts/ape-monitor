@@ -1,6 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getCollectionStats } from '../../../lib/opensea/collections'
-import { UPSERT_COLLECTION_WITH_STATS, UPSERT_COLLECTION_WITHOUT_STATS } from '../../../graphql/mutations'
+import {
+  UPSERT_COLLECTION_WITH_STATS,
+  UPSERT_COLLECTION_WITHOUT_STATS,
+  SET_COLLECTION_ERROR_FETCHING,
+} from '../../../graphql/mutations'
 import { GET_MOST_STALE_COLLECTIONS } from '../../../graphql/queries'
 import client from '../../../backend/graphql-client'
 import { fetchOpenseaCollectionFromContractAddress } from '../../../backend/opensea-helpers'
@@ -51,7 +55,16 @@ const updateCollection = async (givenCollection: ICollection) => {
     log(`   Fetching opensea collection stats for ${collection.slug}`)
     const stats = await getCollectionStats(collection.slug)
     if (stats == null) {
-      console.error('Could not get stats for collection, getCollectionStats returned null')
+      console.error(`Setting ${collection.slug} as error_fetching = true`)
+
+      await client.mutate({
+        mutation: SET_COLLECTION_ERROR_FETCHING,
+        variables: {
+          contract_address,
+          error_fetching: true,
+        },
+      })
+
       return
     }
     // Add stats data to our old collection data

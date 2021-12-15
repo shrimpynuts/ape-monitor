@@ -181,13 +181,7 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
         </div>
 
         {/* Toaster to give user feedback */}
-        <Toaster
-          toastOptions={{
-            style: {
-              wordBreak: 'break-all',
-            },
-          }}
-        />
+        <Toaster />
 
         {/* Display best trades */}
         <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">

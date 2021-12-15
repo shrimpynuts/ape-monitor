@@ -13,7 +13,7 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 // We use this here because opensea /assets endpoint doesn't give us stats,
 // so we don't want to override existing stats data
 const upsertCollectionToDB = async (
-  collection: Omit<ICollection, 'updated_at' | 'created_at'>,
+  collection: Omit<ICollection, 'updated_at' | 'created_at' | 'is_stats_fetched'>,
   client: ApolloClient<NormalizedCacheObject>,
 ) => {
   return client.mutate({

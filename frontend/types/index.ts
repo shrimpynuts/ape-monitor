@@ -1,9 +1,10 @@
 export interface ICollection {
   created_at: string
   updated_at: string
-  name: string
   contract_address: string
-  slug: string
+  is_stats_fetched: boolean
+  name?: string
+  slug?: string
   twitter_username?: string
   discord_url?: string
   external_url?: string

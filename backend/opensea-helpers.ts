@@ -2,10 +2,10 @@ import { ICollection } from '../frontend/types'
 
 export const fetchOpenseaCollectionFromContractAddress = async (
   contractAddress: string,
-): Promise<Omit<ICollection, 'created_at' | 'updated_at'>> => {
-  const result = await fetch(`https://api.opensea.io/api/v1/asset_contract/${contractAddress}`).then((res) =>
-    res.json(),
-  )
+): Promise<Omit<ICollection, 'created_at' | 'updated_at' | 'is_stats_fetched'>> => {
+  const url = `https://api.opensea.io/api/v1/asset_contract/${contractAddress}`
+  console.log(`   Making Opensea API Call: ${url}`)
+  const result = await fetch(url).then((res) => res.json())
   const { collection, detail } = result
 
   // This means request was throttled

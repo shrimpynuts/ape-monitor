@@ -131,7 +131,6 @@ export const fetchAllCollections = async (assets: IAsset[]): Promise<ICollection
         const collection = fetch(`${getServer()}/api/collection/${asset.contract_address}`)
           .then((r) => r.json())
           .catch((error) => {
-            console.log('DICK SHIT')
             return { error }
           })
         return collection
@@ -144,8 +143,6 @@ export const fetchAllCollections = async (assets: IAsset[]): Promise<ICollection
     // Log error if collection fails to fetch all collections
     const numCollectionsExpected = Object.keys(assetsGroupedByContractAddress).length
     const numCollectionsFetched = validResults.length
-
-    console.log({ numCollectionsExpected, numCollectionsFetched })
 
     if (numCollectionsFetched !== numCollectionsExpected) {
       toast.error(`Error: could not fetch ${numCollectionsExpected - numCollectionsFetched} collections!`)

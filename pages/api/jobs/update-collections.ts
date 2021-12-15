@@ -113,7 +113,11 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
     .filter(({ one_day_change }: ICollection) => !one_day_change)
     // Uncomment if you want to filter for a single collection
     // .filter(({ slug }: ICollection) => slug === 'mechanized-abstractions')
-    // Sort by the total volume
+    // // Sort by the updated_at
+    // .sort((collectionA: any, collectionB: any) =>
+    //   collectionA.total_volume ? collectionB.updated_at - collectionA.updated_at : 1,
+    // )
+    // // Sort by the total volume
     // .sort((collectionA: any, collectionB: any) =>
     //   collectionA.total_volume ? collectionB.total_volume - collectionA.total_volume : 1,
     // )

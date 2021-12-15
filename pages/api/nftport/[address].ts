@@ -15,6 +15,8 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   // Cannot fetch without address
   if (typeof givenAddress !== 'string') return res.status(400).json({ error: 'address must be given' })
 
+  console.log(`\n 🎯 Hit nftport assets endpoint for ${givenAddress}`)
+
   // Cannot fetch if api key not available
   if (!apiKey) return res.status(400).json({ error: 'Could not find nftport api key (NFTPORT_API_KEY)' })
 

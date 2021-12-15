@@ -14,8 +14,17 @@ const SingleCollectionStatistic = ({ metric, total }: { metric: number; total: n
 export default function DataPanel({ data }: any) {
   const total = data.total.aggregate.count
 
-  const { slug_null, one_day_change_null, is_stats_fetched_true, floor_price_null, stale1, stale2, stale3, stale4 } =
-    data
+  const {
+    slug_null,
+    one_day_change_null,
+    error_fetching_true,
+    is_stats_fetched_true,
+    floor_price_null,
+    stale1,
+    stale2,
+    stale3,
+    stale4,
+  } = data
 
   return (
     <div className="w-full md:mx-auto flex flex-col ">
@@ -43,6 +52,10 @@ export default function DataPanel({ data }: any) {
         <div className="flex justify-between p-4">
           <span className="font-mono bg-gray-800 p-1 rounded">slug == null</span>
           <SingleCollectionStatistic metric={slug_null.aggregate.count} total={total} />
+        </div>
+        <div className="flex justify-between p-4">
+          <span className="font-mono bg-gray-800 p-1 rounded">error_fetching == true</span>
+          <SingleCollectionStatistic metric={error_fetching_true.aggregate.count} total={total} />
         </div>
       </div>
 

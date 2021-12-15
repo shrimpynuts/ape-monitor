@@ -35,9 +35,9 @@ export const fetchOpenSeaCollections = async ({
   limit = 300,
 }: IFetchOpenSeaCollectionsProps): Promise<{ collections: Array<ICollection> }> => {
   console.log(`Calling offset ${offset}`)
-  const result = await fetch(`https://api.opensea.io/api/v1/collections?offset=${offset}&limit=${limit}`).then((res) =>
-    res.json(),
-  )
+  const url = `https://api.opensea.io/api/v1/collections?offset=${offset}&limit=${limit}`
+  console.log(`   Making Opensea API Call: ${url}`)
+  const result = await fetch(url).then((res) => res.json())
 
   // This means request was throttled
   // if (detail) {

@@ -8,15 +8,16 @@ export const getAssetsForOwner = async (ownerAddress: string) => {
   // Infinite loop until all assets are fetched
   while (1) {
     // Construct request url
-    const openseaEndpoint = `https://api.opensea.io/api/v1/assets?owner=${ownerAddress}&order_direction=desc&offset=${totalAssets.length}&limit=50`
+    const url = `https://api.opensea.io/api/v1/assets?owner=${ownerAddress}&order_direction=desc&offset=${totalAssets.length}&limit=50`
+    console.log(`   Making Opensea API Call: ${url}`)
 
     // Fetch with address and the current offset set to the number of already fetched assets
-    const resp = await fetch(openseaEndpoint, openseaFetchHeaders)
+    const resp = await fetch(url, openseaFetchHeaders)
     const { assets, detail } = await resp.json()
 
     // This means the request was throttled
     if (detail) {
-      console.error(`\nOpensea assets for owner ${ownerAddress}: ${detail}\n`)
+      console.error(`Opensea assets for owner ${ownerAddress}: ${detail}`)
       throw new Error(detail)
     }
 
@@ -25,7 +26,7 @@ export const getAssetsForOwner = async (ownerAddress: string) => {
       // If we get less than the limit of 50 assets, we know we've fetched everything
       if (assets.length < 50) break
     } else {
-      console.error(`Could not fetch events for endpoint: ${openseaEndpoint}\n\n`)
+      console.error(`Could not fetch assets for endpoint: ${url}`)
       break
     }
   }
@@ -118,9 +119,9 @@ export const pruneAssets = (openseaAssets: any[]): IAsset[] => {
 export const fetchOpenseaCollectionFromContractAddress = async (
   contractAddress: string,
 ): Promise<Omit<ICollection, 'created_at' | 'updated_at' | 'is_stats_fetched'>> => {
-  const result = await fetch(`https://api.opensea.io/api/v1/asset_contract/${contractAddress}`).then((res) =>
-    res.json(),
-  )
+  const url = `https://api.opensea.io/api/v1/asset_contract/${contractAddress}`
+  console.log(`   Making Opensea API Call: ${url}`)
+  const result = await fetch(url).then((res) => res.json())
   const { collection, detail } = result
 
   // This means request was throttled

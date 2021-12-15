@@ -60,7 +60,7 @@ const Home: NextPage = () => {
             </>
           )}
         </div>
-        <div className="w-full md:mx-auto md:w-2/3 my-8">
+        <div className="w-full md:mx-auto md:w-4/5 my-8">
           <Leaderboard />
         </div>
       </div>

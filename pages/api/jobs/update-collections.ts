@@ -80,7 +80,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   const startJobDate = new Date().getTime()
 
   // Number of collections to query from our database each run
-  const QUERY_LIMIT = 600
+  const QUERY_LIMIT = 1000
 
   // Number of collections to query from opensea each run of this job
   const JOB_LIMIT = 100
@@ -97,12 +97,13 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Take the top JOB_LIMIT collections in terms of total_volume
   const selectedCollections = collections
+    .filter(({ one_day_change }: ICollection) => !one_day_change)
     // Uncomment if you want to filter for a single collection
     // .filter(({ slug }: ICollection) => slug === 'mechanized-abstractions')
     // Sort by the total volume
-    .sort((collectionA: any, collectionB: any) =>
-      collectionA.total_volume ? collectionB.total_volume - collectionA.total_volume : 1,
-    )
+    // .sort((collectionA: any, collectionB: any) =>
+    //   collectionA.total_volume ? collectionB.total_volume - collectionA.total_volume : 1,
+    // )
     // Update only LIMIT in a single job
     .slice(0, JOB_LIMIT)
 

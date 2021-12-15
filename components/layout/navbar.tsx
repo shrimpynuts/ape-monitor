@@ -88,8 +88,8 @@ const Navbar = ({
           {/* Logo */}
 
           <Link href="/">
-            <div className="ml-1">
-              <Emoji className="text-4xl cursor-pointer" label="logo" symbol="🦧" />
+            <div className="ml-1 transform hover:scale-90 transition duration-200">
+              <Emoji className="text-4xl cursor-pointer " label="logo" symbol="🦧" />
             </div>
           </Link>
 

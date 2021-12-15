@@ -8,6 +8,7 @@ select_permissions:
     - contract_address
     - created_at
     - discord_url
+    - error_fetching
     - external_url
     - floor_price
     - id

@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
 import { getAllAssetsFromCollections } from '../lib/opensea/collections'
@@ -15,7 +16,12 @@ function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-4">
       {allAssets.map(({ image_url, link }) => {
         const image = (
-          <img src={image_url} className="rounded object-none h-64 w-64 transform hover:scale-110 duration-200" />
+          <Image
+            src={image_url || ''}
+            width={180}
+            height={180}
+            className="rounded object-none h-64 w-64 transform hover:scale-110 duration-200"
+          />
         )
         return link ? (
           <Link href={link} passHref>

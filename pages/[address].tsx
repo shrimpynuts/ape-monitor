@@ -112,8 +112,6 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
       // Update the state accordingly
       setCollectionsWithAssets(collectionsWithAssets)
 
-      console.log({ collectionsWithAssets })
-
       setLoading(false)
     }
 

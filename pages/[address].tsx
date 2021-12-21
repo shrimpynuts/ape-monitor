@@ -15,6 +15,7 @@ import TabOptions from '../components/tabOptions'
 import { INSERT_USER } from '../graphql/mutations'
 import useWeb3Container from '../hooks/useWeb3User'
 import CollectionsTable from '../components/collectionsTable'
+import Gallery from '../components/gallery'
 
 import {
   middleEllipses,
@@ -57,12 +58,16 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
       display: 'Current Portfolio',
       index: 0,
     },
+    {
+      display: 'Gallery View',
+      index: 1,
+    },
     // Only allow the previous trades tab if trade data is available
     ...(tradeData
       ? [
           {
             display: 'Previous Trades',
-            index: 1,
+            index: 2,
           },
         ]
       : []),
@@ -113,6 +118,9 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
 
       // Update the state accordingly
       setCollectionsWithAssets(collectionsWithAssets)
+
+      console.log({ collectionsWithAssets })
+
       setLoading(false)
     }
 
@@ -193,7 +201,7 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
         {/* Display all tab options */}
         <TabOptions tabs={tabs} setCurrentTab={setCurrentTab} currentTab={currentTab} />
 
-        {/* Current portfolio tab */}
+        {/* Portfolio tab */}
         {currentTab.index === 0 && (
           <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
             <div className="flex flex-col flex-wrap space-y-2 mx-4">
@@ -202,8 +210,17 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
           </div>
         )}
 
-        {/* Historical trades tab */}
+        {/* Gallery tab */}
         {currentTab.index === 1 && (
+          <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
+            <div className="flex flex-col flex-wrap space-y-2 mx-4">
+              <Gallery collectionsWithAssets={collectionsWithAssets} loading={loading} />
+            </div>
+          </div>
+        )}
+
+        {/* Historical trades tab */}
+        {currentTab.index === 2 && (
           <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
             <div className="flex flex-col flex-wrap space-y-2 mx-4">
               <TradesTable tradeData={tradeData} loading={tradesLoading} addressData={addressData} />

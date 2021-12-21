@@ -1,6 +1,6 @@
 import web3 from 'web3'
 
-import { IAsset, ICollection } from '../../frontend/types'
+import { ICollectionsWithAssets, IAsset, ICollection } from '../../frontend/types'
 import { openseaFetchHeaders } from './config'
 
 export const getAssetsForOwner = async (ownerAddress: string) => {
@@ -140,4 +140,15 @@ export const fetchOpenseaCollectionFromContractAddress = async (
     external_url: collection.external_url,
   }
   return prunedCollection
+}
+
+/**
+ * Extracts all IAssets from an ICollectionsWithAssets object
+ * @param collectionsWithAssets The ICollectionsWithAssets object
+ * @returns All IAssets
+ */
+export const getAllAssetsFromCollections = (collectionsWithAssets: ICollectionsWithAssets) => {
+  return Object.values(collectionsWithAssets).reduce((acc: IAsset[], curr) => {
+    return [...acc, ...curr.assets]
+  }, [])
 }

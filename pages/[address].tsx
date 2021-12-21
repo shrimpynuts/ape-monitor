@@ -8,12 +8,10 @@ import Head from 'next/head'
 
 import { ITradeData, IAddressData, ICollectionsWithAssets } from '../frontend/types'
 import ProfileBanner from '../components/profile/profileBanner'
-import HighlightedTrades from '../components/highlightedTrades'
 import Navbar from '../components/layout/navbar'
 import TradesTable from '../components/tradesTable'
 import TabOptions from '../components/tabOptions'
 import { INSERT_USER } from '../graphql/mutations'
-import useWeb3Container from '../hooks/useWeb3User'
 import CollectionsTable from '../components/collectionsTable'
 import Gallery from '../components/gallery'
 
@@ -37,7 +35,6 @@ import {
  * @param addressData Data about the given address from server side
  */
 const ProfilePage: NextPage<IAddressData> = (addressData) => {
-  const { wallet } = useWeb3Container.useContainer()
   const { address, ensDomain, addressFound } = addressData
   const [loading, setLoading] = useState(addressFound)
   const [insertUser] = useMutation(INSERT_USER)
@@ -63,14 +60,10 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
       index: 1,
     },
     // Only allow the previous trades tab if trade data is available
-    ...(tradeData
-      ? [
-          {
-            display: 'Previous Trades',
-            index: 2,
-          },
-        ]
-      : []),
+    {
+      display: 'Previous Trades',
+      index: 2,
+    },
   ]
   const [currentTab, setCurrentTab] = useState(tabs[0])
 
@@ -143,6 +136,7 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
       })
       .catch(() => {
         toast.error(`Opensea throttled request for trades!`)
+        setTradesLoading(false)
       })
   }, [address])
 
@@ -192,14 +186,16 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
         <Toaster />
 
         {/* Display best trades */}
-        <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
+        {/* <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
           <div className="flex space-x-4 ">
             <HighlightedTrades tradeData={tradeData} loading={tradesLoading} />
           </div>
-        </div>
+        </div> */}
 
         {/* Display all tab options */}
-        <TabOptions tabs={tabs} setCurrentTab={setCurrentTab} currentTab={currentTab} />
+        <div className="max-w-screen-lg m-auto overflow-hidden">
+          <TabOptions tabs={tabs} setCurrentTab={setCurrentTab} currentTab={currentTab} />
+        </div>
 
         {/* Portfolio tab */}
         {currentTab.index === 0 && (

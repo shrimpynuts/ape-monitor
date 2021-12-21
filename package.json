@@ -41,6 +41,7 @@
     "react-moment": "^1.1.1",
     "react-rewards": "^1.1.2",
     "react-table": "^7.7.0",
+    "react-use-clipboard": "^1.0.7",
     "tailwindcss": "^2.2.15",
     "unstated-next": "^1.1.0",
     "use-mobile-detect-hook": "^1.0.4",

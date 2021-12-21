@@ -30,7 +30,7 @@ const upsertCollectionToDB = async (
  */
 const request = async (req: NextApiRequest, res: NextApiResponse) => {
   // To cache our own API requests, uncomment the line below
-  // res.setHeader('Cache-Control', 's-maxage=1800')
+  res.setHeader('Cache-Control', 's-maxage=1800')
 
   const { address: ownerAddress } = req.query
   if (typeof ownerAddress !== 'string') return res.status(400).json({ error: 'ownerAddress must be given' })

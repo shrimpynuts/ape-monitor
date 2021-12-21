@@ -36,7 +36,7 @@ const ProfileAvatar = ({ address, ensName }: IProps) => {
       </div>
       <div className="-mt-1 md:mt-1 flex space-x-1 items-center">
         <span className="dark:text-gray-300">{middleEllipses(address, 4, 5, 2)}</span>
-        <div className="p-2 hover:bg-gray-800 rounded-full cursor-pointer" onClick={setCopied}>
+        <div className="p-2 hover:bg-gray-100 hover:dark:bg-gray-800 rounded-full cursor-pointer" onClick={setCopied}>
           {isCopied ? <ClipboardCheckIcon className="h-4 w-4" /> : <ClipboardIcon className="h-4 w-4" />}
         </div>
       </div>

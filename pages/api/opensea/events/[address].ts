@@ -36,7 +36,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   res.status(200).json({
     tradesByCollection,
     totalTradeStats,
-    events: events.map(pruneEvent),
+    events: unbundledEvents.map(pruneEvent),
   })
 }
 

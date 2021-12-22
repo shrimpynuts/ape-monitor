@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import { getAllAssetsFromCollections } from '../lib/opensea/collections'
 import { ICollectionsWithAssets, IAsset } from '../frontend/types'
+import Placeholder from '../public/placeholder.jpeg'
 
 interface IProps {
   collectionsWithAssets: ICollectionsWithAssets
@@ -17,10 +18,10 @@ function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
       {allAssets.map(({ image_url, link }) => {
         const image = (
           <Image
-            src={image_url || ''}
+            src={image_url || Placeholder}
             width={180}
             height={180}
-            className="rounded object-none h-64 w-64 transform hover:scale-110 duration-200"
+            className="rounded object-none h-64 w-64 transform hover:scale-110 duration-200 hover:shadow-xl"
           />
         )
         return link ? (

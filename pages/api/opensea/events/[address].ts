@@ -4,7 +4,7 @@ import {
   getTradesByCollectionAndTradeStatsForOwner,
   unbundleEvents,
   getEventsBySuccessfulSalesAndBuys,
-} from '../../../../lib/opensea/trades'
+} from '../../../../lib/opensea/events'
 
 /**
  * Fetches the sales of the given address using the Opensea API.
@@ -32,7 +32,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   // Parse events and extract data into usable objects
   const { tradesByCollection, totalTradeStats } = getTradesByCollectionAndTradeStatsForOwner(sales, buys)
 
-  res.status(200).json({ tradesByCollection, totalTradeStats })
+  res.status(200).json({ events: unbundledEvents.slice(0, 2) })
 }
 
 export default request

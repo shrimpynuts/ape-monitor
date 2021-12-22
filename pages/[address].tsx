@@ -126,7 +126,7 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
    * Fetches trade data, storing in state
    */
   useEffect(() => {
-    fetch(`${getServer()}/api/opensea/trades/${address}`)
+    fetch(`${getServer()}/api/opensea/events/${address}`)
       .then((resp) => resp.json())
       .then((data) => {
         setTradeData(data)

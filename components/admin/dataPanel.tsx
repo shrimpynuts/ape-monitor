@@ -38,23 +38,23 @@ export default function DataPanel({ data }: any) {
           <span>{total} collections</span>
         </div>
         <div className="flex justify-between p-4">
-          <span className="font-mono bg-gray-800 p-1 rounded">one_day_change == null</span>
+          <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded">one_day_change == null</span>
           <SingleCollectionStatistic metric={one_day_change_null.aggregate.count} total={total} />
         </div>
         <div className="flex justify-between p-4">
-          <span className="font-mono bg-gray-800 p-1 rounded">is_stats_fetched == true</span>
+          <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded">is_stats_fetched == true</span>
           <SingleCollectionStatistic metric={is_stats_fetched_true.aggregate.count} total={total} />
         </div>
         <div className="flex justify-between p-4">
-          <span className="font-mono bg-gray-800 p-1 rounded">floor_price == null</span>
+          <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded">floor_price == null</span>
           <SingleCollectionStatistic metric={floor_price_null.aggregate.count} total={total} />
         </div>
         <div className="flex justify-between p-4">
-          <span className="font-mono bg-gray-800 p-1 rounded">slug == null</span>
+          <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded">slug == null</span>
           <SingleCollectionStatistic metric={slug_null.aggregate.count} total={total} />
         </div>
         <div className="flex justify-between p-4">
-          <span className="font-mono bg-gray-800 p-1 rounded">error_fetching == true</span>
+          <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded">error_fetching == true</span>
           <SingleCollectionStatistic metric={error_fetching_true.aggregate.count} total={total} />
         </div>
       </div>

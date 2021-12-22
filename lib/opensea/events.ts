@@ -9,9 +9,14 @@ import { pruneAsset } from './collections'
  */
 export const getEventsForOwner = async (ownerAddress: string) => {
   let totalAssetEvents: IOpenSeaEvent[] = []
+
   const limit = 300
-  // Infinite loop until all asset_events are fetched
-  while (1) {
+  const maxIterations = 1
+
+  let currentIteration = 0
+  while (currentIteration < maxIterations) {
+    currentIteration++
+
     // Construct request url
     const url = `https://api.opensea.io/api/v1/events?account_address=${ownerAddress}&only_opensea=false&offset=${totalAssetEvents.length}&limit=${limit}`
     console.log(`   Making Opensea API Call: ${url}`)
@@ -216,14 +221,6 @@ const getEventFromAddress = (event: IOpenSeaEvent) => {
 
 const getEventToAddress = (event: IOpenSeaEvent) => {
   return event.to_account.address
-}
-
-const isEventSeller = (event: IOpenSeaEvent, address: string) => {
-  return getEventFromAddress(event).toLowerCase() === address.toLowerCase()
-}
-
-const isEventBuyer = (event: IOpenSeaEvent, address: string) => {
-  return getEventToAddress(event).toLowerCase() === address.toLowerCase()
 }
 
 const getCollectionFromEvent = (

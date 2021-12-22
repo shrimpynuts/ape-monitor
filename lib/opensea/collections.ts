@@ -1,6 +1,6 @@
 import web3 from 'web3'
 
-import { ICollectionsWithAssets, IAsset, ICollection } from '../../frontend/types'
+import { ICollectionsWithAssets, IOpenseaCollection, IOpenseaAsset, IAsset, ICollection } from '../../frontend/types'
 import { openseaFetchHeaders } from './config'
 
 export const getAssetsForOwner = async (ownerAddress: string) => {
@@ -94,21 +94,19 @@ export const pruneAndRemoveDuplicateCollections = (
 }
 
 /**
- * Turns Opensea assets into IAsset's
+ * Turns Opensea asset into IAsset
  * @param assets Opensea asset data returned from /assets endpoint
  */
-export const pruneAssets = (openseaAssets: any[]): IAsset[] => {
-  return openseaAssets.map((asset) => {
-    return {
-      name: asset.name,
-      contract_address: asset.asset_contract.address,
-      description: asset.description,
-      image_url: asset.image_url,
-      link: asset.permalink,
-      token_id: asset.token_id,
-      last_sale: asset.last_sale ? parseFloat(web3.utils.fromWei(asset.last_sale.total_price)) : undefined,
-    }
-  })
+export const pruneAsset = (asset: IOpenseaAsset): IAsset => {
+  return {
+    name: asset.name,
+    contract_address: asset.asset_contract.address,
+    description: asset.description,
+    image_url: asset.image_url,
+    link: asset.permalink,
+    token_id: asset.token_id,
+    last_sale: asset.last_sale ? parseFloat(web3.utils.fromWei(asset.last_sale.total_price)) : undefined,
+  }
 }
 
 /**

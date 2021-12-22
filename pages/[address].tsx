@@ -14,6 +14,7 @@ import TabOptions from '../components/tabOptions'
 import { INSERT_USER } from '../graphql/mutations'
 import CollectionsTable from '../components/collectionsTable'
 import Gallery from '../components/gallery'
+import Activity from '../components/activity'
 
 import {
   middleEllipses,
@@ -63,6 +64,10 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
     {
       display: 'Previous Trades',
       index: 2,
+    },
+    {
+      display: 'Recent Activity',
+      index: 3,
     },
   ]
   const [currentTab, setCurrentTab] = useState(tabs[0])
@@ -218,6 +223,15 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
           <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
             <div className="flex flex-col flex-wrap space-y-2 mx-4">
               <TradesTable tradeData={tradeData} loading={tradesLoading} addressData={addressData} />
+            </div>
+          </div>
+        )}
+
+        {/* Historical trades tab */}
+        {currentTab.index === 3 && (
+          <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
+            <div className="flex flex-col flex-wrap space-y-2 mx-4">
+              <Activity tradeData={tradeData} loading={tradesLoading} addressData={addressData} />
             </div>
           </div>
         )}

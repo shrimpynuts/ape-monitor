@@ -1,7 +1,8 @@
 import web3 from 'web3'
 
-import { IOpenSeaEvent } from '../../frontend/types'
+import { ICollection, IEvent, IOpenSeaEvent, IAsset } from '../../frontend/types'
 import { openseaFetchHeaders } from './config'
+import { pruneAsset } from './collections'
 
 /**
  * Fetches the events (buy/sells) for a given address
@@ -207,4 +208,70 @@ export const getTradesByCollectionAndTradeStatsForOwner = (
   }
 
   return { tradesByCollection, totalTradeStats }
+}
+
+const getEventFromAddress = (event: IOpenSeaEvent) => {
+  return event.from_account.address
+}
+
+const getEventToAddress = (event: IOpenSeaEvent) => {
+  return event.to_account.address
+}
+
+const isEventSeller = (event: IOpenSeaEvent, address: string) => {
+  return getEventFromAddress(event).toLowerCase() === address.toLowerCase()
+}
+
+const isEventBuyer = (event: IOpenSeaEvent, address: string) => {
+  return getEventToAddress(event).toLowerCase() === address.toLowerCase()
+}
+
+const getCollectionFromEvent = (
+  event: IOpenSeaEvent,
+): Omit<ICollection, 'created_at' | 'updated_at' | 'is_stats_fetched'> => {
+  return {
+    contract_address: event.asset.asset_contract.address,
+    name: event.asset.collection.name,
+    slug: event.asset.collection.slug,
+    image_url: event.asset.collection.image_url,
+    twitter_username: event.asset.collection.twitter_username,
+    discord_url: event.asset.collection.discord_url,
+    external_url: event.asset.collection.external_url,
+  }
+}
+
+const getAssetFromEvent = (event: IOpenSeaEvent): IAsset => {
+  return pruneAsset(event.asset)
+}
+
+const getEventType = (event: IOpenSeaEvent): string => {
+  return event.event_type
+}
+
+export const pruneEvent = (event: IOpenSeaEvent) => {
+  const prunedEvent: IEvent = {
+    date: event.created_date,
+    asset: getAssetFromEvent(event),
+    collection: getCollectionFromEvent(event),
+    type: getEventType(event),
+
+    // If 'successful' it means this is a sale/buy
+    // Retrieve seller/winner data and price
+    ...(getEventType(event) === 'successful' && {
+      sellerAddress: event.seller.address,
+      sellerUsername: event.seller.user?.username,
+      buyerAddress: event.winner_account.address,
+      buyerUsername: event.winner_account.user?.username,
+      price: parseFloat(web3.utils.fromWei(event.total_price)),
+    }),
+
+    // If 'transfer', retrieve from/to data
+    ...(getEventType(event) === 'transfer' && {
+      fromAddress: event.from_account.address,
+      fromUsername: event.from_account.user?.username,
+      toAddress: event.to_account.address,
+      toUsername: event.to_account.user?.username,
+    }),
+  }
+  return prunedEvent
 }

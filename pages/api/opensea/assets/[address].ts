@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { ICollection } from '../../../../frontend/types'
-import { pruneAndRemoveDuplicateCollections, getAssetsForOwner, pruneAssets } from '../../../../lib/opensea/collections'
+import { pruneAndRemoveDuplicateCollections, getAssetsForOwner, pruneAsset } from '../../../../lib/opensea/collections'
 import { UPSERT_COLLECTION_WITHOUT_STATS } from '../../../../graphql/mutations'
 import client from '../../../../backend/graphql-client'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
@@ -60,7 +60,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
     })
 
     // Prune Opensea assets into IAsset objects
-    const prunedAssets = pruneAssets(assets)
+    const prunedAssets = assets.map(pruneAsset)
 
     // Return assets
     return res.status(200).json({ assets: prunedAssets })

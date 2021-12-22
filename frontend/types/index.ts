@@ -17,6 +17,14 @@ export interface ICollection {
   total_volume?: number
 }
 
+export interface IOpenseaCollection {
+  [key: string]: any
+}
+
+export interface IOpenseaAsset {
+  [key: string]: any
+}
+
 export interface IAsset {
   name: string
   contract_address: string
@@ -38,6 +46,14 @@ export interface ICollectionsWithAssets {
 
 export interface IOpenSeaEvent {
   [key: string]: any
+}
+
+export interface IEvent {
+  [key: string]: any
+  date: Date
+  type: string
+  asset: IAsset
+  collection: Omit<ICollection, 'created_at' | 'updated_at' | 'is_stats_fetched'>
 }
 
 export interface IAssetsGroupedByContract {

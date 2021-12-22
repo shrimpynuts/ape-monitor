@@ -4,6 +4,7 @@ import {
   getTradesByCollectionAndTradeStatsForOwner,
   unbundleEvents,
   getEventsBySuccessfulSalesAndBuys,
+  pruneEvent,
 } from '../../../../lib/opensea/events'
 
 /**
@@ -32,7 +33,11 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   // Parse events and extract data into usable objects
   const { tradesByCollection, totalTradeStats } = getTradesByCollectionAndTradeStatsForOwner(sales, buys)
 
-  res.status(200).json({ events: unbundledEvents.slice(0, 2) })
+  res.status(200).json({
+    tradesByCollection,
+    totalTradeStats,
+    events: events.map(pruneEvent),
+  })
 }
 
 export default request

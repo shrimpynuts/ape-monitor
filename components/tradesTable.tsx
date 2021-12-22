@@ -148,11 +148,11 @@ function TradesTable({ tradeData, loading, addressData }: IProps) {
 
   return (
     <div className="w-full">
-      {trades.length > 0 && (
+      {/* {trades.length > 0 && (
         <div className="flex my-4 ">
           <HighlightedTrades tradeData={tradeData} loading={loading} />
         </div>
-      )}
+      )} */}
 
       <Table
         columns={columns}

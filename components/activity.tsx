@@ -17,6 +17,28 @@ interface IEventProps {
   event: IEvent
 }
 
+interface ISingleEventProps {
+  date: Date
+  bodyText: string
+  image: React.ReactNode
+}
+
+function Event({ bodyText, date, image }: ISingleEventProps) {
+  return (
+    <div>
+      <span className="text-xs">
+        <Moment fromNow>{date}</Moment>
+      </span>
+      <div className="mt-2 flex space-x-4 justify-between md:justify-start md:items-center">
+        <span className="text-sm w-24 grow-0 text-right md:text-right">
+          <div className="inline">{image}</div>
+        </span>
+        <span className="text-sm text-right">{bodyText}</span>
+      </div>
+    </div>
+  )
+}
+
 function SaleEvent({ event, addressData }: IEventProps) {
   const isSeller = event.sellerAddress === addressData.address.toLowerCase()
   const counterParty = isSeller
@@ -25,30 +47,24 @@ function SaleEvent({ event, addressData }: IEventProps) {
 
   const assetImage = (
     <div className="rounded">
-      <Image src={event.asset.image_url || Placeholder} width={64} height={64} />
+      <Image src={event.asset.image_url || Placeholder} width={96} height={96} />
     </div>
   )
 
-  return (
-    <div className="flex space-x-4 items-center">
-      <span className="text-sm w-24 text-right">
-        <Moment fromNow>{event.date}</Moment>
-      </span>
-      {event.asset.link ? (
-        <Link href={event.asset.link} passHref>
-          <a target="_blank" rel="noreferrer">
-            {assetImage}
-          </a>
-        </Link>
-      ) : (
-        assetImage
-      )}
-      <span>
-        {isSeller ? 'Sold' : 'Bought'} {event.asset.name} {isSeller ? 'to' : 'from'} {counterParty} for{' '}
-        <img className="inline" src="/eth-logo.svg" alt="eth logo" width="11" /> {event.price}
-      </span>
-    </div>
+  const image = event.asset.link ? (
+    <Link href={event.asset.link} passHref>
+      <a target="_blank" rel="noreferrer">
+        {assetImage}
+      </a>
+    </Link>
+  ) : (
+    assetImage
   )
+
+  const text = `${isSeller ? 'Sold' : 'Bought'} ${event.asset.name} ${isSeller ? 'to' : 'from'} ${counterParty} for ${
+    event.price
+  }Ξ`
+  return <Event date={event.date} bodyText={text} image={image} />
 }
 
 function TransferEvent({ event, addressData }: IEventProps) {
@@ -59,42 +75,29 @@ function TransferEvent({ event, addressData }: IEventProps) {
 
   const assetImage = (
     <div className="rounded">
-      <Image src={event.asset.image_url || Placeholder} width={64} height={64} />
+      <Image src={event.asset.image_url || Placeholder} width={96} height={96} />
     </div>
   )
-
   const isMint = isReceiver && counterParty === 'NullAddress'
-
-  return (
-    <div className="flex space-x-4 items-center">
-      <span className="text-sm w-24 text-right">
-        <Moment fromNow>{event.date}</Moment>
-      </span>
-      {event.asset.link ? (
-        <Link href={event.asset.link} passHref>
-          <a target="_blank" rel="noreferrer">
-            {assetImage}
-          </a>
-        </Link>
-      ) : (
-        assetImage
-      )}
-      <span>
-        {isMint ? (
-          'Minted ' + event.asset.name
-        ) : (
-          <>
-            {isReceiver ? 'Received' : 'Sent'} {event.asset.name} {isReceiver ? 'from' : 'to'} {counterParty}
-          </>
-        )}
-      </span>
-    </div>
+  const image = event.asset.link ? (
+    <Link href={event.asset.link} passHref>
+      <a target="_blank" rel="noreferrer">
+        {assetImage}
+      </a>
+    </Link>
+  ) : (
+    assetImage
   )
+  const text = isMint
+    ? `Minted ${event.asset.name}`
+    : `${isReceiver ? 'Received' : 'Sent'} ${event.asset.name} ${isReceiver ? 'from' : 'to'} ${counterParty}`
+
+  return <Event date={event.date} bodyText={text} image={image} />
 }
 
 function Activity({ tradeData, loading, addressData }: IProps) {
   return (
-    <div className="">
+    <div className="flex flex-col space-y-4 md:space-y-2">
       {tradeData?.events.map((event: IEvent) => {
         if (event.type === 'successful') return <SaleEvent event={event} addressData={addressData} />
         if (event.type === 'transfer') return <TransferEvent event={event} addressData={addressData} />

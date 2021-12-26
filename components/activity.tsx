@@ -20,22 +20,37 @@ interface IEventProps {
 interface ISingleEventProps {
   date: Date
   bodyText: string
-  image: React.ReactNode
+  image?: string
+  link?: string
 }
 
-function Event({ bodyText, date, image }: ISingleEventProps) {
-  return (
-    <div>
-      <span className="text-xs">
-        <Moment fromNow>{date}</Moment>
-      </span>
-      <div className="mt-2 flex space-x-4 justify-between md:justify-start md:items-center">
+function Event({ bodyText, date, image, link }: ISingleEventProps) {
+  const event = (
+    <div
+      className="px-4 py-4 rounded shadow hover:bg-gray-50 cursor-pointer border 
+border-solid border-gray-100 dark:border-darkblue drop-shadow-md "
+    >
+      <div className="flex space-x-4 justify-between  md:items-center">
         <span className="text-sm w-24 grow-0 text-right md:text-right">
-          <div className="inline">{image}</div>
+          <Image className="rounded-lg" src={image || Placeholder} width={96} height={96} />
         </span>
-        <span className="text-sm text-right">{bodyText}</span>
+        <div className="flex flex-col space-y-2">
+          <span className="text-xs text-right">
+            <Moment fromNow>{date}</Moment>
+          </span>
+          <span className="text-sm text-right">{bodyText}</span>
+        </div>
       </div>
     </div>
+  )
+  return link ? (
+    <Link href={link} passHref>
+      <a target="_blank" rel="noreferrer">
+        {event}
+      </a>
+    </Link>
+  ) : (
+    event
   )
 }
 
@@ -45,26 +60,10 @@ function SaleEvent({ event, addressData }: IEventProps) {
     ? event.buyerUsername || middleEllipses(event.buyerAddress, 4, 5, 2)
     : event.sellerUsername || middleEllipses(event.sellerAddress, 4, 5, 2)
 
-  const assetImage = (
-    <div className="rounded">
-      <Image src={event.asset.image_url || Placeholder} width={96} height={96} />
-    </div>
-  )
-
-  const image = event.asset.link ? (
-    <Link href={event.asset.link} passHref>
-      <a target="_blank" rel="noreferrer">
-        {assetImage}
-      </a>
-    </Link>
-  ) : (
-    assetImage
-  )
-
   const text = `${isSeller ? 'Sold' : 'Bought'} ${event.asset.name} ${isSeller ? 'to' : 'from'} ${counterParty} for ${
     event.price
   }Ξ`
-  return <Event date={event.date} bodyText={text} image={image} />
+  return <Event date={event.date} bodyText={text} image={event.asset.image_url} link={event.asset.link} />
 }
 
 function TransferEvent({ event, addressData }: IEventProps) {
@@ -73,31 +72,17 @@ function TransferEvent({ event, addressData }: IEventProps) {
     ? event.fromUsername || middleEllipses(event.fromAddress, 4, 5, 2)
     : event.toUsername || middleEllipses(event.toAddress, 4, 5, 2)
 
-  const assetImage = (
-    <div className="rounded">
-      <Image src={event.asset.image_url || Placeholder} width={96} height={96} />
-    </div>
-  )
   const isMint = isReceiver && counterParty === 'NullAddress'
-  const image = event.asset.link ? (
-    <Link href={event.asset.link} passHref>
-      <a target="_blank" rel="noreferrer">
-        {assetImage}
-      </a>
-    </Link>
-  ) : (
-    assetImage
-  )
   const text = isMint
     ? `Minted ${event.asset.name}`
     : `${isReceiver ? 'Received' : 'Sent'} ${event.asset.name} ${isReceiver ? 'from' : 'to'} ${counterParty}`
 
-  return <Event date={event.date} bodyText={text} image={image} />
+  return <Event date={event.date} bodyText={text} image={event.asset.image_url} link={event.asset.link} />
 }
 
 function Activity({ tradeData, loading, addressData }: IProps) {
   return (
-    <div className="flex flex-col space-y-4 md:space-y-2">
+    <div className="flex flex-col space-y-4">
       {tradeData?.events.map((event: IEvent) => {
         if (event.type === 'successful') return <SaleEvent event={event} addressData={addressData} />
         if (event.type === 'transfer') return <TransferEvent event={event} addressData={addressData} />

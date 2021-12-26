@@ -54,18 +54,26 @@ function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
         Header: `Floor Price`,
         accessor: 'collection.floor_price',
         id: 'floor_price',
-        Cell: ({ cell: { value } }: CellProps<any>) => (
-          <div>
-            {value ? (
-              <span className="flex items-center justify-start space-x-2">
-                <img src="/eth-logo.svg" alt="eth logo" width="11" />
-                <span>{convertNumberToRoundedString(value)}</span>
-              </span>
-            ) : (
-              ''
-            )}
-          </div>
-        ),
+        Cell: ({ cell: { value, row } }: CellProps<any>) => {
+          const isStatsFetched = row.original.collection.is_stats_fetched
+          return (
+            <div>
+              {isStatsFetched ? (
+                value !== null ? (
+                  <span className="flex items-center justify-start space-x-2">
+                    <img src="/eth-logo.svg" alt="eth logo" width="11" />
+                    <span>{convertNumberToRoundedString(value)}</span>
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-start space-x-2">--</span>
+                )
+              ) : (
+                // Don't display anything if the stats have not been fetched yet.
+                <span className="flex items-center justify-start space-x-2"></span>
+              )}
+            </div>
+          )
+        },
         disableFilters: true,
         width: 120,
       },
@@ -170,6 +178,8 @@ function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
       return 0
     },
   )
+
+  console.log({ sortedCollections })
 
   return (
     <div className="w-full">

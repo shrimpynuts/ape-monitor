@@ -110,7 +110,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Take the top JOB_LIMIT collections in terms of total_volume
   const selectedCollections = collections
-    .filter(({ one_day_change }: ICollection) => !one_day_change)
+    // .filter(({ one_day_change }: ICollection) => !one_day_change)
     // Uncomment if you want to filter for a single collection
     // .filter(({ slug }: ICollection) => slug === 'mechanized-abstractions')
     // // Sort by the updated_at

@@ -195,14 +195,13 @@ const Table: FC<IProps> = ({
                             <tr>
                               <th className="flex px-6 text-left border-gray-300 dark:border-darkblue text-xs font-medium text-gray-500 dark:text-gray-100 uppercase tracking-wider">
                                 <div className="px-4 py-2 w-1/2">Name</div>
-                                {!dontIncludeSubrowCostBasis && <div className="px-4 py-2 w-1/4">Cost Basis</div>}
+                                {!dontIncludeSubrowCostBasis && <div className="px-4 py-2 w-1/4">Total Spent</div>}
                                 <div className="px-4 py-2 w-1/4">Opensea</div>
                               </th>
                             </tr>
                           </thead>
                           <tbody className="bg-gray-100 divide-y divide-gray-300 dark:divide-darkblue text-gray-500 dark:text-gray-100 dark:bg-blackPearl">
                             {row.original.assets.map((asset: any, i: any) => {
-                              console.log({ asset })
                               return (
                                 <tr className="relative flex px-6 " key={i}>
                                   <td className="w-1/2 px-4 py-2">

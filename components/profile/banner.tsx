@@ -52,7 +52,7 @@ const Banner = ({ costBasis, totalValue, oneDayChange }: IProps) => {
       <div className="flex items-center">
         <BannerDisplay amount={`${totalValue}`} subtext="total value" />
         <VerticalSpacer />
-        <BannerDisplay amount={`${costBasis}`} subtext="cost basis" />
+        <BannerDisplay amount={`${costBasis}`} subtext="total spent" />
         <VerticalSpacer />
         <BannerDisplay
           amount={`${charge}${oneDayChange}%`}

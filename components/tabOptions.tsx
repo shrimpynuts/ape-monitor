@@ -13,7 +13,7 @@ interface IProps {
 
 export default function TabOptions({ tabs, setCurrentTab, currentTab }: IProps) {
   return (
-    <div className="flex flex-wrap space-x-4 mx-4">
+    <div className="flex flex-wrap gap-y-2 gap-x-2 space-x-0 md:space-x-4 mx-4">
       {tabs.map(({ display, index }) => {
         return (
           <div

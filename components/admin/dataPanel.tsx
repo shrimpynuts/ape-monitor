@@ -60,8 +60,8 @@ export default function DataPanel({ data }: any) {
       </div>
 
       <div
-        className="md:mx-auto md:w-1/2 my-8 flex flex-col
-      sm:rounded-lg mb-2 shadow border border-solid border-gray-300 dark:border-darkblue
+        className="md:mx-auto md:w-1/2 mt-4 mb-8 flex flex-col
+      sm:rounded-lg shadow border border-solid border-gray-300 dark:border-darkblue
       divide-y divide-gray-300 dark:divide-darkblue"
       >
         <div className="flex justify-between p-4">

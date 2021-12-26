@@ -108,21 +108,12 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   })
 
+  if (collections.length === 0) {
+    return res.status(200).json({ error: false, message: `No more collections without stats fetched!` })
+  }
+
   // Take the top JOB_LIMIT collections in terms of total_volume
-  const selectedCollections = collections
-    .filter(({ one_day_change }: ICollection) => !one_day_change)
-    // Uncomment if you want to filter for a single collection
-    // .filter(({ slug }: ICollection) => slug === 'mechanized-abstractions')
-    // // Sort by the updated_at
-    // .sort((collectionA: any, collectionB: any) =>
-    //   collectionA.total_volume ? collectionB.updated_at - collectionA.updated_at : 1,
-    // )
-    // // Sort by the total volume
-    // .sort((collectionA: any, collectionB: any) =>
-    //   collectionA.total_volume ? collectionB.total_volume - collectionA.total_volume : 1,
-    // )
-    // Update only LIMIT in a single job
-    .slice(0, JOB_LIMIT)
+  const selectedCollections = collections.slice(0, JOB_LIMIT)
 
   // Run updateCollection for each collection, while counting how many updates work
   let index = 0

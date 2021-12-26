@@ -49,13 +49,13 @@ const Home: NextPage = () => {
         redirectToProfileOnConnect={shouldRedirectToProfile}
       />
       <div className="px-4 w-full mt-4">
-        <div className="flex flex-col items-center w-full md:mx-auto md:w-96 space-y-4">
+        <div className="flex flex-col items-center w-full md:mx-auto md:w-96 space-y-2">
           {wallet.status !== 'connected' && (
             <>
               <div className="w-full">
                 <Searchbar autoFocus />
               </div>
-              <span className="my-2">or</span>
+              <span>or</span>
               <Button onClick={onConnectClick}>Connect to Wallet</Button>
             </>
           )}

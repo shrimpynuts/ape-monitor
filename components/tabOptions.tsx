@@ -13,13 +13,13 @@ interface IProps {
 
 export default function TabOptions({ tabs, setCurrentTab, currentTab }: IProps) {
   return (
-    <div className="flex flex-wrap gap-y-2 gap-x-2 space-x-0 md:space-x-4 mx-4">
+    <div className="flex flex-wrap gap-y-2 gap-x-2 md:gap-x-0 space-x-0 md:space-x-4 mx-4">
       {tabs.map(({ display, index }) => {
         return (
           <div
             key={index}
             className={classNames(
-              'py-2 px-4 cursor-pointer rounded-xl border border-solid border-gray-300 dark:border-darkblue drop-shadow-md  ',
+              'py-2 px-4 cursor-pointer rounded-lg border border-solid border-gray-300 dark:border-darkblue drop-shadow-md  ',
               // Styling if tab is selected
               {
                 'bg-gray-100 dark:bg-gray-850 ': currentTab.index === index,

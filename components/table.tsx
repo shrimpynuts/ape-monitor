@@ -202,11 +202,12 @@ const Table: FC<IProps> = ({
                           </thead>
                           <tbody className="bg-gray-100 divide-y divide-gray-300 dark:divide-darkblue text-gray-500 dark:text-gray-100 dark:bg-blackPearl">
                             {row.original.assets.map((asset: any, i: any) => {
+                              console.log({ asset })
                               return (
                                 <tr className="relative flex px-6 " key={i}>
                                   <td className="w-1/2 px-4 py-2">
                                     <div className="flex items-center space-x-4">
-                                      <img src={asset.image_thumbnail_url} className="h-8 rounded-full" />
+                                      <img src={asset.image_url} className="h-8 rounded-full" />
                                       <span>{asset.name}</span>
                                     </div>
                                   </td>
@@ -217,7 +218,7 @@ const Table: FC<IProps> = ({
                                   )}
                                   <td className="w-1/4 px-4 py-2">
                                     <div className="flex items-center h-full">
-                                      <a href={asset.permalink} target="_blank" rel="noreferrer">
+                                      <a href={asset.link} target="_blank" rel="noreferrer">
                                         <ExternalLinkIcon className="h-4 w-4" />
                                       </a>
                                     </div>

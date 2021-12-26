@@ -5,7 +5,8 @@ import { lastUpdated1, lastUpdated2, lastUpdated3, lastUpdated4 } from '../../pa
 const SingleCollectionStatistic = ({ metric, total }: { metric: number; total: number }) => {
   return (
     <div className="flex items-center space-x-2">
-      <span className="font-light">({metric})</span>
+      <span className="font-light text-red-500">(-{total - metric})</span>
+      <span className="font-light text-green-500">({metric})</span>
       <span className="font-bold">{((metric / total) * 100).toFixed(2)}%</span>
     </div>
   )

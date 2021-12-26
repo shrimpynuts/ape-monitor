@@ -70,6 +70,27 @@ const AdminPage: NextPage = () => {
     )
   }
 
+  const onFetchNewClick = async () => {
+    toast.promise(
+      fetch(`${getServer()}/api/jobs/update-new-collections`)
+        .then((resp) => resp.json())
+        .then((value) => {
+          const { error, message } = value
+          if (error) throw Error(message)
+          return message
+        }),
+      {
+        loading: 'Updating collections...',
+        success: (data) => {
+          // Refresh stats when done updating collections
+          // refresh(variables)
+          return data
+        },
+        error: (err) => err.toString(),
+      },
+    )
+  }
+
   const adminAccounts = ['0xf725a0353dbB6aAd2a4692D49DDa0bE241f45fD0', '0xd6CB70a88bB0D8fB1be377bD3E48e603528AdB54']
   const isConnected = wallet.isConnected()
   const isAdmin = wallet.account ? adminAccounts.includes(wallet.account) : false
@@ -116,6 +137,11 @@ const AdminPage: NextPage = () => {
               <div className="flex relative space-x-2 items-center justify-center">
                 <Tooltip width={64} text="Hits /api/jobs/update-collections" />
                 <Button onClick={onFetchClick}>Update Collections</Button>
+              </div>
+
+              <div className="flex relative space-x-2 items-center justify-center">
+                <Tooltip width={64} text="Hits /api/jobs/update-new-collections" />
+                <Button onClick={onFetchNewClick}>Update New Collections</Button>
               </div>
             </div>
           </div>

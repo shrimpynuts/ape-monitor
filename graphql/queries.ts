@@ -38,6 +38,20 @@ export const GET_MOST_STALE_COLLECTIONS = gql`
   }
 `
 
+export const GET_MOST_STALE_COLLECTIONS_WITHOUT_STATS = gql`
+  ${CORE_COLLECTION_FIELDS}
+  query GetMostStaleCollectionsWithoutStats($limit: Int!, $offset: Int = 0) {
+    collections(
+      where: { error_fetching: { _eq: false }, _and: { is_stats_fetched: { _eq: false } } }
+      order_by: { updated_at: asc }
+      limit: $limit
+      offset: $offset
+    ) {
+      ...CoreCollectionFields
+    }
+  }
+`
+
 export const GET_COLLECTION_BY_CONTRACT_ADDRESS = gql`
   ${CORE_COLLECTION_FIELDS}
   query GetCollectionByContractAddress($contract_address: String!) {

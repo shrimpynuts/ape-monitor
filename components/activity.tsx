@@ -63,6 +63,8 @@ function TransferEvent({ event, addressData }: IEventProps) {
     </div>
   )
 
+  const isMint = isReceiver && counterParty === 'NullAddress'
+
   return (
     <div className="flex space-x-4 items-center">
       <span className="text-sm w-24 text-right">
@@ -78,7 +80,13 @@ function TransferEvent({ event, addressData }: IEventProps) {
         assetImage
       )}
       <span>
-        {isReceiver ? 'Received' : 'Sent'} {event.asset.name} {isReceiver ? 'from' : 'to'} {counterParty}
+        {isMint ? (
+          'Minted ' + event.asset.name
+        ) : (
+          <>
+            {isReceiver ? 'Received' : 'Sent'} {event.asset.name} {isReceiver ? 'from' : 'to'} {counterParty}
+          </>
+        )}
       </span>
     </div>
   )

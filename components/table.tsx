@@ -206,7 +206,7 @@ const Table: FC<IProps> = ({
                                 <tr className="relative flex px-6 " key={i}>
                                   <td className="w-1/2 px-4 py-2">
                                     <div className="flex items-center space-x-4">
-                                      <img src={asset.image_url} className="h-8 rounded-full" />
+                                      <img src={asset.image_url} className="h-8 rounded" />
                                       <span>{asset.name}</span>
                                     </div>
                                   </td>

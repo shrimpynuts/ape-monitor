@@ -1,8 +1,19 @@
 import Button from '../util/button'
+import { useMint } from '../../hooks/useMint'
 
 interface IProps {}
 
 const MintForm: React.FC<IProps> = () => {
+  const {
+    mint,
+    data: { loading },
+  } = useMint()
+
+  const handleClick = async () => {
+    console.log(`invoking mint`)
+    await mint(1)
+  }
+
   return (
     <div className="">
       <div className="p-2 bg-blue-600 flex justify-center blue-gradient">
@@ -17,7 +28,13 @@ const MintForm: React.FC<IProps> = () => {
           <source src="/pro-license.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <Button classOverrides="w-full mt-4 py-2 text-lg bg-blue-500 hover:bg-blue-600">Mint </Button>
+        <Button
+          isLoading={loading}
+          onClick={handleClick}
+          classOverrides="w-full mt-4 py-2 text-lg bg-blue-500 hover:bg-blue-600"
+        >
+          Mint
+        </Button>
       </div>
 
       <style jsx>{`

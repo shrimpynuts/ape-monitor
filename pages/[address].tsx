@@ -181,6 +181,7 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
             style: {
               wordBreak: 'break-all',
             },
+            position: 'bottom-left',
           }}
         />
 

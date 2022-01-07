@@ -48,12 +48,16 @@ const Button: React.FC<IButtonProps> = ({
       <div className="relative">
         <div
           className={classnames('', {
-            'opacity-0 h-0': isLoading,
+            'opacity-0': isLoading,
           })}
         >
           {children}
         </div>
-        {isLoading && <Spinner />}
+        {isLoading && (
+          <div className="absolute right-0 left-0 bottom-0 top-1">
+            <Spinner />
+          </div>
+        )}
       </div>
     </button>
   )

@@ -57,12 +57,15 @@ const Home: NextPage = () => {
         redirectToProfileOnConnect={shouldRedirectToProfile}
       />
 
-      <div className="flex flex-col md:flex-row">
-        {/* Hero section */}
+      {/* Hero section */}
+      <section className="flex flex-col lg:flex-row md:mx-8">
+        {/* Left side: Title and description */}
         <div className="px-4 w-full mt-12">
-          <h1 className="text-7xl font-bold tracking-wide text-gray-800 dark:text-gray-100 ">Ape Monitor</h1>
-          <h2 className="text-3xl mt-2 text-gray-800 dark:text-gray-100">Track your NFT portfolio.</h2>
-          <h2 className="text-3xl mt-1 text-gray-800 dark:text-gray-100 inline-flex">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-wide text-gray-800 dark:text-gray-100 ">
+            Ape Monitor
+          </h1>
+          <h2 className="text-xl md:text-3xl mt-2 text-gray-800 dark:text-gray-100">Track your NFT portfolio.</h2>
+          <h2 className="text-xl md:text-3xl mt-1 text-gray-800 dark:text-gray-100 inline-flex">
             <span className="mr-2">Discover the next</span>
             <InfiniteTypist
               colorValues={colorVals.slice(0, 6)}
@@ -81,8 +84,8 @@ const Home: NextPage = () => {
           </h2>
         </div>
 
-        {/* Search or connect to wallet (call to action) */}
-        <div className="px-4 w-full mt-20">
+        {/* Right side: Searchbar and connect to wallet (call to action) */}
+        <div className="px-4 w-full mt-8 md:mt-20">
           <div className="flex flex-col items-center w-full md:mx-auto md:w-96 space-y-2">
             {wallet.status !== 'connected' && (
               <>
@@ -95,13 +98,14 @@ const Home: NextPage = () => {
             )}
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="m-auto overflow-hidden mt-8">
+      {/* Top collections section */}
+      <section className="m-auto overflow-hidden mt-2 md:mt-8">
         <div className="flex flex-col flex-wrap space-y-2 mx-4">
           <TopCollections />
         </div>
-      </div>
+      </section>
     </div>
   )
 }

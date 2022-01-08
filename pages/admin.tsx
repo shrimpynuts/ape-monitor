@@ -110,7 +110,7 @@ const AdminPage: NextPage = () => {
         customState={{ modalIsOpen, setModalIsOpen }}
         redirectToProfileOnConnect={false}
       />
-      <div className="px-4 w-full mt-4">
+      <div className="px-4 w-full mt-12">
         {!isConnected && !isAdmin && (
           <div className="flex flex-col items-center w-full md:mx-auto md:w-96 space-y-4 mt-64">
             <h1 className="text-2xl ">Admin Panel</h1>

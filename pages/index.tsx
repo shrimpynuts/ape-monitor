@@ -1,10 +1,8 @@
 import { useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { Toaster } from 'react-hot-toast'
 
 import useWeb3Container from '../hooks/useWeb3User'
-import Leaderboard from '../components/leaderboard'
 import Searchbar from '../components/searchbar'
 import Navbar from '../components/layout/navbar'
 import Button from '../components/util/button'
@@ -52,7 +50,6 @@ const Home: NextPage = () => {
         <meta name="twitter:description" content="Monitor the performance of your Ethereum NFTs using Opensea data." />
         <meta name="twitter:image" content={'https://www.apemonitor.com/image-metadata.png'} />
       </Head>
-      <Toaster />
       <Navbar
         displaySearchbar={false}
         displayConnectButton={false}
@@ -78,7 +75,6 @@ const Home: NextPage = () => {
                 'Loot',
                 'Meebits',
                 'Mutant Apes',
-                'Cryp',
               ]}
             />
             .
@@ -101,9 +97,6 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      {/* <div className="w-full md:mx-auto md:w-4/5 mt-8">
-        <Leaderboard />
-      </div> */}
       <div className="m-auto overflow-hidden mt-8">
         <div className="flex flex-col flex-wrap space-y-2 mx-4">
           <TopCollections />

@@ -129,7 +129,7 @@ const AdminPage: NextPage = () => {
         )}
         {isAdmin && data && (
           <div className="w-full md:mx-auto flex flex-col ">
-            <div className="flex flex-row space-x-2 mb-4 items-start w-1/2 mx-auto">
+            <div className="flex flex-row space-x-2 mb-4 items-start md:w-1/2 mx-auto">
               <div className="flex relative space-x-2 items-center justify-center">
                 <Tooltip width={64} text="Refreshes this admin panel" />
                 <Button onClick={onRefreshClick}>Refresh</Button>

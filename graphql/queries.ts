@@ -64,7 +64,11 @@ export const GET_COLLECTION_BY_CONTRACT_ADDRESS = gql`
 export const GET_TOP_COLLECTIONS = gql`
   ${CORE_COLLECTION_FIELDS}
   query GetTopCollections($lastUpdated: timestamptz!) {
-    collections(where: { market_cap: { _gt: 1000 } }, order_by: { one_day_change: desc_nulls_last }, limit: 30) {
+    collections(
+      where: { total_volume: { _gt: 100 }, floor_price: { _gt: 0.05 } }
+      order_by: { one_day_change: desc_nulls_last }
+      limit: 20
+    ) {
       ...CoreCollectionFields
     }
 

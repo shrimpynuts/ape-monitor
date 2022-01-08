@@ -159,7 +159,7 @@ const Table: FC<IProps> = ({
                 {rows.map((row, i) => {
                   prepareRow(row)
                   return (
-                    <Link href={`https://opensea.io/collection/${row.original.slug}`} passHref>
+                    <Link href={`https://opensea.io/collection/${row.original.slug}`} passHref key={i}>
                       <a target="_blank" rel="noreferrer">
                         <tr
                           className="relative flex select-none hover:bg-gray-100 dark:hover:bg-black transition-all cursor-pointer"
@@ -167,7 +167,6 @@ const Table: FC<IProps> = ({
                           style={{
                             width: '100%',
                           }}
-                          key={i}
                         >
                           {row.cells.map((cell, ii) => {
                             return (

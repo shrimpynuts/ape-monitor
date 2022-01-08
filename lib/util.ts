@@ -2,6 +2,11 @@ import { alchemyProvider } from './ethersProvider'
 import { ICollection, IAsset, IAssetsGroupedByContract, ICollectionsWithAssets } from '../frontend/types'
 import toast from 'react-hot-toast'
 
+export function addressIsAdmin(address: string) {
+  const adminAccounts = ['0xf725a0353dbB6aAd2a4692D49DDa0bE241f45fD0', '0xd6CB70a88bB0D8fB1be377bD3E48e603528AdB54']
+  return adminAccounts.includes(address)
+}
+
 /**
  * Inserts middle ellipses into a given string
  * @param str The string to insert ellipses into
@@ -131,7 +136,6 @@ export const fetchAllCollections = async (assets: IAsset[]): Promise<ICollection
         const collection = fetch(`${getServer()}/api/collection/${asset.contract_address}`)
           .then((r) => r.json())
           .catch((error) => {
-            console.log('DICK SHIT')
             return { error }
           })
         return collection
@@ -145,10 +149,8 @@ export const fetchAllCollections = async (assets: IAsset[]): Promise<ICollection
     const numCollectionsExpected = Object.keys(assetsGroupedByContractAddress).length
     const numCollectionsFetched = validResults.length
 
-    console.log({ numCollectionsExpected, numCollectionsFetched })
-
     if (numCollectionsFetched !== numCollectionsExpected) {
-      toast.error(`Error: could not fetch ${numCollectionsExpected - numCollectionsFetched} collections!`)
+      toast.error(`Error: could not fetch ${numCollectionsExpected - numCollectionsFetched} collection(s)!`)
     }
 
     return validResults

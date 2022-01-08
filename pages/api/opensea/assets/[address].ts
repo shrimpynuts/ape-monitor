@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { ICollection } from '../../../../frontend/types'
-import { pruneAndRemoveDuplicateCollections, getAssetsForOwner, pruneAssets } from '../../../../lib/opensea/collections'
+import { pruneAndRemoveDuplicateCollections, getAssetsForOwner, pruneAsset } from '../../../../lib/opensea/collections'
 import { UPSERT_COLLECTION_WITHOUT_STATS } from '../../../../graphql/mutations'
 import client from '../../../../backend/graphql-client'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
@@ -13,7 +13,7 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 // We use this here because opensea /assets endpoint doesn't give us stats,
 // so we don't want to override existing stats data
 const upsertCollectionToDB = async (
-  collection: Omit<ICollection, 'updated_at' | 'created_at'>,
+  collection: Omit<ICollection, 'updated_at' | 'created_at' | 'is_stats_fetched'>,
   client: ApolloClient<NormalizedCacheObject>,
 ) => {
   return client.mutate({
@@ -30,10 +30,12 @@ const upsertCollectionToDB = async (
  */
 const request = async (req: NextApiRequest, res: NextApiResponse) => {
   // To cache our own API requests, uncomment the line below
-  // res.setHeader('Cache-Control', 's-maxage=1800')
+  res.setHeader('Cache-Control', 's-maxage=1800')
 
   const { address: ownerAddress } = req.query
   if (typeof ownerAddress !== 'string') return res.status(400).json({ error: 'ownerAddress must be given' })
+
+  console.log(`\n 🎯 Hit assets/ endpoint for ${ownerAddress}`)
 
   try {
     // Fetch all assets from Opensea
@@ -58,13 +60,13 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
     })
 
     // Prune Opensea assets into IAsset objects
-    const prunedAssets = pruneAssets(assets)
+    const prunedAssets = assets.map(pruneAsset)
 
     // Return assets
     return res.status(200).json({ assets: prunedAssets })
   } catch (error) {
     // Return errors
-    return res.status(500).json({ error: `Opensea API fetch all NFTs for ${ownerAddress}: ${error}` })
+    return res.status(500).json({ error: `Opensea API: ${error}` })
   }
 }
 

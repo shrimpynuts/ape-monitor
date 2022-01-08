@@ -6,6 +6,7 @@ import useMobileDetect from 'use-mobile-detect-hook'
 import { convertNumberToRoundedString, usdFormatter } from '../lib/util'
 import { ITradeData, IAddressData } from '../frontend/types'
 import useWeb3Container from '../hooks/useWeb3User'
+import HighlightedTrades from './highlightedTrades'
 import Spinner from './util/spinner'
 import Emoji from './util/emoji'
 import Table from './table'
@@ -129,21 +130,30 @@ function TradesTable({ tradeData, loading, addressData }: IProps) {
   let replaceTableBody
   if (loading) {
     replaceTableBody = <Spinner />
-  } else if (trades.length === 0) {
-    const name = addressData.ensDomain ? addressData.ensDomain : addressData.address
-    replaceTableBody = (
-      <div className="leading-2">
-        <h1 className="text-center mb-2">{name} has never flipped an NFT.</h1>
-        <h2 className="text-center">
-          <Emoji className="text-4xl cursor-pointer" label="logo" symbol="💎" />
-          <Emoji className="text-4xl cursor-pointer" label="logo" symbol="🙌" />
-        </h2>
-      </div>
-    )
   }
+  // else if (trades.length === 0) {
+  //   const name = addressData.ensDomain ? addressData.ensDomain : addressData.address
+  //   replaceTableBody = (
+  //     <div className="leading-2">
+  //       <h1 className="text-center mb-2">{name} has never flipped an NFT.</h1>
+  //       <h2 className="text-center">
+  //         <Emoji className="text-4xl cursor-pointer" label="logo" symbol="💎" />
+  //         <Emoji className="text-4xl cursor-pointer" label="logo" symbol="🙌" />
+  //       </h2>
+  //     </div>
+  //   )
+  // }
+
+  console.log({ loading })
 
   return (
     <div className="w-full">
+      {/* {trades.length > 0 && (
+        <div className="flex my-4 ">
+          <HighlightedTrades tradeData={tradeData} loading={loading} />
+        </div>
+      )} */}
+
       <Table
         columns={columns}
         data={trades}

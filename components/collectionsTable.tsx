@@ -1,13 +1,14 @@
 import { useMemo } from 'react'
 import { CellProps } from 'react-table'
 import useMobileDetect from 'use-mobile-detect-hook'
+import { ExternalLinkIcon } from '@heroicons/react/solid'
 
 import { convertNumberToRoundedString, calculateCostBasis } from '../lib/util'
 import { ICollectionsWithAssets } from '../frontend/types'
 import DeltaDisplay from './util/deltaDisplay'
-
-import Table from './table'
 import Spinner from './util/spinner'
+import Table from './table'
+
 interface IProps {
   collectionsWithAssets: ICollectionsWithAssets
   loading: boolean
@@ -32,21 +33,47 @@ function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
         ),
       },
       {
-        Header: `Floor Price`,
-        accessor: 'collection.floor_price',
-        id: 'floor_price',
+        Header: ``,
+        accessor: 'collection.slug',
+        id: 'opensea_link',
         Cell: ({ cell: { value } }: CellProps<any>) => (
           <div>
             {value ? (
-              <span className="flex items-center justify-start space-x-2">
-                <img src="/eth-logo.svg" alt="eth logo" width="11" />
-                <span>{convertNumberToRoundedString(value)}</span>
-              </span>
+              <a href={`https://opensea.io/collection/${value}`} target="_blank" rel="noreferrer">
+                <ExternalLinkIcon className="h-8 w-4" />
+              </a>
             ) : (
               ''
             )}
           </div>
         ),
+        disableFilters: true,
+        width: 40,
+      },
+      {
+        Header: `Floor Price`,
+        accessor: 'collection.floor_price',
+        id: 'floor_price',
+        Cell: ({ cell: { value, row } }: CellProps<any>) => {
+          const isStatsFetched = row.original.collection.is_stats_fetched
+          return (
+            <div>
+              {isStatsFetched ? (
+                value !== null ? (
+                  <span className="flex items-center justify-start space-x-2">
+                    <img src="/eth-logo.svg" alt="eth logo" width="11" />
+                    <span>{convertNumberToRoundedString(value)}</span>
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-start space-x-2">--</span>
+                )
+              ) : (
+                // Don't display anything if the stats have not been fetched yet.
+                <span className="flex items-center justify-start space-x-2"></span>
+              )}
+            </div>
+          )
+        },
         disableFilters: true,
         width: 120,
       },
@@ -151,6 +178,8 @@ function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
       return 0
     },
   )
+
+  console.log({ sortedCollections })
 
   return (
     <div className="w-full">

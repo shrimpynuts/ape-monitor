@@ -13,7 +13,7 @@ import Searchbar from '../searchbar'
 import MintModal from '../token-pass/mintModal'
 import DarkModeToggle from '../util/darkModeToggle'
 import Emoji from '../util/emoji'
-import { getServer } from '../../lib/util'
+import { addressIsAdmin, getServer } from '../../lib/util'
 
 interface IProps {
   displaySearchbar?: boolean
@@ -87,6 +87,8 @@ const Navbar = ({
 
   const formattedETH = parseFloat(formatUnits(balance)).toFixed(2)
 
+  const isAdmin = wallet.account ? addressIsAdmin(wallet.account) : false
+  console.log({ isAdmin })
   return (
     <>
       <MintModal
@@ -100,8 +102,8 @@ const Navbar = ({
           {/* Logo */}
 
           <Link href="/">
-            <div className="ml-1">
-              <Emoji className="text-4xl cursor-pointer" label="logo" symbol="🦧" />
+            <div className="ml-1 transform hover:rotate-20 transition duration-200">
+              <Emoji className="text-4xl cursor-pointer " label="logo" symbol="🦧" />
             </div>
           </Link>
 
@@ -153,6 +155,20 @@ const Navbar = ({
                   ensName={ensName}
                   balance={formattedETH}
                 />
+                {isAdmin && (
+                  <Link href={'/admin'} passHref>
+                    <a target="_blank" rel="noreferrer">
+                      <Button
+                        type="button"
+                        className="inline-flex items-center p-2 rounded-md shadow-sm bg-white text-black border border-solid border-gray-200 hover:bg-gray-100 
+                            dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 text-sm leading-none"
+                      >
+                        Admin
+                        {/* <LogoutIcon className="h-4 w-4 fill-current" /> */}
+                      </Button>
+                    </a>
+                  </Link>
+                )}
                 <Button
                   type="button"
                   className="inline-flex items-center p-2 rounded-md shadow-sm bg-white text-black border border-solid border-gray-200 hover:bg-gray-100 

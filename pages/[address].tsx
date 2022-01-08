@@ -8,13 +8,13 @@ import Head from 'next/head'
 
 import { ITradeData, IAddressData, ICollectionsWithAssets } from '../frontend/types'
 import ProfileBanner from '../components/profile/profileBanner'
-import HighlightedTrades from '../components/highlightedTrades'
 import Navbar from '../components/layout/navbar'
 import TradesTable from '../components/tradesTable'
 import TabOptions from '../components/tabOptions'
 import { INSERT_USER } from '../graphql/mutations'
-import useWeb3Container from '../hooks/useWeb3User'
 import CollectionsTable from '../components/collectionsTable'
+import Gallery from '../components/gallery'
+import Activity from '../components/activity'
 
 import {
   middleEllipses,
@@ -36,12 +36,14 @@ import {
  * @param addressData Data about the given address from server side
  */
 const ProfilePage: NextPage<IAddressData> = (addressData) => {
-  const { wallet } = useWeb3Container.useContainer()
   const { address, ensDomain, addressFound } = addressData
   const [loading, setLoading] = useState(addressFound)
   const [insertUser] = useMutation(INSERT_USER)
 
   const [collectionsWithAssets, setCollectionsWithAssets] = useState<ICollectionsWithAssets>({})
+  const totalCostBasis = calculateTotalCostBasis(collectionsWithAssets)
+  const totalValue = calculateTotalValue(collectionsWithAssets)
+  const totalAssetCount = calculateTotalAssetCount(collectionsWithAssets)
 
   const [tradeData, setTradeData] = useState<ITradeData>()
   const [tradesLoading, setTradesLoading] = useState(true)
@@ -54,15 +56,19 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
       display: 'Current Portfolio',
       index: 0,
     },
+    {
+      display: 'Gallery View',
+      index: 1,
+    },
     // Only allow the previous trades tab if trade data is available
-    ...(tradeData
-      ? [
-          {
-            display: 'Previous Trades',
-            index: 1,
-          },
-        ]
-      : []),
+    {
+      display: 'Previous Trades',
+      index: 2,
+    },
+    {
+      display: 'Recent Activity',
+      index: 3,
+    },
   ]
   const [currentTab, setCurrentTab] = useState(tabs[0])
 
@@ -71,21 +77,20 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
    */
   useEffect(() => {
     // Make sure the user is connected and the address matches
-    if (wallet.isConnected() && wallet.account === address) {
+    if (addressFound) {
       // Upsert user into DB
-      insertUser({
-        variables: {
-          user: {
-            address: address,
-            ensDomain: ensDomain,
-            totalCostBasis: calculateTotalCostBasis(collectionsWithAssets),
-            totalValue: calculateTotalValue(collectionsWithAssets),
-            totalAssetCount: calculateTotalAssetCount(collectionsWithAssets),
-          },
-        },
-      }).catch(console.error)
+      console.log(`Inserting new user ${address} ${ensDomain && `/ ${ensDomain}`}`)
+      const newUser = {
+        address: address,
+        ensDomain: ensDomain,
+        totalCostBasis,
+        totalValue,
+        totalAssetCount,
+      }
+      console.log({ newUser })
+      insertUser({ variables: { user: newUser } }).catch(console.error)
     }
-  }, [collectionsWithAssets, wallet])
+  }, [address, ensDomain, addressFound, collectionsWithAssets])
 
   /**
    * Fetches assets and collections, storing in state
@@ -111,6 +116,7 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
 
       // Update the state accordingly
       setCollectionsWithAssets(collectionsWithAssets)
+
       setLoading(false)
     }
 
@@ -125,10 +131,14 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
    * Fetches trade data, storing in state
    */
   useEffect(() => {
-    fetch(`${getServer()}/api/opensea/trades/${address}`)
+    fetch(`${getServer()}/api/opensea/events/${address}`)
       .then((resp) => resp.json())
       .then((data) => {
         setTradeData(data)
+        setTradesLoading(false)
+      })
+      .catch(() => {
+        toast.error(`Opensea throttled request for trades!`)
         setTradesLoading(false)
       })
   }, [address])
@@ -169,8 +179,8 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
           <ProfileBanner
             ensName={ensDomain ? ensDomain : middleEllipses(address, 4, 6, 4)}
             address={address}
-            costBasis={convertNumberToRoundedString(calculateTotalCostBasis(collectionsWithAssets))}
-            totalValue={convertNumberToRoundedString(calculateTotalValue(collectionsWithAssets))}
+            costBasis={convertNumberToRoundedString(totalCostBasis)}
+            totalValue={convertNumberToRoundedString(totalValue)}
             oneDayChange={convertNumberToRoundedString(calculateTotalChange(collectionsWithAssets))}
           />
         </div>
@@ -178,24 +188,23 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
         {/* Toaster to give user feedback */}
         <Toaster
           toastOptions={{
-            style: {
-              wordBreak: 'break-all',
-            },
             position: 'bottom-left',
           }}
         />
 
         {/* Display best trades */}
-        <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
+        {/* <div className="flex flex-col flex-wrap space-y-2 -mt-7 mx-4">
           <div className="flex space-x-4 ">
             <HighlightedTrades tradeData={tradeData} loading={tradesLoading} />
           </div>
-        </div>
+        </div> */}
 
         {/* Display all tab options */}
-        <TabOptions tabs={tabs} setCurrentTab={setCurrentTab} currentTab={currentTab} />
+        <div className="max-w-screen-lg m-auto overflow-hidden">
+          <TabOptions tabs={tabs} setCurrentTab={setCurrentTab} currentTab={currentTab} />
+        </div>
 
-        {/* Current portfolio tab */}
+        {/* Portfolio tab */}
         {currentTab.index === 0 && (
           <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
             <div className="flex flex-col flex-wrap space-y-2 mx-4">
@@ -204,11 +213,29 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
           </div>
         )}
 
-        {/* Historical trades tab */}
+        {/* Gallery tab */}
         {currentTab.index === 1 && (
           <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
             <div className="flex flex-col flex-wrap space-y-2 mx-4">
+              <Gallery collectionsWithAssets={collectionsWithAssets} loading={loading} />
+            </div>
+          </div>
+        )}
+
+        {/* Historical trades tab */}
+        {currentTab.index === 2 && (
+          <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
+            <div className="flex flex-col flex-wrap space-y-2 mx-4">
               <TradesTable tradeData={tradeData} loading={tradesLoading} addressData={addressData} />
+            </div>
+          </div>
+        )}
+
+        {/* Historical trades tab */}
+        {currentTab.index === 3 && (
+          <div className="max-w-screen-lg m-auto overflow-hidden mt-4">
+            <div className="flex flex-col flex-wrap space-y-2 mx-4">
+              <Activity tradeData={tradeData} loading={tradesLoading} addressData={addressData} />
             </div>
           </div>
         )}

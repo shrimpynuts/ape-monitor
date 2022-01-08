@@ -5,7 +5,7 @@ import {
   UPSERT_COLLECTION_WITHOUT_STATS,
   SET_COLLECTION_ERROR_FETCHING,
 } from '../../../graphql/mutations'
-import { GET_MOST_STALE_COLLECTIONS } from '../../../graphql/queries'
+import { GET_MOST_STALE_COLLECTIONS_WITHOUT_STATS } from '../../../graphql/queries'
 import client from '../../../backend/graphql-client'
 import { fetchOpenseaCollectionFromContractAddress } from '../../../backend/opensea-helpers'
 import { ICollection } from '../../../frontend/types'
@@ -89,7 +89,7 @@ const updateCollection = async (givenCollection: ICollection) => {
  * Fetches the data for a single collection by its contract address from our database
  */
 const request = async (req: NextApiRequest, res: NextApiResponse) => {
-  log(`\n   Job: update-collections started 🚀\n`)
+  log(`\n   Job: update-new-collections started 🚀\n`)
   const startJobDate = new Date().getTime()
 
   // Number of collections to query from our database each run
@@ -102,27 +102,18 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     data: { collections },
   } = await client.query({
-    query: GET_MOST_STALE_COLLECTIONS,
+    query: GET_MOST_STALE_COLLECTIONS_WITHOUT_STATS,
     variables: {
       limit: QUERY_LIMIT,
     },
   })
 
+  if (collections.length === 0) {
+    return res.status(200).json({ error: false, message: `No more collections without stats fetched!` })
+  }
+
   // Take the top JOB_LIMIT collections in terms of total_volume
-  const selectedCollections = collections
-    // .filter(({ one_day_change }: ICollection) => !one_day_change)
-    // Uncomment if you want to filter for a single collection
-    // .filter(({ slug }: ICollection) => slug === 'mechanized-abstractions')
-    // // Sort by the updated_at
-    // .sort((collectionA: any, collectionB: any) =>
-    //   collectionA.total_volume ? collectionB.updated_at - collectionA.updated_at : 1,
-    // )
-    // // Sort by the total volume
-    // .sort((collectionA: any, collectionB: any) =>
-    //   collectionA.total_volume ? collectionB.total_volume - collectionA.total_volume : 1,
-    // )
-    // Update only LIMIT in a single job
-    .slice(0, JOB_LIMIT)
+  const selectedCollections = collections.slice(0, JOB_LIMIT)
 
   // Run updateCollection for each collection, while counting how many updates work
   let index = 0
@@ -140,7 +131,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   const endJobDate = new Date().getTime()
   var durationInSeconds = Math.abs(endJobDate - startJobDate) / 1000
 
-  log(`\n   Job: update-collections completed in ${durationInSeconds}s ✅\n`)
+  log(`\n   Job: update-new-collections completed in ${durationInSeconds}s ✅\n`)
   res
     .status(200)
     .json({ error: false, message: `Successfully fetched ${index} collection(s) in ${durationInSeconds}s` })

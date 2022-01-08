@@ -1,18 +1,13 @@
 import { useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { Toaster } from 'react-hot-toast'
 
 import useWeb3Container from '../hooks/useWeb3User'
-import Leaderboard from '../components/leaderboard'
 import Searchbar from '../components/searchbar'
 import Navbar from '../components/layout/navbar'
 import Button from '../components/util/button'
 import TopCollections from '../components/topCollections'
-
-function getRandomInt(max: number) {
-  return Math.floor(Math.random() * max) + 1
-}
+import InfiniteTypist from '../components/infiniteTypist'
 
 const Home: NextPage = () => {
   const { wallet } = useWeb3Container.useContainer()
@@ -23,6 +18,16 @@ const Home: NextPage = () => {
     setShouldRedirectToProfile(true)
     setModalIsOpen(true)
   }
+
+  const colorObjects = {
+    gold: 'linear-gradient(180deg, #FFF6EA 0%, #FFC876 100%)',
+    blue: 'linear-gradient(182.18deg, #F7FBFF -18.82%, #F0F8FF -18.82%, #70C3FF 98.17%)',
+    green: 'linear-gradient(178.53deg, #D6FFD6 36.05%, #9AFF98 80.15%)',
+    purple: 'linear-gradient(180deg, #ABB0FF 15.48%, #DCDEFF 15.48%, #8F95F7 100%)',
+    red: 'linear-gradient(180deg, #FFC6C6 0%, #FF7B7B 85.71%)',
+    pink: 'linear-gradient(180deg, #FFC6F9 -5.95%, #FFB1F3 46.97%, #FF7BE2 91.67%)',
+  }
+  const colorVals = Object.values(colorObjects)
 
   return (
     <div className="max-w-screen-xl m-auto pb-4 md:pb-12">
@@ -45,30 +50,54 @@ const Home: NextPage = () => {
         <meta name="twitter:description" content="Monitor the performance of your Ethereum NFTs using Opensea data." />
         <meta name="twitter:image" content={'https://www.apemonitor.com/image-metadata.png'} />
       </Head>
-      <Toaster />
       <Navbar
         displaySearchbar={false}
         displayConnectButton={false}
         customState={{ modalIsOpen, setModalIsOpen }}
         redirectToProfileOnConnect={shouldRedirectToProfile}
       />
-      <div className="px-4 w-full mt-4">
-        <div className="flex flex-col items-center w-full md:mx-auto md:w-96 space-y-4">
-          {wallet.status !== 'connected' && (
-            <>
-              <div className="w-full">
-                <Searchbar autoFocus />
-              </div>
-              <span className="my-2">or</span>
-              <Button onClick={onConnectClick}>Connect to Wallet</Button>
-            </>
-          )}
+
+      <div className="flex flex-col md:flex-row">
+        {/* Hero section */}
+        <div className="px-4 w-full mt-12">
+          <h1 className="text-7xl font-bold tracking-wide text-gray-800 dark:text-gray-100 ">Ape Monitor</h1>
+          <h2 className="text-3xl mt-2 text-gray-800 dark:text-gray-100">Track your NFT portfolio.</h2>
+          <h2 className="text-3xl mt-1 text-gray-800 dark:text-gray-100 inline-flex">
+            <span className="mr-2">Discover the next</span>
+            <InfiniteTypist
+              colorValues={colorVals.slice(0, 6)}
+              words={[
+                'Bored Apes',
+                'Cool Cats',
+                'Doodles',
+                'Cryptopunks',
+                'Pudgy Penguins',
+                'Loot',
+                'Meebits',
+                'Mutant Apes',
+              ]}
+            />
+            .
+          </h2>
         </div>
-        <div className="w-full md:mx-auto md:w-2/3 my-8">
-          <Leaderboard />
+
+        {/* Search or connect to wallet (call to action) */}
+        <div className="px-4 w-full mt-20">
+          <div className="flex flex-col items-center w-full md:mx-auto md:w-96 space-y-2">
+            {wallet.status !== 'connected' && (
+              <>
+                <div className="w-full">
+                  <Searchbar autoFocus />
+                </div>
+                <span>or</span>
+                <Button onClick={onConnectClick}>Connect to Wallet</Button>
+              </>
+            )}
+          </div>
         </div>
       </div>
-      <div className=" m-auto overflow-hidden mt-4">
+
+      <div className="m-auto overflow-hidden mt-8">
         <div className="flex flex-col flex-wrap space-y-2 mx-4">
           <TopCollections />
         </div>

@@ -5,6 +5,9 @@ module.exports = {
   darkMode: 'class', // or 'media' or 'class'
   theme: {
     extend: {
+      rotate: {
+        20: '20deg',
+      },
       keyframes: {
         rotate: {
           '100%': {

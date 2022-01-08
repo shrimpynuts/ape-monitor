@@ -12,7 +12,7 @@ export default function Tooltip({ text, width }: { text: string; width?: number 
         id="tooltip"
         className={`transition-all duration-200 absolute w-${
           width ? width : 72
-        } -top-10 max-h-12 rounded text-black dark:text-gray-50 bg-white text-sm dark:bg-gray-800 p-2 border dark:border-gray-700`}
+        } -top-10 max-h-18 rounded text-black dark:text-gray-50 bg-white text-sm dark:bg-gray-800 p-2 border dark:border-gray-700`}
       >
         {text}
       </span>

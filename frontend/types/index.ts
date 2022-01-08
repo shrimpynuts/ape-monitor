@@ -1,9 +1,10 @@
 export interface ICollection {
   created_at: string
   updated_at: string
-  name: string
   contract_address: string
-  slug: string
+  is_stats_fetched: boolean
+  name?: string
+  slug?: string
   twitter_username?: string
   discord_url?: string
   external_url?: string
@@ -14,6 +15,14 @@ export interface ICollection {
   thirty_day_change?: number
   market_cap?: number
   total_volume?: number
+}
+
+export interface IOpenseaCollection {
+  [key: string]: any
+}
+
+export interface IOpenseaAsset {
+  [key: string]: any
 }
 
 export interface IAsset {
@@ -37,6 +46,14 @@ export interface ICollectionsWithAssets {
 
 export interface IOpenSeaEvent {
   [key: string]: any
+}
+
+export interface IEvent {
+  [key: string]: any
+  date: Date
+  type: string
+  asset: IAsset
+  collection: Omit<ICollection, 'created_at' | 'updated_at' | 'is_stats_fetched'>
 }
 
 export interface IAssetsGroupedByContract {

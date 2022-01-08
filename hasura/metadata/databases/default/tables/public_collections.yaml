@@ -3,22 +3,25 @@ table:
   schema: public
 select_permissions:
 - permission:
+    allow_aggregations: true
     columns:
-    - id
+    - contract_address
     - created_at
-    - updated_at
-    - name
-    - slug
-    - floor_price
-    - twitter_username
     - discord_url
+    - error_fetching
     - external_url
+    - floor_price
+    - id
     - image_url
+    - is_stats_fetched
+    - market_cap
+    - name
     - one_day_change
     - seven_day_change
+    - slug
     - thirty_day_change
-    - contract_address
     - total_volume
-    - market_cap
+    - twitter_username
+    - updated_at
     filter: {}
   role: public

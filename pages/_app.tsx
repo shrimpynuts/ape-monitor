@@ -7,7 +7,7 @@ import { ApolloProvider } from '@apollo/client'
 import { ThemeProvider } from 'next-themes'
 import { UseWalletProvider } from 'use-wallet'
 import Web3UserProvider from '../hooks/web3UserProvider'
-import client from '../lib/apollo-client'
+import client from '../frontend/apollo-client'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

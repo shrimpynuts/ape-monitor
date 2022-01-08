@@ -2,7 +2,10 @@ import fetch from 'isomorphic-unfetch'
 import { ApolloClient, InMemoryCache, ApolloLink, from, HttpLink } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 
-const cache = new InMemoryCache()
+const cache = new InMemoryCache({
+  // Remove __typename from queried objects
+  addTypename: false,
+})
 
 interface IClientFactory {
   url: string

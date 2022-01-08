@@ -77,6 +77,7 @@ const Home: NextPage = () => {
                 'Pudgy Penguins',
                 'Loot',
                 'Meebits',
+                'Chain Runners',
                 'Mutant Apes',
               ]}
             />

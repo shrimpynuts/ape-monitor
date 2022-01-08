@@ -38,7 +38,7 @@ const Button: React.FC<IButtonProps> = ({
           'text-xs': size === 'sm',
           'text-md': size === 'md',
           'text-xl': size === 'lg',
-          [`bg-${bgColor}-600 hover:bg-${bgColor}-800`]: !isLoading,
+          [`bg-${bgColor && 'yellow'}-600 hover:bg-${bgColor && 'yellow'}-800`]: !isLoading,
           'bg-gray-400 cursor-not-allowed': isLoading || disabled,
           [`${classOverrides}`]: classOverrides?.length && classOverrides?.length > 0,
         },

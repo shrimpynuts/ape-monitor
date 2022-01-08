@@ -22,23 +22,27 @@ interface ISingleEventProps {
   bodyText: string
   image?: string
   link?: string
+  collectionName?: string
 }
 
-function Event({ bodyText, date, image, link }: ISingleEventProps) {
+function Event({ bodyText, date, image, link, collectionName }: ISingleEventProps) {
   const event = (
     <div
-      className="px-4 py-4 rounded shadow hover:bg-gray-50 cursor-pointer border 
-border-solid border-gray-100 dark:border-darkblue drop-shadow-md "
+      className="px-4 py-4 rounded shadow dark:hover:bg-gray-900 hover:bg-gray-50 cursor-pointer border 
+      md:w-2/3
+      text-gray-800 dark:text-gray-100
+border-solid border-gray-100 dark:border-darkblue drop-shadow-md transform hover:translate-x-2 transition duration-300"
     >
       <div className="flex space-x-4 justify-between  md:items-center">
         <span className="text-sm w-24 grow-0 text-right md:text-right">
           <Image className="rounded-lg" src={image || Placeholder} width={96} height={96} />
         </span>
         <div className="flex flex-col space-y-2">
-          <span className="text-xs text-right">
+          <span className="text-right italic">
             <Moment fromNow>{date}</Moment>
           </span>
-          <span className="text-sm text-right">{bodyText}</span>
+          <span className="font-semibold text-right">{bodyText}</span>
+          <span className="text-right">{collectionName}</span>
         </div>
       </div>
     </div>
@@ -63,7 +67,15 @@ function SaleEvent({ event, addressData }: IEventProps) {
   const text = `${isSeller ? 'Sold' : 'Bought'} ${event.asset.name} ${isSeller ? 'to' : 'from'} ${counterParty} for ${
     event.price
   }Ξ`
-  return <Event date={event.date} bodyText={text} image={event.asset.image_url} link={event.asset.link} />
+  return (
+    <Event
+      collectionName={event.collection.name}
+      date={event.date}
+      bodyText={text}
+      image={event.asset.image_url}
+      link={event.asset.link}
+    />
+  )
 }
 
 function TransferEvent({ event, addressData }: IEventProps) {
@@ -74,10 +86,18 @@ function TransferEvent({ event, addressData }: IEventProps) {
 
   const isMint = isReceiver && counterParty === 'NullAddress'
   const text = isMint
-    ? `Minted ${event.asset.name}`
+    ? `Minted ${event.asset.name === null ? event.asset.token_id : event.asset.name}`
     : `${isReceiver ? 'Received' : 'Sent'} ${event.asset.name} ${isReceiver ? 'from' : 'to'} ${counterParty}`
 
-  return <Event date={event.date} bodyText={text} image={event.asset.image_url} link={event.asset.link} />
+  return (
+    <Event
+      collectionName={event.collection.name}
+      date={event.date}
+      bodyText={text}
+      image={event.asset.image_url}
+      link={event.asset.link}
+    />
+  )
 }
 
 function Activity({ tradeData, loading, addressData }: IProps) {

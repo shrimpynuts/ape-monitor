@@ -116,7 +116,7 @@ const Navbar = ({
 
           {/* Connect to web3, dark mode toggle */}
           <div className="flex items-center space-x-2">
-            <Button classOverrides="bg-green-400 hover:bg-green-500 shadow" onClick={handleMint}>
+            <Button classOverrides="bg-blue-500 dark:bg-blue-700 hover:bg-blue-500 shadow" onClick={handleMint}>
               Buy Premium
             </Button>
             {status === 'connected' ? (

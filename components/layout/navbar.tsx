@@ -88,7 +88,6 @@ const Navbar = ({
   const formattedETH = parseFloat(formatUnits(balance)).toFixed(2)
 
   const isAdmin = wallet.account ? addressIsAdmin(wallet.account) : false
-  console.log({ isAdmin })
   return (
     <>
       <MintModal

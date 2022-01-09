@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "pages/assets/[contract_address]"  ],
   "exclude": [
     "node_modules"
   ]

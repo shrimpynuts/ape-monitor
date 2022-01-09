@@ -61,6 +61,14 @@ export const GET_COLLECTION_BY_CONTRACT_ADDRESS = gql`
   }
 `
 
+// downBadCollections: collections(
+//   where: { total_volume: { _gt: 100 } }
+//   order_by: { one_day_change: asc_nulls_last }
+//   limit: 10
+// ) {
+//   ...CoreCollectionFields
+// }
+
 export const GET_TOP_COLLECTIONS = gql`
   ${CORE_COLLECTION_FIELDS}
   query GetTopCollections($lastUpdated: timestamptz!) {

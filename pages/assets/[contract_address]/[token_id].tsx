@@ -5,6 +5,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import useClipboard from 'react-use-clipboard'
 
 import { ICollection } from '../../../frontend/types'
 import Navbar from '../../../components/layout/navbar'
@@ -20,10 +21,34 @@ interface ITokenData {
 }
 
 function DisplayKeyValue({ left, right }: { left: string; right: string }) {
+  const [isCopied, setCopied] = useClipboard(right, { successDuration: 1000 })
+  useEffect(() => {
+    if (isCopied) toast.success('Copied to clipboard!')
+  }, [isCopied])
+
   return (
-    <div className="flex justify-between space-x-8">
+    <div className="flex justify-between space-x-8 pt-2">
       <span>{left}:</span>
-      <span className="text-ellipsis line-clamp-3 hover:line-clamp-6">{right}</span>
+      <span className="text-ellipsis line-clamp-3 hover:line-clamp-6 cursor-pointer" onClick={setCopied}>
+        {right}
+      </span>
+    </div>
+  )
+}
+
+function DisplayKeyValueData({ left, right }: { left: string; right: string }) {
+  const [isCopied, setCopied] = useClipboard(right, { successDuration: 1000 })
+  useEffect(() => {
+    if (isCopied) toast.success('Copied to clipboard!')
+  }, [isCopied])
+  return (
+    <div className="flex justify-between space-x-8 mt-2">
+      <div>
+        <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded ">{left}:</span>
+      </div>
+      <span className="text-ellipsis line-clamp-3 hover:line-clamp-6 cursor-pointer" onClick={setCopied}>
+        {right}
+      </span>
     </div>
   )
 }
@@ -82,36 +107,42 @@ const AssetPage: NextPage = () => {
       />
 
       {tokenData && typeof contract_address === 'string' && typeof token_id === 'string' && (
-        <div
-          className="mt-8 md:w-1/2 mx-4 md:mx-auto overflow-hidden space-y-4
-        p-8 shadow sm:rounded-lg bg-gray-100 dark:bg-gray-850 text-gray-500 dark:text-gray-100
-        md:flex-row md:items-center md:divide-y divide-gray-200 dark:divide-gray-700"
-        >
-          <DisplayKeyValue left="ERC 721 Contract" right={contract_address} />
-          <DisplayKeyValue left="Token ID" right={token_id} />
-          <DisplayKeyValue left="Token URI" right={tokenData.tokenURI} />
-          <DisplayKeyValue left="Owner" right={tokenData.owner} />
-          <div className="">
-            {tokenData.metadata && (
-              <div>
-                {Object.entries(tokenData.metadata).map((entry, i) => {
-                  const [key, value] = entry
-                  return <DisplayKeyValue key={i} left={key} right={JSON.stringify(value)} />
-                })}
-              </div>
-            )}
-          </div>
-          <div className="">
+        <>
+          <div
+            className="mt-8 md:w-1/2 mx-4 md:mx-auto overflow-hidden space-y-4
+                border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
+                p-8 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
+                md:flex-row md:items-center md:divide-y divide-gray-200 dark:divide-gray-700"
+          >
             {tokenData.other && (
-              <div>
+              <div className="space-y-2">
                 {Object.entries(tokenData.other).map((entry, i) => {
                   const [key, value] = entry
-                  return <DisplayKeyValue key={i} left={key} right={JSON.stringify(value)} />
+                  return <DisplayKeyValue key={i} left={key} right={value} />
                 })}
               </div>
             )}
           </div>
-        </div>
+          <div
+            className="mt-8 md:w-1/2 mx-4 md:mx-auto overflow-hidden space-y-4
+          border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
+          p-8 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
+          md:flex-row md:items-center md:divide-y divide-gray-200 dark:divide-gray-700"
+          >
+            <DisplayKeyValue left="ERC 721 Contract" right={contract_address} />
+            <DisplayKeyValue left="Token ID" right={token_id} />
+            <DisplayKeyValue left="Token URI" right={tokenData.tokenURI} />
+            <DisplayKeyValue left="Owner" right={tokenData.owner} />
+            {tokenData.metadata && (
+              <div className="space-y-2">
+                {Object.entries(tokenData.metadata).map((entry, i) => {
+                  const [key, value] = entry
+                  return <DisplayKeyValueData key={i} left={key} right={JSON.stringify(value)} />
+                })}
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   )

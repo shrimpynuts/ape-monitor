@@ -82,7 +82,6 @@ const Navbar = ({
   const formattedETH = parseFloat(formatUnits(balance)).toFixed(2)
 
   const isAdmin = wallet.account ? addressIsAdmin(wallet.account) : false
-  console.log({ isAdmin })
   return (
     <>
       <nav className="w-full px-4 pt-8 md:py-8 items-center">

@@ -35,7 +35,7 @@ export default function InfiniteTypist({ words, startDelay = 0, colorOffset = 0,
         >
           {word}
         </p>
-        <Typist.Backspace count={word.length} delay={5000} />
+        <Typist.Backspace count={word.length} delay={2000} />
       </Typist>
     )
   }

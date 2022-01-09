@@ -77,6 +77,28 @@ const updateCollection = async (givenCollection: ICollection) => {
       total_volume: stats.total_volume,
       market_cap: stats.market_cap,
       is_stats_fetched: true,
+
+      one_day_volume: stats.one_day_volume,
+      // one_day_change: stats.one_day_change,
+      one_day_sales: stats.one_day_sales,
+      one_day_average_price: stats.one_day_average_price,
+      seven_day_volume: stats.seven_day_volume,
+      // seven_day_change: stats.seven_day_change,
+      seven_day_sales: stats.seven_day_sales,
+      seven_day_average_price: stats.seven_day_average_price,
+      thirty_day_volume: stats.thirty_day_volume,
+      // thirty_day_change: stats.thirty_day_change,
+      thirty_day_sales: stats.thirty_day_sales,
+      thirty_day_average_price: stats.thirty_day_average_price,
+      // total_volume: stats.total_volume,
+      total_sales: stats.total_sales,
+      total_supply: stats.total_supply,
+      count: stats.count,
+      num_owners: stats.num_owners,
+      average_price: stats.average_price,
+      num_reports: stats.num_reports,
+      // market_cap: stats.market_cap,
+      // floor_price: stats.floor_price,
     }
 
     console.log('Saving collection with stats')

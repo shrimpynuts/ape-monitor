@@ -21,6 +21,7 @@ export default function DataPanel({ data }: any) {
     error_fetching_true,
     is_stats_fetched_true,
     floor_price_null,
+    one_day_volume_null,
     stale1,
     stale2,
     stale3,
@@ -57,6 +58,10 @@ export default function DataPanel({ data }: any) {
         <div className="flex justify-between p-4">
           <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded">error_fetching == true</span>
           <SingleCollectionStatistic metric={error_fetching_true.aggregate.count} total={total} />
+        </div>
+        <div className="flex justify-between p-4">
+          <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded">one_day_volume_null == null</span>
+          <SingleCollectionStatistic metric={one_day_volume_null.aggregate.count} total={total} />
         </div>
       </div>
 

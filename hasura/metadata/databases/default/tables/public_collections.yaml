@@ -5,23 +5,38 @@ select_permissions:
 - permission:
     allow_aggregations: true
     columns:
-    - contract_address
-    - created_at
-    - discord_url
-    - error_fetching
-    - external_url
-    - floor_price
     - id
-    - image_url
-    - is_stats_fetched
-    - market_cap
+    - created_at
+    - updated_at
     - name
+    - slug
+    - floor_price
+    - twitter_username
+    - discord_url
+    - external_url
+    - image_url
     - one_day_change
     - seven_day_change
-    - slug
     - thirty_day_change
+    - contract_address
     - total_volume
-    - twitter_username
-    - updated_at
+    - market_cap
+    - is_stats_fetched
+    - error_fetching
+    - one_day_volume
+    - one_day_sales
+    - one_day_average_price
+    - seven_day_volume
+    - seven_day_sales
+    - seven_day_average_price
+    - thirty_day_volume
+    - thirty_day_sales
+    - thirty_day_average_price
+    - total_sales
+    - total_supply
+    - count
+    - num_owners
+    - average_price
+    - num_reports
     filter: {}
   role: public

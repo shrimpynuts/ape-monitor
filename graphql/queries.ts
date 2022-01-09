@@ -111,6 +111,10 @@ export const GET_COLLECTIONS_ADMIN_STATS = gql`
     one_day_change_null: collections_aggregate(where: { one_day_change: { _is_null: true } }) {
       ...CollectionsAggregateCount
     }
+    one_day_volume_null: collections_aggregate(where: { one_day_volume: { _is_null: true } }) {
+      ...CollectionsAggregateCount
+    }
+
     slug_null: collections_aggregate(where: { slug: { _is_null: true } }) {
       ...CollectionsAggregateCount
     }

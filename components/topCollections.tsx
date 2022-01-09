@@ -250,7 +250,7 @@ function TopCollections({}: IProps) {
       </div>
 
       <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full mt-8">
-        <Tooltip width={64} text="Based on 24 hour change, above 1000Ξ market cap" />
+        <Tooltip width={64} text="Based on 24 hour change, above 100Ξ volume, and above 0.05Ξ floor" />
         <h1 className="text-center relative text-xl font-bold tracking-wide">Trending Collections</h1>
       </div>
       <div className="mt-4">

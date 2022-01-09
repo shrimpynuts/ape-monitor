@@ -161,12 +161,12 @@ function TopCollections({}: IProps) {
         width: 100,
       },
       {
-        Header: `One Day Volume`,
+        Header: `24hr Volume`,
         accessor: `one_day_volume`,
         id: 'One Day Volume',
         Cell: ({ cell: { value } }: CellProps<any>) => <EthDisplay value={value} />,
         disableFilters: true,
-        width: 150,
+        width: 130,
       },
       {
         Header: `Total Volume`,
@@ -174,7 +174,7 @@ function TopCollections({}: IProps) {
         id: 'Total Volume',
         Cell: ({ cell: { value } }: CellProps<any>) => <EthDisplay value={value} />,
         disableFilters: true,
-        width: 150,
+        width: 130,
       },
       {
         Header: `Market Cap`,
@@ -185,24 +185,24 @@ function TopCollections({}: IProps) {
         width: 120,
       },
       {
-        Header: `Total Supply`,
+        Header: `Supply`,
         accessor: `total_supply`,
         id: 'Total Supply',
         Cell: ({ cell: { value } }: CellProps<any>) => (
           <div className="text-center">{value ? formatLargeNumber(value, 1) : ''}</div>
         ),
         disableFilters: true,
-        width: 125,
+        width: 80,
       },
       {
-        Header: `# of Owners`,
+        Header: `Owners`,
         accessor: `num_owners`,
         id: 'Owners',
         Cell: ({ cell: { value } }: CellProps<any>) => (
           <div className="text-center">{value ? formatLargeNumber(value, 1) : ''}</div>
         ),
         disableFilters: true,
-        width: 120,
+        width: 80,
       },
     ],
     [isMobile],
@@ -217,7 +217,7 @@ function TopCollections({}: IProps) {
   return (
     <div className="w-full text-gray-900 dark:text-gray-300">
       <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full mt-8">
-        <Tooltip width={64} text="Based on 24 hour change, above 100Ξ volume, and above 0.05Ξ floor" />
+        <Tooltip width={64} text="Based on 24 hour volume, above 100Ξ volume, and above 0.05Ξ floor" />
         <h1 className="text-center relative text-xl font-bold tracking-wide">Trending Collections</h1>
       </div>
       <div className="mt-4">

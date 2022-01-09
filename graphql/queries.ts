@@ -73,9 +73,9 @@ export const GET_TOP_COLLECTIONS = gql`
   ${CORE_COLLECTION_FIELDS}
   query GetTopCollections($lastUpdated: timestamptz!) {
     trendingCollections: collections(
-      where: { total_volume: { _gt: 100 }, floor_price: { _gt: 0.05 } }
-      order_by: { one_day_change: desc_nulls_last }
-      limit: 10
+      where: { market_cap: { _gt: 1000 }, floor_price: { _gt: 0.05 } }
+      order_by: { one_day_volume: desc_nulls_last }
+      limit: 15
     ) {
       ...CoreCollectionFields
     }

@@ -8,6 +8,9 @@ module.exports = {
       rotate: {
         20: '20deg',
       },
+      maxHeight: {
+        128: '35rem',
+      },
       keyframes: {
         rotate: {
           '100%': {

@@ -70,15 +70,15 @@ const Home: NextPage = () => {
             <InfiniteTypist
               colorValues={colorVals.slice(0, 6)}
               words={[
-                'Bored Apes',
+                'Bored Ape Yacht Club',
                 'Cool Cats',
                 'Doodles',
                 'Cryptopunks',
                 'Pudgy Penguins',
                 'Loot',
+                'World of Women',
                 'Meebits',
                 'Chain Runners',
-                'Mutant Apes',
               ]}
             />
             .

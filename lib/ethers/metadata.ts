@@ -11,10 +11,15 @@ export async function getTokenURI(contract_address: string, token_id: string) {
   const contract = new ethers.Contract(contract_address, ERC721ABI, alchemyProvider)
   const tokenURI = await contract.tokenURI(token_id)
   const owner = await contract.ownerOf(token_id)
-  const metadata = await fetch(tokenURI).then((res) => res.json())
 
   let [imageURIURL, protocol] = await getURLFromURI(tokenURI)
   const other = { imageURIURL, protocol }
+
+  console.log({ tokenURI })
+  const metadata = await fetch(tokenURI)
+    .then((res) => res.json())
+    .catch(console.error)
+
   return { tokenURI, owner, metadata, other }
 }
 

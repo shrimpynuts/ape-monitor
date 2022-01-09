@@ -96,7 +96,7 @@ const AssetPage: NextPage = () => {
               <div>
                 {Object.entries(tokenData.metadata).map((entry, i) => {
                   const [key, value] = entry
-                  return <DisplayKeyValue left={key} right={JSON.stringify(value)} />
+                  return <DisplayKeyValue key={i} left={key} right={JSON.stringify(value)} />
                 })}
               </div>
             )}
@@ -106,7 +106,7 @@ const AssetPage: NextPage = () => {
               <div>
                 {Object.entries(tokenData.other).map((entry, i) => {
                   const [key, value] = entry
-                  return <DisplayKeyValue left={key} right={JSON.stringify(value)} />
+                  return <DisplayKeyValue key={i} left={key} right={JSON.stringify(value)} />
                 })}
               </div>
             )}

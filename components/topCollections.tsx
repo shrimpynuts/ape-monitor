@@ -9,7 +9,7 @@ import { ICollection } from '../frontend/types'
 import DeltaDisplay from './util/deltaDisplay'
 import { GET_TOP_COLLECTIONS } from '../graphql/queries'
 
-import Table from './table'
+import TopCollectionsTable from './topCollectionsTable'
 import Spinner from './util/spinner'
 import Tooltip from './util/tooltip'
 
@@ -248,7 +248,7 @@ function TopCollections({}: IProps) {
         <h1 className="text-center relative text-xl font-bold tracking-wide">Trending Collections</h1>
       </div>
       <div className="mt-4">
-        <Table
+        <TopCollectionsTable
           columns={columns}
           data={data?.collections || []}
           isMobile={isMobile}

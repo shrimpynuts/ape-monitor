@@ -36,7 +36,7 @@ function DisplayKeyValue({ left, right, link, copy }: { left: string; right: str
 
         {link && (
           <div className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer">
-            <a href={link} target="_blank">
+            <a href={link} target="_blank" rel="noreferrer">
               <ExternalLinkIcon className="h-4 w-4" />
             </a>
           </div>

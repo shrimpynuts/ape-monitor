@@ -71,7 +71,9 @@ const AssetPage: NextPage = () => {
     }
   }, [contract_address, token_id])
 
-  const metadataTitle = collection ? `${collection.name} - NFT Collection` : 'Ape Monitor'
+  const metadataTitle = tokenData?.metadata
+    ? `${tokenData.metadata.name} - ${collection && collection.name}`
+    : 'Ape Monitor'
   return (
     <div className="pb-4 md:pb-12">
       <Head>

@@ -73,6 +73,17 @@ const SingleTopCollections = ({
   )
 }
 
+const EthDisplay = ({ value }: { value: number }) => {
+  return value !== null ? (
+    <span className="flex justify-start space-x-2">
+      <img src="/eth-logo.svg" alt="eth logo" width="11" />
+      <span>{convertNumberToRoundedString(value)}</span>
+    </span>
+  ) : (
+    <></>
+  )
+}
+
 function TopCollections({}: IProps) {
   const detectMobile = useMobileDetect()
   const isMobile = detectMobile.isMobile()
@@ -159,20 +170,7 @@ function TopCollections({}: IProps) {
         Header: `Volume`,
         accessor: `total_volume`,
         id: 'Volume',
-        Cell: ({ cell: { value } }: CellProps<any>) => {
-          return (
-            <div>
-              {value !== null ? (
-                <span className="flex justify-start space-x-2">
-                  <img src="/eth-logo.svg" alt="eth logo" width="11" />
-                  <span>{convertNumberToRoundedString(value)}</span>
-                </span>
-              ) : (
-                ''
-              )}
-            </div>
-          )
-        },
+        Cell: ({ cell: { value } }: CellProps<any>) => <EthDisplay value={value} />,
         disableFilters: true,
         width: 120,
       },
@@ -180,20 +178,27 @@ function TopCollections({}: IProps) {
         Header: `Market Cap`,
         accessor: `market_cap`,
         id: 'Market Cap',
-        Cell: ({ cell: { value } }: CellProps<any>) => {
-          return (
-            <div>
-              {value !== null ? (
-                <span className="flex justify-start space-x-2">
-                  <img src="/eth-logo.svg" alt="eth logo" width="11" />
-                  <span>{convertNumberToRoundedString(value)}</span>
-                </span>
-              ) : (
-                ''
-              )}
-            </div>
-          )
-        },
+        Cell: ({ cell: { value } }: CellProps<any>) => <EthDisplay value={value} />,
+        disableFilters: true,
+        width: 120,
+      },
+      {
+        Header: `Total Supply`,
+        accessor: `total_supply`,
+        id: 'Total Supply',
+        Cell: ({ cell: { value } }: CellProps<any>) => (
+          <div className="text-left">{value ? formatLargeNumber(value, 1) : ''}</div>
+        ),
+        disableFilters: true,
+        width: 125,
+      },
+      {
+        Header: `# of Owners`,
+        accessor: `num_owners`,
+        id: 'Owners',
+        Cell: ({ cell: { value } }: CellProps<any>) => (
+          <div className="text-left">{value ? formatLargeNumber(value, 1) : ''}</div>
+        ),
         disableFilters: true,
         width: 120,
       },

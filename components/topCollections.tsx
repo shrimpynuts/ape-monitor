@@ -187,7 +187,7 @@ function TopCollections({}: IProps) {
         accessor: `total_supply`,
         id: 'Total Supply',
         Cell: ({ cell: { value } }: CellProps<any>) => (
-          <div className="text-left">{value ? formatLargeNumber(value, 1) : ''}</div>
+          <div className="text-center">{value ? formatLargeNumber(value, 1) : ''}</div>
         ),
         disableFilters: true,
         width: 125,
@@ -197,7 +197,7 @@ function TopCollections({}: IProps) {
         accessor: `num_owners`,
         id: 'Owners',
         Cell: ({ cell: { value } }: CellProps<any>) => (
-          <div className="text-left">{value ? formatLargeNumber(value, 1) : ''}</div>
+          <div className="text-center">{value ? formatLargeNumber(value, 1) : ''}</div>
         ),
         disableFilters: true,
         width: 120,

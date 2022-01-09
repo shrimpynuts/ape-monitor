@@ -113,16 +113,10 @@ function TopCollections({}: IProps) {
         accessor: 'floor_price',
         id: 'floor_price',
         Cell: ({ cell: { value } }: CellProps<any>) => (
-          <div>
-            {value ? (
-              <span className="flex items-center justify-start space-x-2">
-                <img src="/eth-logo.svg" alt="eth logo" width="11" />
-                <span>{convertNumberToRoundedString(value)}</span>
-              </span>
-            ) : (
-              ''
-            )}
-          </div>
+          <span className="flex items-center justify-start space-x-2">
+            <img src="/eth-logo.svg" alt="eth logo" width="11" />
+            <span>{convertNumberToRoundedString(value)}</span>
+          </span>
         ),
         disableFilters: true,
         width: 120,
@@ -167,12 +161,20 @@ function TopCollections({}: IProps) {
         width: 100,
       },
       {
-        Header: `Volume`,
-        accessor: `total_volume`,
-        id: 'Volume',
+        Header: `One Day Volume`,
+        accessor: `one_day_volume`,
+        id: 'One Day Volume',
         Cell: ({ cell: { value } }: CellProps<any>) => <EthDisplay value={value} />,
         disableFilters: true,
-        width: 120,
+        width: 150,
+      },
+      {
+        Header: `Total Volume`,
+        accessor: `total_volume`,
+        id: 'Total Volume',
+        Cell: ({ cell: { value } }: CellProps<any>) => <EthDisplay value={value} />,
+        disableFilters: true,
+        width: 150,
       },
       {
         Header: `Market Cap`,
@@ -256,7 +258,21 @@ function TopCollections({}: IProps) {
       <div className="mt-4">
         <TopCollectionsTable
           columns={columns}
-          data={data?.collections || []}
+          data={data?.trendingCollections || []}
+          isMobile={isMobile}
+          dontIncludeSubrows
+          replaceTableBody={loading && <Spinner />}
+        />
+      </div>
+
+      <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full mt-8">
+        <Tooltip width={64} text="Based on 24 hour change, above 100Ξ volume, and above 0.05Ξ floor" />
+        <h1 className="text-center relative text-xl font-bold tracking-wide">Down Bad Collections</h1>
+      </div>
+      <div className="mt-4">
+        <TopCollectionsTable
+          columns={columns}
+          data={data?.downBadCollections || []}
           isMobile={isMobile}
           dontIncludeSubrows
           replaceTableBody={loading && <Spinner />}

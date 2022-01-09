@@ -217,9 +217,22 @@ function TopCollections({}: IProps) {
   return (
     <div className="w-full text-gray-900 dark:text-gray-300">
       <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full mt-8">
-        <h1 className="text-center relative text-xl font-bold tracking-wide">Top Collections</h1>
+        <Tooltip width={64} text="Based on 24 hour change, above 100Ξ volume, and above 0.05Ξ floor" />
+        <h1 className="text-center relative text-xl font-bold tracking-wide">Trending Collections</h1>
+      </div>
+      <div className="mt-4">
+        <TopCollectionsTable
+          columns={columns}
+          data={data?.trendingCollections || []}
+          isMobile={isMobile}
+          dontIncludeSubrows
+          replaceTableBody={loading && <Spinner />}
+        />
       </div>
 
+      <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full mt-8">
+        <h1 className="text-center relative text-xl font-bold tracking-wide">Top Collections</h1>
+      </div>
       <div className="flex flex-col md:flex-row space-between space-y-4 md:space-y-0 md:space-x-4 mt-4">
         <SingleTopCollections
           title="One Day Change"
@@ -251,21 +264,7 @@ function TopCollections({}: IProps) {
         />
       </div>
 
-      <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full mt-8">
-        <Tooltip width={64} text="Based on 24 hour change, above 100Ξ volume, and above 0.05Ξ floor" />
-        <h1 className="text-center relative text-xl font-bold tracking-wide">Trending Collections</h1>
-      </div>
-      <div className="mt-4">
-        <TopCollectionsTable
-          columns={columns}
-          data={data?.trendingCollections || []}
-          isMobile={isMobile}
-          dontIncludeSubrows
-          replaceTableBody={loading && <Spinner />}
-        />
-      </div>
-
-      <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full mt-8">
+      {/* <div className="flex relative space-x-2 items-center justify-center mx-auto text-center w-full mt-8">
         <Tooltip width={64} text="Based on 24 hour change, above 100Ξ volume" />
         <h1 className="text-center relative text-xl font-bold tracking-wide">Down Bad Collections</h1>
       </div>
@@ -277,7 +276,7 @@ function TopCollections({}: IProps) {
           dontIncludeSubrows
           replaceTableBody={loading && <Spinner />}
         />
-      </div>
+      </div> */}
     </div>
   )
 }

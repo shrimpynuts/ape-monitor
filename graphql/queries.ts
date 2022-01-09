@@ -71,13 +71,6 @@ export const GET_TOP_COLLECTIONS = gql`
     ) {
       ...CoreCollectionFields
     }
-    downBadCollections: collections(
-      where: { total_volume: { _gt: 100 } }
-      order_by: { one_day_change: asc_nulls_last }
-      limit: 10
-    ) {
-      ...CoreCollectionFields
-    }
 
     totalVolume: collections(order_by: { total_volume: desc_nulls_last }, limit: 10) {
       ...CoreCollectionFields

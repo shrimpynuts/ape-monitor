@@ -4,7 +4,7 @@ import useMobileDetect from 'use-mobile-detect-hook'
 import { useQuery } from '@apollo/client'
 import Link from 'next/link'
 
-import { convertNumberToRoundedString, getRankDisplay } from '../lib/util'
+import { convertNumberToRoundedString, formatLargeNumber, getRankDisplay } from '../lib/util'
 import { ICollection } from '../frontend/types'
 import DeltaDisplay from './util/deltaDisplay'
 import { GET_TOP_COLLECTIONS } from '../graphql/queries'
@@ -44,12 +44,12 @@ const SingleTopCollections = ({
         <div className="flex flex-col space-y-2 mt-4">
           {collections?.map((collection, i: number) => (
             <div className="flex justify-between " key={i}>
-              <div className="flex space-x-4">
+              <div className="flex space-x-4 items-center">
                 <span className="flex-1 w-4 text-center">{getRankDisplay(i + 1)}</span>
                 <Link href={`https://opensea.io/collection/${collection.slug}`} passHref>
                   <a target="_blank" rel="noreferrer">
-                    <p className="flex-1 cursor-pointer hover:text-yellow-600 hover:font-bold truncate w-52 md:w-36">
-                      <img src={collection.image_url} className="h-8 w-8 rounded-full inline mr-2" />
+                    <p className="flex-1 cursor-pointer hover:text-yellow-600 hover:font-bold truncate w-40 md:w-[20]">
+                      <img src={collection.image_url} className="h-6 w-6 rounded-full inline mr-2" />
                       {collection.name}
                     </p>
                   </a>
@@ -60,9 +60,10 @@ const SingleTopCollections = ({
                   {collection[accessor] !== undefined && <DeltaDisplay delta={collection[accessor]} denomination="%" />}
                 </span>
               ) : (
-                <span className="flex-1 text-right">{`${convertNumberToRoundedString(
-                  collection[accessor],
-                )}${denomination}`}</span>
+                <span className="text-right flex items-center">
+                  <img className="inline mr-1" src="/eth-logo.svg" alt="eth logo" width="11" />
+                  {`${formatLargeNumber(collection[accessor] || 0, 1)}`}
+                </span>
               )}
             </div>
           ))}

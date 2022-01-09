@@ -12,6 +12,9 @@ import Navbar from '../../../components/layout/navbar'
 import { GET_COLLECTION_BY_CONTRACT_ADDRESS } from '../../../graphql/queries'
 
 import { getTokenURI } from '../../../lib/ethers/metadata'
+import Link from 'next/link'
+import { DuplicateIcon, ExternalLinkIcon } from '@heroicons/react/outline'
+import { DuplicateIcon as DuplicateIconSolid } from '@heroicons/react/solid'
 
 interface ITokenData {
   tokenURI: string
@@ -20,35 +23,48 @@ interface ITokenData {
   other: { [key: string]: any }
 }
 
-function DisplayKeyValue({ left, right }: { left: string; right: string }) {
+function DisplayKeyValue({ left, right, link, copy }: { left: string; right: string; link?: string; copy?: boolean }) {
   const [isCopied, setCopied] = useClipboard(right, { successDuration: 1000 })
-  useEffect(() => {
-    if (isCopied) toast.success('Copied to clipboard!')
-  }, [isCopied])
-
+  // useEffect(() => {
+  //   if (isCopied) toast.success('Copied to clipboard!')
+  // }, [isCopied])
   return (
     <div className="flex justify-between space-x-8 pt-2">
       <span>{left}:</span>
-      <span className="text-ellipsis line-clamp-3 hover:line-clamp-6 cursor-pointer" onClick={setCopied}>
-        {right}
-      </span>
+      <div className="flex items-center space-x-2">
+        <span className="text-ellipsis line-clamp-3 hover:line-clamp-6">{right}</span>
+
+        {link && (
+          <div className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer">
+            <a href={link} target="_blank">
+              <ExternalLinkIcon className="h-4 w-4" />
+            </a>
+          </div>
+        )}
+
+        {copy && (
+          <div className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer" onClick={setCopied}>
+            {isCopied ? <DuplicateIconSolid className="h-4 w-4" /> : <DuplicateIcon className="h-4 w-4" />}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
 
 function DisplayKeyValueData({ left, right }: { left: string; right: string }) {
   const [isCopied, setCopied] = useClipboard(right, { successDuration: 1000 })
-  useEffect(() => {
-    if (isCopied) toast.success('Copied to clipboard!')
-  }, [isCopied])
   return (
     <div className="flex justify-between space-x-8 mt-2">
       <div>
         <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded ">{left}:</span>
       </div>
-      <span className="text-ellipsis line-clamp-3 hover:line-clamp-6 cursor-pointer" onClick={setCopied}>
-        {right}
-      </span>
+      <div className="flex items-center space-x-2">
+        <span className="text-ellipsis line-clamp-3 hover:line-clamp-6">{right}</span>
+        <div className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer" onClick={setCopied}>
+          {isCopied ? <DuplicateIconSolid className="h-4 w-4" /> : <DuplicateIcon className="h-4 w-4" />}
+        </div>
+      </div>
     </div>
   )
 }
@@ -70,6 +86,8 @@ const AssetPage: NextPage = () => {
       getTokenURI(contract_address, token_id).then(setTokenData).catch(toast.error)
     }
   }, [contract_address, token_id])
+
+  console.log({ tokenData })
 
   const metadataTitle = tokenData?.metadata
     ? `${tokenData.metadata.name} - ${collection && collection.name}`
@@ -131,10 +149,14 @@ const AssetPage: NextPage = () => {
           p-8 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
           md:flex-row md:items-center md:divide-y divide-gray-200 dark:divide-gray-700"
           >
-            <DisplayKeyValue left="ERC 721 Contract" right={contract_address} />
+            <DisplayKeyValue
+              left="ERC 721 Contract"
+              right={contract_address}
+              link={`https://etherscan.io/token/${contract_address}`}
+            />
             <DisplayKeyValue left="Token ID" right={token_id} />
             <DisplayKeyValue left="Token URI" right={tokenData.tokenURI} />
-            <DisplayKeyValue left="Owner" right={tokenData.owner} />
+            <DisplayKeyValue left="Owner" right={tokenData.owner} copy />
             {tokenData.metadata && (
               <div className="space-y-2">
                 {Object.entries(tokenData.metadata).map((entry, i) => {

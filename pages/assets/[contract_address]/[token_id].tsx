@@ -152,7 +152,7 @@ const AssetPage: NextPage = () => {
             <DisplayKeyValue
               left="ERC 721 Contract"
               right={contract_address}
-              link={`https://etherscan.io/address/${contract_address}`}
+              link={`https://etherscan.io/address/${contract_address}#code`}
             />
             <DisplayKeyValue left="Token ID" right={token_id} />
             <DisplayKeyValue left="Token URI" right={tokenData.tokenURI} />

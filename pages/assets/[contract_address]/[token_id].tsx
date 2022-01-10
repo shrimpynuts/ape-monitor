@@ -11,8 +11,7 @@ import { ICollection } from '../../../frontend/types'
 import Navbar from '../../../components/layout/navbar'
 import { GET_COLLECTION_BY_CONTRACT_ADDRESS } from '../../../graphql/queries'
 
-import { getTokenURI } from '../../../lib/ethers/metadata'
-import Link from 'next/link'
+import { getTokenURI, ipfsURItoURL } from '../../../lib/ethers/metadata'
 import { DuplicateIcon, ExternalLinkIcon } from '@heroicons/react/outline'
 import { DuplicateIcon as DuplicateIconSolid } from '@heroicons/react/solid'
 
@@ -29,13 +28,13 @@ function DisplayKeyValue({ left, right, link, copy }: { left: string; right: str
   //   if (isCopied) toast.success('Copied to clipboard!')
   // }, [isCopied])
   return (
-    <div className="flex justify-between space-x-8 pt-2">
+    <div className="flex justify-between space-x-8 pt-2 overflow-x-hidden">
       <span>{left}:</span>
       <div className="flex items-center space-x-2">
         <span className="text-ellipsis line-clamp-3 hover:line-clamp-6">{right}</span>
 
         {link && (
-          <div className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer">
+          <div className="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer">
             <a href={link} target="_blank" rel="noreferrer">
               <ExternalLinkIcon className="h-4 w-4" />
             </a>
@@ -43,7 +42,7 @@ function DisplayKeyValue({ left, right, link, copy }: { left: string; right: str
         )}
 
         {copy && (
-          <div className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer" onClick={setCopied}>
+          <div className="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer" onClick={setCopied}>
             {isCopied ? <DuplicateIconSolid className="h-4 w-4" /> : <DuplicateIcon className="h-4 w-4" />}
           </div>
         )}
@@ -61,7 +60,7 @@ function DisplayKeyValueData({ left, right }: { left: string; right: string }) {
       </div>
       <div className="flex items-center space-x-2">
         <span className="text-ellipsis line-clamp-3 hover:line-clamp-6">{right}</span>
-        <div className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer" onClick={setCopied}>
+        <div className="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer" onClick={setCopied}>
           {isCopied ? <DuplicateIconSolid className="h-4 w-4" /> : <DuplicateIcon className="h-4 w-4" />}
         </div>
       </div>
@@ -89,8 +88,13 @@ const AssetPage: NextPage = () => {
 
   console.log({ tokenData })
 
+  const containerStyles = `mt-8 md:w-1/2 mx-4 md:mx-auto overflow-hidden space-y-4
+  border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
+  p-4 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
+  md:flex-row md:items-center md:divide-y divide-gray-200 dark:divide-gray-700`
+
   const metadataTitle = tokenData?.metadata
-    ? `${tokenData.metadata.name} - ${collection && collection.name}`
+    ? `${tokenData.metadata.name || token_id} - ${collection && collection.name}`
     : 'Ape Monitor'
   return (
     <div className="pb-4 md:pb-12">
@@ -128,12 +132,7 @@ const AssetPage: NextPage = () => {
 
       {tokenData && typeof contract_address === 'string' && typeof token_id === 'string' && (
         <>
-          <div
-            className="mt-8 md:w-1/2 mx-4 md:mx-auto overflow-hidden space-y-4
-                border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
-                p-8 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
-                md:flex-row md:items-center md:divide-y divide-gray-200 dark:divide-gray-700"
-          >
+          <div className={containerStyles}>
             {tokenData.other && (
               <div className="space-y-2">
                 {Object.entries(tokenData.other).map((entry, i) => {
@@ -143,25 +142,32 @@ const AssetPage: NextPage = () => {
               </div>
             )}
           </div>
-          <div
-            className="mt-8 md:w-1/2 mx-4 md:mx-auto overflow-hidden space-y-4
-          border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
-          p-8 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
-          md:flex-row md:items-center md:divide-y divide-gray-200 dark:divide-gray-700"
-          >
+          <div className={containerStyles}>
             <DisplayKeyValue
               left="ERC 721 Contract"
               right={contract_address}
               link={`https://etherscan.io/address/${contract_address}#code`}
+              copy
             />
             <DisplayKeyValue left="Token ID" right={token_id} />
             <DisplayKeyValue left="Token URI" right={tokenData.tokenURI} />
-            <DisplayKeyValue left="Owner" right={tokenData.owner} copy />
+            <DisplayKeyValue
+              left="Owner"
+              link={`https://etherscan.io/address/${tokenData.owner}`}
+              right={tokenData.owner}
+              copy
+            />
+          </div>
+          <div className={containerStyles}>
             {tokenData.metadata && (
               <div className="space-y-2">
                 {Object.entries(tokenData.metadata).map((entry, i) => {
                   const [key, value] = entry
-                  return <DisplayKeyValueData key={i} left={key} right={JSON.stringify(value)} />
+                  const valueURL = value.includes('ipfs://') ? ipfsURItoURL(value) : value
+                  const isObject = typeof valueURL === 'object'
+                  return (
+                    <DisplayKeyValueData key={i} left={key} right={isObject ? JSON.stringify(valueURL) : valueURL} />
+                  )
                 })}
               </div>
             )}

@@ -8,15 +8,24 @@ const CID = require('cids')
 const arweave = Arweave.init({})
 
 export async function getTokenURI(contract_address: string, token_id: string) {
-  const contract = new ethers.Contract(contract_address, ERC721ABI, alchemyProvider)
-  const tokenURI = await contract.tokenURI(token_id)
-  const owner = await contract.ownerOf(token_id)
+  console.log({ contract_address })
 
-  let [imageURIURL, protocol] = await getURLFromURI(tokenURI)
-  const other = { imageURIURL, protocol }
+  if (contract_address === '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb') {
+    console.log('PUNKS!')
+  }
+
+  const contract = new ethers.Contract(contract_address, ERC721ABI, alchemyProvider)
+  console.log({ contract })
+  const tokenURI = await contract.tokenURI(token_id)
+  console.log({ tokenURI })
+  const owner = await contract.ownerOf(token_id)
+  console.log({ owner })
+
+  let [tokenURL, protocol] = await getURLFromURI(tokenURI)
+  const other = { tokenURL, protocol }
 
   console.log({ tokenURI })
-  const metadata = await fetch(tokenURI)
+  const metadata = await fetch(tokenURL)
     .then((res) => res.json())
     .catch(console.error)
 
@@ -36,37 +45,38 @@ export const isIPFSCID = (hash: string) => {
   }
 }
 
+export const ipfsURItoURL = (uri: string) => {
+  let CID = uri.replace('ipfs://', '')
+  return ipfsGetEndpoint + CID
+}
+
 export const getURLFromURI = async (uri: string) => {
   try {
-    if (!uri) {
-      return ['', 'undefined']
-    }
-    // if correct URI we get the protocol
     let url = new URL(uri)
-    // if protocol other IPFS -- get the ipfs hash
+
+    // Check for IPFS Protocol
     if (url.protocol === 'ipfs:') {
       // ipfs://ipfs/Qm
-
-      let ipfsHash = url.href.replace('ipfs://ipfs/', '')
-
-      return [ipfsGetEndpoint + ipfsHash, 'ipfs']
+      let CID = url.href.replace('ipfs://', '')
+      return [ipfsGetEndpoint + CID, 'ipfs']
     }
 
-    if (url.pathname.includes('ipfs') || url.pathname.includes('Qm')) {
-      // /ipfs/QmTtbYLMHaSqkZ7UenwEs9Sri6oUjQgnagktJSnHeWY8iG
-      let ipfsHash = url.pathname.replace('/ipfs/', '')
-      return [ipfsGetEndpoint + ipfsHash, 'ipfs']
-    }
+    // if (url.pathname.includes('ipfs') || url.pathname.includes('Qm')) {
+    //   // /ipfs/QmTtbYLMHaSqkZ7UenwEs9Sri6oUjQgnagktJSnHeWY8iG
+    //   let ipfsHash = url.pathname.replace('/ipfs/', '')
+    //   return [ipfsGetEndpoint + ipfsHash, 'ipfs']
+    // }
 
-    // otherwise we check if arweave (arweave in the name or arweave.net)
+    // Check if arweave (arweave in the name or arweave.net)
     if (url.hostname.includes('arweave')) {
       return [arweaveEndpoint + '/' + url.pathname.replace('/', ''), 'arweave']
     }
 
     // otherwise it's a centralized uri
     return [uri, 'centralized']
-  } catch (e) {
+
     // it's not a url, we keep checking
+  } catch (e) {
     // check if IPFS
     if (isIPFSCID(uri)) {
       return [ipfsGetEndpoint + uri, 'ipfs']

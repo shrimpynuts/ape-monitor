@@ -74,22 +74,27 @@ const Token = ({ tokenData, collection }: IProps) => {
   const router = useRouter()
   const { contract_address, token_id } = router.query
 
-  const containerStyles = `mt-8 md:mx-auto overflow-hidden space-y-4
+  // Styles
+  const containerStyles = `mt-2 md:mx-auto overflow-hidden space-y-4
   border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
   p-4 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
   md:flex-row md:items-center md:divide-y divide-gray-200 dark:divide-gray-700`
-
   const containerStylesColumn = `mt-8 md:w-1/2 mx-4 md:mx-auto overflow-hidden space-y-4
   border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
   p-8 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
-  flex-col md:items-center md:divide-y divide-gray-200 dark:divide-gray-700`
+  flex-col md:items-center `
+  const sectionTitleStyles = 'text-2xl font-bold ml-2 tracking-wide leading-relaxed	'
 
+  // Retrieving constants
   const value = tokenData?.metadata?.image
   const imageURL = value?.includes('ipfs://') ? ipfsURItoURL(value) : value
-  console.log({ tokenData })
-  console.log({ imageURL })
-
   const openseaLink = `https://opensea.io/assets/${contract_address}/${token_id}`
+
+  // localhost:3000/assets/0xa406489360a47af2c74fc1004316a64e469646a5/9691
+  // localhost:3000/assets/0x57a204aa1042f6e66dd7730813f4024114d74f37/4723
+  // localhost:3000/assets/0xc92ceddfb8dd984a89fb494c376f9a48b999aafc/5061
+  // localhost:3000/assets/0xbd3531da5cf5857e7cfaa92426877b022e612cf8/4441
+
   return (
     <div className="pb-4 md:pb-12">
       {tokenData && typeof contract_address === 'string' && typeof token_id === 'string' && (
@@ -102,7 +107,7 @@ const Token = ({ tokenData, collection }: IProps) => {
             </div>
             <div className="space-y-2">
               <h1 className="text-4xl">{tokenData.metadata?.name || `Token #${token_id}`}</h1>
-              <h3 className="text-xl font-extrabold">{collection?.name}</h3>
+              <h3 className="text-xl font-extrabold tracking-wide">{collection?.name}</h3>
               <h3 className="text-sm">{tokenData.metadata?.description}</h3>
               <h3 className="text-sm">
                 <Link href={openseaLink} passHref>
@@ -113,6 +118,13 @@ const Token = ({ tokenData, collection }: IProps) => {
               </h3>
             </div>
           </div>
+
+          <h2 className={sectionTitleStyles}>
+            Permanence Grade: <span className="text-yellow-500">{tokenData.permanenceGrade}</span>
+          </h2>
+          <div className={containerStyles}>{tokenData.permanenceDescription}</div>
+
+          <h2 className={sectionTitleStyles}>Details</h2>
           <div className={containerStyles}>
             <DisplayKeyValue left="Token URI" right={tokenData.tokenURI} link={tokenData.tokenURL} />
             <DisplayKeyValue left="Protocol" right={tokenData.protocol} />
@@ -129,9 +141,16 @@ const Token = ({ tokenData, collection }: IProps) => {
               right={tokenData.owner}
               copy
             />
+            <DisplayKeyValue
+              left="Check My NFT"
+              link={`https://checkmynft.com/?address=${contract_address}&id=${token_id}`}
+              right={'...'}
+            />
           </div>
+
+          <h2 className={sectionTitleStyles}>Metadata</h2>
           <div className={containerStyles}>
-            {tokenData.metadata && (
+            {tokenData.metadata ? (
               <div className="space-y-2">
                 {Object.entries(tokenData.metadata).map((entry, i) => {
                   const [key, value] = entry
@@ -141,6 +160,10 @@ const Token = ({ tokenData, collection }: IProps) => {
                     <DisplayKeyValueData key={i} left={key} right={isObject ? JSON.stringify(valueURL) : valueURL} />
                   )
                 })}
+              </div>
+            ) : (
+              <div>
+                <span className="text-red-400">Had an issue fetching metadata. Likely a CORS issue. </span>
               </div>
             )}
           </div>

@@ -97,4 +97,7 @@ export interface ITokenData {
   protocol?: 'IPFS' | 'Arweave' | 'Centralized' | 'Unknown'
   owner?: string // Doesn't exist for cryptopunks
   metadata: { [key: string]: any }
+
+  permanenceGrade: string
+  permanenceDescription: string
 }

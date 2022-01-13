@@ -27,6 +27,8 @@ export async function getTokenURI(contract_address: string, token_id: string): P
       metadata: {
         image,
       },
+      permanenceGrade: 'B',
+      permanenceDescription: 'This is because something',
     }
   } else {
     const contract = new ethers.Contract(contract_address, ERC721ABI, alchemyProvider)
@@ -39,7 +41,17 @@ export async function getTokenURI(contract_address: string, token_id: string): P
       .then((res) => res.json())
       .catch(console.error)
 
-    return { tokenURI, tokenURL, owner, metadata, protocol }
+    return {
+      tokenURI,
+      tokenURL,
+      owner,
+      metadata,
+      protocol,
+      permanenceGrade: 'B',
+      permanenceDescription: `This asset is either stored on a centralized provider or there might not be a link between your NFT and the asset on chain. 
+        Your asset is at great risk of loss if the provider goes out of business, if the issuer stops payment to the storage provider or if the link between
+        your NFT and the assets breaks (for example, if the link is stored on a centralized website).`,
+    }
   }
 }
 

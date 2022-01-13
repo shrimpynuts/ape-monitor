@@ -163,7 +163,10 @@ const Token = ({ tokenData, collection }: IProps) => {
               </div>
             ) : (
               <div>
-                <span className="text-red-400">Had an issue fetching metadata. Likely a CORS issue. </span>
+                <span className="text-red-400">
+                  Had an issue fetching metadata. Likely a CORS issue due to the NFT's data being stored on a
+                  centralized server.
+                </span>
               </div>
             )}
           </div>

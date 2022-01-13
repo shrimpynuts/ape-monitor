@@ -33,7 +33,7 @@ export async function getTokenURI(contract_address: string, token_id: string): P
     const tokenURI = await contract.tokenURI(token_id)
     const owner = await contract.ownerOf(token_id)
 
-    let [tokenURL, protocol] = await getURLFromURI(tokenURI)
+    let { tokenURL, protocol } = await getURLFromURI(tokenURI)
 
     const metadata = await fetch(tokenURL)
       .then((res) => res.json())
@@ -61,7 +61,9 @@ export const ipfsURItoURL = (uri: string) => {
   return ipfsGetEndpoint + CID
 }
 
-export const getURLFromURI = async (uri: string) => {
+export const getURLFromURI = async (
+  uri: string,
+): Promise<{ tokenURL: string; protocol: 'IPFS' | 'Arweave' | 'Centralized' | 'Unknown' }> => {
   try {
     let url = new URL(uri)
 
@@ -69,7 +71,7 @@ export const getURLFromURI = async (uri: string) => {
     if (url.protocol === 'ipfs:') {
       // ipfs://ipfs/Qm
       let CID = url.href.replace('ipfs://', '')
-      return [ipfsGetEndpoint + CID, 'IPFS']
+      return { tokenURL: ipfsGetEndpoint + CID, protocol: 'IPFS' }
     }
 
     // if (url.pathname.includes('ipfs') || url.pathname.includes('Qm')) {
@@ -80,26 +82,26 @@ export const getURLFromURI = async (uri: string) => {
 
     // Check if arweave (arweave in the name or arweave.net)
     if (url.hostname.includes('arweave')) {
-      return [arweaveEndpoint + '/' + url.pathname.replace('/', ''), 'Arweave']
+      return { tokenURL: arweaveEndpoint + '/' + url.pathname.replace('/', ''), protocol: 'Arweave' }
     }
 
     // otherwise it's a centralized uri
-    return [uri, 'centralized']
+    return { tokenURL: uri, protocol: 'Centralized' }
 
     // it's not a url, we keep checking
   } catch (e) {
     // check if IPFS
     if (isIPFSCID(uri)) {
-      return [ipfsGetEndpoint + uri, 'IPFS']
+      return { tokenURL: ipfsGetEndpoint + uri, protocol: 'IPFS' }
     }
 
     try {
       // could be an arweave tx ID, check it
       await arweave.transactions.get(uri)
-      return [arweaveEndpoint + '/' + uri, 'Arweave']
+      return { tokenURL: arweaveEndpoint + '/' + uri, protocol: 'Arweave' }
     } catch (e) {
       // otherwise we don't know
-      return ['', 'undefined']
+      return { tokenURL: uri, protocol: 'Unknown' }
     }
   }
 }

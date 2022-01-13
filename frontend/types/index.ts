@@ -94,7 +94,7 @@ export interface ITradeData {
 export interface ITokenData {
   tokenURI?: string // Doesn't exist for cryptopunks
   tokenURL?: string
-  protocol?: string
+  protocol?: 'IPFS' | 'Arweave' | 'Centralized' | 'Unknown'
   owner?: string // Doesn't exist for cryptopunks
   metadata: { [key: string]: any }
 }

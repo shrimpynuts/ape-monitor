@@ -93,7 +93,8 @@ export interface ITradeData {
 
 export interface ITokenData {
   tokenURI?: string // Doesn't exist for cryptopunks
+  tokenURL?: string
+  protocol?: string
   owner?: string // Doesn't exist for cryptopunks
   metadata: { [key: string]: any }
-  other: { [key: string]: any }
 }

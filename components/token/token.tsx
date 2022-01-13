@@ -26,7 +26,9 @@ function DisplayKeyValue({
     <div className="flex justify-between space-x-8 pt-2 overflow-x-hidden">
       <span>{left}:</span>
       <div className="flex items-center space-x-2">
-        <span className="text-ellipsis line-clamp-3 hover:line-clamp-6">{right}</span>
+        <div className="max-w-md overflow-hidden truncate">
+          <span className="text-ellipsis  truncate">{right}</span>
+        </div>
 
         {link && (
           <div className="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer">
@@ -112,27 +114,18 @@ const Token = ({ tokenData, collection }: IProps) => {
             </div>
           </div>
           <div className={containerStyles}>
-            {tokenData.other && (
-              <div className="space-y-2">
-                {Object.entries(tokenData.other).map((entry, i) => {
-                  const [key, value] = entry
-                  return <DisplayKeyValue key={i} left={key} right={value} />
-                })}
-              </div>
-            )}
-          </div>
-          <div className={containerStyles}>
+            <DisplayKeyValue left="Token URI" right={tokenData.tokenURI} link={tokenData.tokenURL} />
+            <DisplayKeyValue left="Protocol" right={tokenData.protocol} />
             <DisplayKeyValue
-              left="ERC 721 Contract"
+              left="Contract Address"
               right={contract_address}
               link={`https://etherscan.io/address/${contract_address}#code`}
               copy
             />
             <DisplayKeyValue left="Token ID" right={token_id} />
-            <DisplayKeyValue left="Token URI" right={tokenData.tokenURI} />
             <DisplayKeyValue
               left="Owner"
-              link={`https://etherscan.io/address/${tokenData.owner}`}
+              link={`https://apemonitor.com/${tokenData.owner}`}
               right={tokenData.owner}
               copy
             />

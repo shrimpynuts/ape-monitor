@@ -27,7 +27,6 @@ export async function getTokenURI(contract_address: string, token_id: string): P
       metadata: {
         image,
       },
-      other: { name: 'Cryptopunk', attributesContract: CryptopunkAttributesAddress },
     }
   } else {
     const contract = new ethers.Contract(contract_address, ERC721ABI, alchemyProvider)
@@ -35,13 +34,12 @@ export async function getTokenURI(contract_address: string, token_id: string): P
     const owner = await contract.ownerOf(token_id)
 
     let [tokenURL, protocol] = await getURLFromURI(tokenURI)
-    const other = { tokenURL, protocol }
 
     const metadata = await fetch(tokenURL)
       .then((res) => res.json())
       .catch(console.error)
 
-    return { tokenURI, owner, metadata, other }
+    return { tokenURI, tokenURL, owner, metadata, protocol }
   }
 }
 

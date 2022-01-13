@@ -16,17 +16,10 @@ function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-4">
       {allAssets.map(({ image_url, link }) => {
-        const image = (
-          <Image
-            src={image_url || Placeholder}
-            width={180}
-            height={180}
-            className="rounded object-none h-64 w-64 transform hover:scale-110 duration-200 hover:shadow-xl"
-          />
-        )
+        const image = <Image src={image_url || Placeholder} width={180} height={180} className="rounded h-64 w-64 " />
         return link ? (
           <Link href={link} passHref>
-            <a target="_blank" rel="noreferrer">
+            <a target="_blank" rel="noreferrer" className="transform hover:scale-110 duration-200 hover:shadow-xl">
               {image}
             </a>
           </Link>

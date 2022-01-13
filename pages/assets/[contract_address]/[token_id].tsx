@@ -1,79 +1,24 @@
 import { useState, useEffect } from 'react'
 
-import { useQuery } from '@apollo/client'
 import toast, { Toaster } from 'react-hot-toast'
+import { useQuery } from '@apollo/client'
+import { useRouter } from 'next/router'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import useClipboard from 'react-use-clipboard'
 
-import { ICollection } from '../../../frontend/types'
+import { ICollection, ITokenData } from '../../../frontend/types'
 import Navbar from '../../../components/layout/navbar'
 import { GET_COLLECTION_BY_CONTRACT_ADDRESS } from '../../../graphql/queries'
 
-import { getTokenURI, ipfsURItoURL } from '../../../lib/ethers/metadata'
-import { DuplicateIcon, ExternalLinkIcon } from '@heroicons/react/outline'
-import { DuplicateIcon as DuplicateIconSolid } from '@heroicons/react/solid'
-
-interface ITokenData {
-  tokenURI: string
-  owner: string
-  metadata: { [key: string]: any }
-  other: { [key: string]: any }
-}
-
-function DisplayKeyValue({ left, right, link, copy }: { left: string; right: string; link?: string; copy?: boolean }) {
-  const [isCopied, setCopied] = useClipboard(right, { successDuration: 1000 })
-  // useEffect(() => {
-  //   if (isCopied) toast.success('Copied to clipboard!')
-  // }, [isCopied])
-  return (
-    <div className="flex justify-between space-x-8 pt-2 overflow-x-hidden">
-      <span>{left}:</span>
-      <div className="flex items-center space-x-2">
-        <span className="text-ellipsis line-clamp-3 hover:line-clamp-6">{right}</span>
-
-        {link && (
-          <div className="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer">
-            <a href={link} target="_blank" rel="noreferrer">
-              <ExternalLinkIcon className="h-4 w-4" />
-            </a>
-          </div>
-        )}
-
-        {copy && (
-          <div className="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer" onClick={setCopied}>
-            {isCopied ? <DuplicateIconSolid className="h-4 w-4" /> : <DuplicateIcon className="h-4 w-4" />}
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
-function DisplayKeyValueData({ left, right }: { left: string; right: string }) {
-  const [isCopied, setCopied] = useClipboard(right, { successDuration: 1000 })
-  return (
-    <div className="flex justify-between space-x-8 mt-2">
-      <div>
-        <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded ">{left}:</span>
-      </div>
-      <div className="flex items-center space-x-2">
-        <span className="text-ellipsis line-clamp-3 hover:line-clamp-6">{right}</span>
-        <div className="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer" onClick={setCopied}>
-          {isCopied ? <DuplicateIconSolid className="h-4 w-4" /> : <DuplicateIcon className="h-4 w-4" />}
-        </div>
-      </div>
-    </div>
-  )
-}
+import { getTokenURI, contractIsPunks } from '../../../lib/ethers/metadata'
+import TokenDisplay from '../../../components/token/token'
 
 const AssetPage: NextPage = () => {
   const router = useRouter()
   const { contract_address, token_id } = router.query
   const [tokenData, setTokenData] = useState<ITokenData | undefined>()
 
-  const { loading, data } = useQuery(GET_COLLECTION_BY_CONTRACT_ADDRESS, {
+  const { data } = useQuery(GET_COLLECTION_BY_CONTRACT_ADDRESS, {
     variables: {
       contract_address,
     },
@@ -82,20 +27,18 @@ const AssetPage: NextPage = () => {
 
   useEffect(() => {
     if (typeof contract_address === 'string' && typeof token_id === 'string') {
-      getTokenURI(contract_address, token_id).then(setTokenData).catch(toast.error)
+      getTokenURI(contract_address, token_id)
+        .then(setTokenData)
+        .catch((e) => {
+          toast.error(e.toString())
+        })
     }
   }, [contract_address, token_id])
-
-  console.log({ tokenData })
-
-  const containerStyles = `mt-8 md:w-1/2 mx-4 md:mx-auto overflow-hidden space-y-4
-  border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
-  p-4 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
-  md:flex-row md:items-center md:divide-y divide-gray-200 dark:divide-gray-700`
 
   const metadataTitle = tokenData?.metadata
     ? `${tokenData.metadata.name || token_id} - ${collection && collection.name}`
     : 'Ape Monitor'
+
   return (
     <div className="pb-4 md:pb-12">
       <Head>
@@ -130,50 +73,7 @@ const AssetPage: NextPage = () => {
         }}
       />
 
-      {tokenData && typeof contract_address === 'string' && typeof token_id === 'string' && (
-        <>
-          <div className={containerStyles}>
-            {tokenData.other && (
-              <div className="space-y-2">
-                {Object.entries(tokenData.other).map((entry, i) => {
-                  const [key, value] = entry
-                  return <DisplayKeyValue key={i} left={key} right={value} />
-                })}
-              </div>
-            )}
-          </div>
-          <div className={containerStyles}>
-            <DisplayKeyValue
-              left="ERC 721 Contract"
-              right={contract_address}
-              link={`https://etherscan.io/address/${contract_address}#code`}
-              copy
-            />
-            <DisplayKeyValue left="Token ID" right={token_id} />
-            <DisplayKeyValue left="Token URI" right={tokenData.tokenURI} />
-            <DisplayKeyValue
-              left="Owner"
-              link={`https://etherscan.io/address/${tokenData.owner}`}
-              right={tokenData.owner}
-              copy
-            />
-          </div>
-          <div className={containerStyles}>
-            {tokenData.metadata && (
-              <div className="space-y-2">
-                {Object.entries(tokenData.metadata).map((entry, i) => {
-                  const [key, value] = entry
-                  const valueURL = value.includes('ipfs://') ? ipfsURItoURL(value) : value
-                  const isObject = typeof valueURL === 'object'
-                  return (
-                    <DisplayKeyValueData key={i} left={key} right={isObject ? JSON.stringify(valueURL) : valueURL} />
-                  )
-                })}
-              </div>
-            )}
-          </div>
-        </>
-      )}
+      <TokenDisplay tokenData={tokenData} collection={collection} />
     </div>
   )
 }

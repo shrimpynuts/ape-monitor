@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   images: {
-    domains: ['storage.opensea.io', 'lh3.googleusercontent.com'],
+    domains: ['storage.opensea.io', 'lh3.googleusercontent.com', 'ipfs.io'],
   },
   reactStrictMode: true,
   async headers() {

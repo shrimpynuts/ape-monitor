@@ -90,3 +90,10 @@ export interface IAddressData {
 export interface ITradeData {
   [key: string]: any
 }
+
+export interface ITokenData {
+  tokenURI?: string // Doesn't exist for cryptopunks
+  owner?: string // Doesn't exist for cryptopunks
+  metadata: { [key: string]: any }
+  other: { [key: string]: any }
+}

@@ -3,33 +3,46 @@ import { ethers } from 'ethers'
 
 import { alchemyProvider } from '../ethersProvider'
 import ERC721ABI from '../../lib/ERC721ABI.json'
+import CryptopunksAttributesABI from '../../lib/CryptopunksAttributesABI.json'
+import { ITokenData } from '../../frontend/types'
 
 const CID = require('cids')
 const arweave = Arweave.init({})
 
-export async function getTokenURI(contract_address: string, token_id: string) {
+const CryptopunkAttributesAddress = '0x16f5a35647d6f03d5d3da7b35409d65ba03af3b2'
+const CryptopunkMainAddress = '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb'
+
+export const contractIsPunks = (contract_address: string) => contract_address === CryptopunkMainAddress
+
+export async function getTokenURI(contract_address: string, token_id: string): Promise<ITokenData> {
   console.log({ contract_address })
 
-  if (contract_address === '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb') {
+  if (contractIsPunks(contract_address)) {
     console.log('PUNKS!')
+    const contract = new ethers.Contract(CryptopunkAttributesAddress, CryptopunksAttributesABI, alchemyProvider)
+    console.log({ token_id, contract })
+    const image = await contract.punkImageSvg(parseInt(token_id))
+    console.log({ image })
+    return {
+      metadata: {
+        image,
+      },
+      other: { name: 'Cryptopunk', attributesContract: CryptopunkAttributesAddress },
+    }
+  } else {
+    const contract = new ethers.Contract(contract_address, ERC721ABI, alchemyProvider)
+    const tokenURI = await contract.tokenURI(token_id)
+    const owner = await contract.ownerOf(token_id)
+
+    let [tokenURL, protocol] = await getURLFromURI(tokenURI)
+    const other = { tokenURL, protocol }
+
+    const metadata = await fetch(tokenURL)
+      .then((res) => res.json())
+      .catch(console.error)
+
+    return { tokenURI, owner, metadata, other }
   }
-
-  const contract = new ethers.Contract(contract_address, ERC721ABI, alchemyProvider)
-  console.log({ contract })
-  const tokenURI = await contract.tokenURI(token_id)
-  console.log({ tokenURI })
-  const owner = await contract.ownerOf(token_id)
-  console.log({ owner })
-
-  let [tokenURL, protocol] = await getURLFromURI(tokenURI)
-  const other = { tokenURL, protocol }
-
-  console.log({ tokenURI })
-  const metadata = await fetch(tokenURL)
-    .then((res) => res.json())
-    .catch(console.error)
-
-  return { tokenURI, owner, metadata, other }
 }
 
 export const ipfsGetEndpoint = 'https://ipfs.io/ipfs/'
@@ -58,7 +71,7 @@ export const getURLFromURI = async (uri: string) => {
     if (url.protocol === 'ipfs:') {
       // ipfs://ipfs/Qm
       let CID = url.href.replace('ipfs://', '')
-      return [ipfsGetEndpoint + CID, 'ipfs']
+      return [ipfsGetEndpoint + CID, 'IPFS']
     }
 
     // if (url.pathname.includes('ipfs') || url.pathname.includes('Qm')) {
@@ -69,7 +82,7 @@ export const getURLFromURI = async (uri: string) => {
 
     // Check if arweave (arweave in the name or arweave.net)
     if (url.hostname.includes('arweave')) {
-      return [arweaveEndpoint + '/' + url.pathname.replace('/', ''), 'arweave']
+      return [arweaveEndpoint + '/' + url.pathname.replace('/', ''), 'Arweave']
     }
 
     // otherwise it's a centralized uri
@@ -79,13 +92,13 @@ export const getURLFromURI = async (uri: string) => {
   } catch (e) {
     // check if IPFS
     if (isIPFSCID(uri)) {
-      return [ipfsGetEndpoint + uri, 'ipfs']
+      return [ipfsGetEndpoint + uri, 'IPFS']
     }
 
     try {
       // could be an arweave tx ID, check it
       await arweave.transactions.get(uri)
-      return [arweaveEndpoint + '/' + uri, 'arweave']
+      return [arweaveEndpoint + '/' + uri, 'Arweave']
     } catch (e) {
       // otherwise we don't know
       return ['', 'undefined']

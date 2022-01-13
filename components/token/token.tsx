@@ -82,7 +82,7 @@ const Token = ({ tokenData, collection }: IProps) => {
   p-8 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
   flex-col md:items-center md:divide-y divide-gray-200 dark:divide-gray-700`
 
-  const value = tokenData?.metadata.image
+  const value = tokenData?.metadata?.image
   const imageURL = value?.includes('ipfs://') ? ipfsURItoURL(value) : value
   console.log({ tokenData })
   console.log({ imageURL })

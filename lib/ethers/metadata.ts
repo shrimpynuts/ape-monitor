@@ -62,9 +62,11 @@ export async function getTokenData(contract_address: string, token_id: string): 
       metadata: {
         image,
       },
-      permanenceColor: 'yellow',
-      permanenceGrade: 'B',
-      permanenceDescription: 'This is because something',
+      permanenceColor: 'green',
+      permanenceGrade: 'A-',
+      permanenceDescription: `Cryptopunks is a unique NFT collection. Because they were created before the ERC-721 standard, each token is not directly linked to any metadata at all.
+      The only true verification is stored as a hash of the entire collection of punk images. Read more about the details here: https://github.com/larvalabs/cryptopunks.
+      However, as of August 2021, the metadata for each punk has been deployed to its own smart contract (https://www.larvalabs.com/blog/2021-8-18-18-0/on-chain-cryptopunks).`,
     }
   } else {
     const contract = new ethers.Contract(contract_address, ERC721ABI, alchemyProvider)

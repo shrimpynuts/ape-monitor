@@ -46,7 +46,7 @@ const permanenceDetails: {
 } = {
   IPFS: {
     metadata: `This NFT's metadata is stored safely on IPFS, a decentralized data provider. This is good!
-    However, long term permanence of the asset is not guaranteed. The asset requires ongoing renewal and payment of the storage contract or it will be permanently lost`,
+    However, long term permanence of the asset is not guaranteed. The asset requires ongoing renewal and payment of the storage contract or it will be permanently lost.`,
     image: "This NFT's image is stored safely on IPFS.",
   },
   Arweave: defaultPerformanceDetails,

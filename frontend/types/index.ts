@@ -91,7 +91,7 @@ export interface ITradeData {
   [key: string]: any
 }
 
-export type ProtocolType = 'IPFS' | 'Arweave' | 'Centralized' | 'Unknown' | 'Pinata (IPFS)' | 'Data'
+export type ProtocolType = 'IPFS' | 'Arweave' | 'Centralized' | 'Unknown' | 'Pinata (IPFS)' | 'On-Chain'
 export interface ITokenData {
   tokenURI?: string // Doesn't exist for cryptopunks
   tokenURL?: string

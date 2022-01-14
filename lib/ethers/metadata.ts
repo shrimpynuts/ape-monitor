@@ -44,7 +44,7 @@ const permanenceDetails: {
   IPFS: {
     metadata: `This NFT's metadata is stored safely on IPFS, a decentralized data provider. This is good!
     However, long term permanence of the asset is not guaranteed. The asset requires ongoing renewal and payment of the storage contract or it will be permanently lost.`,
-    image: '',
+    image: ' The image is stored on IPFS.',
   },
   Arweave: {
     metadata: `This NFT's metadata is stored safely on Arweave. Arweave is the best long term solution for hosting your data.`,
@@ -53,7 +53,7 @@ const permanenceDetails: {
   ['Pinata (IPFS)']: defaultPerformanceDetails,
   Centralized: defaultPerformanceDetails,
   Unknown: defaultPerformanceDetails,
-  Data: {
+  ['On-Chain']: {
     metadata: `This NFT's metadata is stored 100% on-chain. This is the best possible scenario!
     As long as the smart contract is not mutated, you can be sure that this data is permanent.
     Furthermore, other smart contracts can access this data to create derivative projects.`,
@@ -106,7 +106,7 @@ export async function getTokenData(contract_address: string, token_id: string): 
     let permanenceGrade
     if (protocol === 'IPFS' || protocol === 'Pinata (IPFS)') {
       permanenceGrade = 'B'
-    } else if (protocol === 'Arweave' || protocol === 'Data') {
+    } else if (protocol === 'Arweave' || protocol === 'On-Chain') {
       permanenceGrade = 'A'
     } else if (protocol === 'Centralized') {
       permanenceGrade = 'F'
@@ -122,7 +122,7 @@ export async function getTokenData(contract_address: string, token_id: string): 
         imageProtocol === 'IPFS' ||
         imageProtocol === 'Pinata (IPFS)' ||
         imageProtocol === 'Arweave' ||
-        imageProtocol === 'Data'
+        imageProtocol === 'On-Chain'
       ) {
         permanenceGrade += '+'
       } else {
@@ -142,11 +142,11 @@ export async function getTokenData(contract_address: string, token_id: string): 
       // Special cases
 
       // Both image and metadata are on IPFS
-      if (protocol === 'IPFS' || imageProtocol === 'IPFS') {
+      if (protocol === 'IPFS' && imageProtocol === 'IPFS') {
         return {
           ...obj,
           permanenceDescription: `Both the NFT metadata and image are stored on IPFS. IPFS is indeed a decentralized data provider, so this data cannot change. 
-          However, the data isn\t guaranteed to always be persistently available. Read more about it here: https://docs.ipfs.io/concepts/persistence/#persistence-versus-permanence.`,
+          However, the data isn\'t guaranteed to always be persistently available. Read more about it here: https://docs.ipfs.io/concepts/persistence/#persistence-versus-permanence.`,
         }
       }
 
@@ -169,7 +169,7 @@ export async function getTokenData(contract_address: string, token_id: string): 
       }
 
       // Both image and metadata are on chain
-      if (protocol === 'Data' && imageProtocol === 'Data') {
+      if (protocol === 'On-Chain' && imageProtocol === 'On-Chain') {
         return {
           ...obj,
           permanenceDescription: `Both the NFT metadata AND image are stored 100% on-chain. This is the best possible scenario!
@@ -234,7 +234,7 @@ export const getURLFromURI = async (uri: string): Promise<{ tokenURL: string; pr
     // Check for data URI
     if (url.protocol === 'data:') {
       // ipfs://ipfs/Qm
-      return { tokenURL: uri, protocol: 'Data' }
+      return { tokenURL: uri, protocol: 'On-Chain' }
     }
 
     // Check for Pinata (IPFS)

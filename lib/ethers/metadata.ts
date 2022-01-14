@@ -31,6 +31,31 @@ const permanenceGradeToColor = (permanenceGrade: string) => {
   }
 }
 
+const defaultPerformanceDetails = {
+  metadata: `This asset is either stored on a centralized provider or there might not be a link between your NFT and the asset on chain. 
+Your asset is at great risk of loss if the provider goes out of business, if the issuer stops payment to the storage provider or if the link between
+your NFT and the assets breaks (for example, if the link is stored on a centralized website).`,
+  image: 'fuck',
+}
+
+const permanenceDetails: {
+  [key in ProtocolType]: {
+    metadata: string
+    image: string
+  }
+} = {
+  IPFS: {
+    metadata: `This NFT's metadata is stored safely on IPFS, a decentralized data provider. This is good!
+    However, long term permanence of the asset is not guaranteed. The asset requires ongoing renewal and payment of the storage contract or it will be permanently lost`,
+    image: "This NFT's image is stored safely on IPFS.",
+  },
+  Arweave: defaultPerformanceDetails,
+  ['Pinata (IPFS)']: defaultPerformanceDetails,
+  Centralized: defaultPerformanceDetails,
+  Unknown: defaultPerformanceDetails,
+  Data: defaultPerformanceDetails,
+}
+
 export async function getTokenData(contract_address: string, token_id: string): Promise<ITokenData> {
   if (contractIsPunks(contract_address)) {
     console.log('PUNKS!')
@@ -65,16 +90,24 @@ export async function getTokenData(contract_address: string, token_id: string): 
     } else if (protocol === 'Arweave' || protocol === 'Data') {
       permanenceGrade = 'A'
     } else if (protocol === 'Centralized') {
-      permanenceGrade = 'D'
+      permanenceGrade = 'F'
     } else {
       permanenceGrade = 'F'
     }
 
     const permanenceColor = permanenceGradeToColor(permanenceGrade)
 
-    const permanenceDescription = `This asset is either stored on a centralized provider or there might not be a link between your NFT and the asset on chain. 
-      Your asset is at great risk of loss if the provider goes out of business, if the issuer stops payment to the storage provider or if the link between
-      your NFT and the assets breaks (for example, if the link is stored on a centralized website).`
+    if (metadata?.image) {
+      const { protocol } = await getURLFromURI(metadata.image)
+      if (protocol === 'IPFS' || protocol === 'Pinata (IPFS)' || protocol === 'Arweave' || protocol === 'Data') {
+        permanenceGrade += '+'
+      } else {
+        permanenceGrade += '-'
+      }
+    }
+
+    let permanenceDescription = permanenceDetails[protocol].metadata
+    permanenceDescription += `\n${permanenceDetails[protocol].image}`
 
     return {
       tokenURI,

@@ -55,7 +55,7 @@ function DisplayKeyValueData({ left, right }: { left: string; right: string }) {
         <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded ">{left}:</span>
       </div>
       <div className="flex items-center space-x-2">
-        <div className="max-w-md whitespace-pre-line truncate">
+        <div className="max-w-lg whitespace-pre-line truncate">
           <span className="text-ellipsis line-clamp-3 hover:line-clamp-6">{right}</span>
         </div>
         <div className="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer" onClick={setCopied}>

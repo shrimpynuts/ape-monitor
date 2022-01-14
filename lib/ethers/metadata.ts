@@ -12,7 +12,10 @@ const arweave = Arweave.init({})
 const CryptopunkAttributesAddress = '0x16f5a35647d6f03d5d3da7b35409d65ba03af3b2'
 const CryptopunkMainAddress = '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb'
 
-export const contractIsPunks = (contract_address: string) => contract_address === CryptopunkMainAddress
+const OpenseaAddress = '0x495f947276749ce646f68ac8c248420045cb7b5e'
+
+export const contractIsCryptoPunks = (contract_address: string) => contract_address === CryptopunkMainAddress
+export const contractIsOpensea = (contract_address: string) => contract_address === OpenseaAddress
 
 const permanenceGradeToColor = (permanenceGrade: string) => {
   switch (permanenceGrade) {
@@ -59,7 +62,8 @@ const permanenceDetails: {
 }
 
 export async function getTokenData(contract_address: string, token_id: string): Promise<ITokenData> {
-  if (contractIsPunks(contract_address)) {
+  // Cryptopunks
+  if (contractIsCryptoPunks(contract_address)) {
     console.log('PUNKS!')
     const contract = new ethers.Contract(CryptopunkAttributesAddress, CryptopunksAttributesABI, alchemyProvider)
     const image = await contract.punkImageSvg(parseInt(token_id))
@@ -72,6 +76,17 @@ export async function getTokenData(contract_address: string, token_id: string): 
       permanenceDescription: `Cryptopunks is a unique NFT collection. Because they were created before the ERC-721 standard, each token is not directly linked to any metadata at all.
       The only true verification is stored as a hash of the entire collection of punk images. Read more about the details here: https://github.com/larvalabs/cryptopunks.
       However, as of August 2021, the metadata for each punk has been deployed to its own smart contract (https://www.larvalabs.com/blog/2021-8-18-18-0/on-chain-cryptopunks).`,
+    }
+
+    // Opensea
+  } else if (contract_address === OpenseaAddress) {
+    return {
+      metadata: {},
+      permanenceColor: 'red',
+      permanenceGrade: 'F-',
+      permanenceDescription: `This is an NFT minted from the Opensea storefront. 
+      This means the creator of the NFT is able to edit the metadata, including the image/name/description, however they want.
+      Even after they've sold the item! The NFT\'s data is stored on Opensea servers, so it's completely dependent on Opensea.`,
     }
   } else {
     const contract = new ethers.Contract(contract_address, ERC721ABI, alchemyProvider)

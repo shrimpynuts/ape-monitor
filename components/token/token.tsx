@@ -1,10 +1,12 @@
+import Image from 'next/image'
 import { DuplicateIcon, ExternalLinkIcon } from '@heroicons/react/outline'
 import { DuplicateIcon as DuplicateIconSolid } from '@heroicons/react/solid'
 import useClipboard from 'react-use-clipboard'
 import Link from 'next/link'
 
-import { ipfsURItoURL } from '../../lib/ethers/metadata'
+import { ipfsURItoURL, contractIsOpensea } from '../../lib/ethers/metadata'
 import { ICollection, ITokenData } from '../../frontend/types'
+import Placeholder from '../../public/placeholder.jpeg'
 
 function DisplayKeyValue({
   left,
@@ -99,14 +101,22 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
           <div className="flex flex-col space-y-4 space-x-0 md:flex-row md:space-y-0">
             <div>
               <div className="w-72">
-                <img src={imageURL} className="rounded object-contain h-64" />
+                {imageURL ? (
+                  <img src={imageURL} className="rounded object-contain h-64" />
+                ) : (
+                  <div className="mr-4">
+                    <Image src={Placeholder} height={530} className="rounded object-contain" />
+                  </div>
+                )}
               </div>
             </div>
             <div>
               <div className="space-y-2">
-                <h1 className="text-4xl">{tokenData.metadata?.name || `Token #${token_id}`}</h1>
-                <h3 className="text-xl font-extrabold tracking-wide">{collection?.name}</h3>
-                <h3 className="text-sm">{tokenData.metadata?.description}</h3>
+                <h1 className="text-4xl truncate max-w-md">{tokenData.metadata?.name || `Token #${token_id}`}</h1>
+                <h3 className="text-xl font-extrabold tracking-wide">
+                  {contractIsOpensea(contract_address) ? 'Opensea Storefront' : collection?.name}
+                </h3>
+                <h3 className="text-sm line-clamp-6 hover:line-clamp-none">{tokenData.metadata?.description}</h3>
               </div>
 
               <div className="mt-2">

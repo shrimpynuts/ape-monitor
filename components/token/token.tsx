@@ -1,7 +1,6 @@
 import { DuplicateIcon, ExternalLinkIcon } from '@heroicons/react/outline'
 import { DuplicateIcon as DuplicateIconSolid } from '@heroicons/react/solid'
 import useClipboard from 'react-use-clipboard'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 import { ipfsURItoURL } from '../../lib/ethers/metadata'
@@ -56,7 +55,9 @@ function DisplayKeyValueData({ left, right }: { left: string; right: string }) {
         <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded ">{left}:</span>
       </div>
       <div className="flex items-center space-x-2">
-        <span className="text-ellipsis line-clamp-3 hover:line-clamp-6">{right}</span>
+        <div className="max-w-md whitespace-pre-line truncate">
+          <span className="text-ellipsis line-clamp-3 hover:line-clamp-6">{right}</span>
+        </div>
         <div className="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full cursor-pointer" onClick={setCopied}>
           {isCopied ? <DuplicateIconSolid className="h-4 w-4" /> : <DuplicateIcon className="h-4 w-4" />}
         </div>
@@ -68,12 +69,11 @@ function DisplayKeyValueData({ left, right }: { left: string; right: string }) {
 interface IProps {
   tokenData?: ITokenData
   collection?: ICollection
+  contract_address: string | string[] | undefined
+  token_id: string | string[] | undefined
 }
 
-const Token = ({ tokenData, collection }: IProps) => {
-  const router = useRouter()
-  const { contract_address, token_id } = router.query
-
+const Token = ({ tokenData, collection, contract_address, token_id }: IProps) => {
   // Styles
   const containerStyles = `mt-2 md:mx-auto overflow-hidden space-y-4
   border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
@@ -91,11 +91,6 @@ const Token = ({ tokenData, collection }: IProps) => {
   const openseaLink = `https://opensea.io/assets/${contract_address}/${token_id}`
   const checkmynftLink = `https://checkmynft.com/?address=${contract_address}&id=${token_id}`
   const etherscanLink = `https://etherscan.io/address/${contract_address}#code`
-
-  // localhost:3000/assets/0xa406489360a47af2c74fc1004316a64e469646a5/9691
-  // localhost:3000/assets/0x57a204aa1042f6e66dd7730813f4024114d74f37/4723
-  // localhost:3000/assets/0xc92ceddfb8dd984a89fb494c376f9a48b999aafc/5061
-  // localhost:3000/assets/0xbd3531da5cf5857e7cfaa92426877b022e612cf8/4441
 
   return (
     <div className="pb-4 md:pb-12">
@@ -134,7 +129,8 @@ const Token = ({ tokenData, collection }: IProps) => {
           </div>
 
           <h2 className={sectionTitleStyles}>
-            Permanence Grade: <span className="text-yellow-500">{tokenData.permanenceGrade}</span>
+            Permanence Grade:{' '}
+            <span className={`text-${tokenData.permanenceColor}-500`}>{tokenData.permanenceGrade}</span>
           </h2>
           <div className={containerStyles}>{tokenData.permanenceDescription}</div>
 

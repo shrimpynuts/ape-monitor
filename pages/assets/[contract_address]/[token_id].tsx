@@ -10,7 +10,7 @@ import { ICollection, ITokenData } from '../../../frontend/types'
 import Navbar from '../../../components/layout/navbar'
 import { GET_COLLECTION_BY_CONTRACT_ADDRESS } from '../../../graphql/queries'
 
-import { getTokenURI, contractIsPunks } from '../../../lib/ethers/metadata'
+import { getTokenData } from '../../../lib/ethers/metadata'
 import TokenDisplay from '../../../components/token/token'
 
 const AssetPage: NextPage = () => {
@@ -27,7 +27,7 @@ const AssetPage: NextPage = () => {
 
   useEffect(() => {
     if (typeof contract_address === 'string' && typeof token_id === 'string') {
-      getTokenURI(contract_address, token_id)
+      getTokenData(contract_address, token_id)
         .then(setTokenData)
         .catch((e) => {
           toast.error(e.toString())
@@ -73,7 +73,12 @@ const AssetPage: NextPage = () => {
         }}
       />
 
-      <TokenDisplay tokenData={tokenData} collection={collection} />
+      <TokenDisplay
+        tokenData={tokenData}
+        collection={collection}
+        token_id={token_id}
+        contract_address={contract_address}
+      />
     </div>
   )
 }

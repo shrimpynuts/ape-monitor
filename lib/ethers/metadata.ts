@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import { alchemyProvider } from '../ethersProvider'
 import ERC721ABI from '../../lib/ERC721ABI.json'
 import CryptopunksAttributesABI from '../../lib/CryptopunksAttributesABI.json'
-import { ITokenData } from '../../frontend/types'
+import { ITokenData, ProtocolType } from '../../frontend/types'
 
 const CID = require('cids')
 const arweave = Arweave.init({})
@@ -14,19 +14,33 @@ const CryptopunkMainAddress = '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb'
 
 export const contractIsPunks = (contract_address: string) => contract_address === CryptopunkMainAddress
 
-export async function getTokenURI(contract_address: string, token_id: string): Promise<ITokenData> {
-  console.log({ contract_address })
+const permanenceGradeToColor = (permanenceGrade: string) => {
+  switch (permanenceGrade) {
+    case 'A':
+      return 'green'
+    case 'B':
+      return 'yellow'
+    case 'C':
+      return 'red'
+    case 'D':
+      return 'red'
+    case 'F':
+      return 'red'
+    default:
+      return 'white'
+  }
+}
 
+export async function getTokenData(contract_address: string, token_id: string): Promise<ITokenData> {
   if (contractIsPunks(contract_address)) {
     console.log('PUNKS!')
     const contract = new ethers.Contract(CryptopunkAttributesAddress, CryptopunksAttributesABI, alchemyProvider)
-    console.log({ token_id, contract })
     const image = await contract.punkImageSvg(parseInt(token_id))
-    console.log({ image })
     return {
       metadata: {
         image,
       },
+      permanenceColor: 'yellow',
       permanenceGrade: 'B',
       permanenceDescription: 'This is because something',
     }
@@ -41,16 +55,36 @@ export async function getTokenURI(contract_address: string, token_id: string): P
       .then((res) => res.json())
       .catch(console.error)
 
+    if (!metadata) {
+      console.log("Couldn't fetch metadata")
+    }
+
+    let permanenceGrade
+    if (protocol === 'IPFS' || protocol === 'Pinata (IPFS)') {
+      permanenceGrade = 'B'
+    } else if (protocol === 'Arweave' || protocol === 'Data') {
+      permanenceGrade = 'A'
+    } else if (protocol === 'Centralized') {
+      permanenceGrade = 'D'
+    } else {
+      permanenceGrade = 'F'
+    }
+
+    const permanenceColor = permanenceGradeToColor(permanenceGrade)
+
+    const permanenceDescription = `This asset is either stored on a centralized provider or there might not be a link between your NFT and the asset on chain. 
+      Your asset is at great risk of loss if the provider goes out of business, if the issuer stops payment to the storage provider or if the link between
+      your NFT and the assets breaks (for example, if the link is stored on a centralized website).`
+
     return {
       tokenURI,
       tokenURL,
       owner,
       metadata,
       protocol,
-      permanenceGrade: 'B',
-      permanenceDescription: `This asset is either stored on a centralized provider or there might not be a link between your NFT and the asset on chain. 
-        Your asset is at great risk of loss if the provider goes out of business, if the issuer stops payment to the storage provider or if the link between
-        your NFT and the assets breaks (for example, if the link is stored on a centralized website).`,
+      permanenceColor,
+      permanenceGrade,
+      permanenceDescription,
     }
   }
 }
@@ -73,24 +107,34 @@ export const ipfsURItoURL = (uri: string) => {
   return ipfsGetEndpoint + CID
 }
 
-export const getURLFromURI = async (
-  uri: string,
-): Promise<{ tokenURL: string; protocol: 'IPFS' | 'Arweave' | 'Centralized' | 'Unknown' }> => {
+export const getURLFromURI = async (uri: string): Promise<{ tokenURL: string; protocol: ProtocolType }> => {
   try {
     let url = new URL(uri)
 
-    // Check for IPFS Protocol
+    console.log(url.hostname)
+
+    // Check for IPFS URL
+    if (url.hostname === 'ipfs.io') {
+      return { tokenURL: uri, protocol: 'IPFS' }
+    }
+
+    // Check for IPFS URI
     if (url.protocol === 'ipfs:') {
       // ipfs://ipfs/Qm
       let CID = url.href.replace('ipfs://', '')
       return { tokenURL: ipfsGetEndpoint + CID, protocol: 'IPFS' }
     }
 
-    // if (url.pathname.includes('ipfs') || url.pathname.includes('Qm')) {
-    //   // /ipfs/QmTtbYLMHaSqkZ7UenwEs9Sri6oUjQgnagktJSnHeWY8iG
-    //   let ipfsHash = url.pathname.replace('/ipfs/', '')
-    //   return [ipfsGetEndpoint + ipfsHash, 'ipfs']
-    // }
+    // Check for data URI
+    if (url.protocol === 'data:') {
+      // ipfs://ipfs/Qm
+      return { tokenURL: uri, protocol: 'Data' }
+    }
+
+    // Check for Pinata (IPFS)
+    if (url.href.includes('mypinata.cloud/ipfs')) {
+      return { tokenURL: uri, protocol: 'Pinata (IPFS)' }
+    }
 
     // Check if arweave (arweave in the name or arweave.net)
     if (url.hostname.includes('arweave')) {

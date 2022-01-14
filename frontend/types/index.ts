@@ -91,13 +91,15 @@ export interface ITradeData {
   [key: string]: any
 }
 
+export type ProtocolType = 'IPFS' | 'Arweave' | 'Centralized' | 'Unknown' | 'Pinata (IPFS)' | 'Data'
 export interface ITokenData {
   tokenURI?: string // Doesn't exist for cryptopunks
   tokenURL?: string
-  protocol?: 'IPFS' | 'Arweave' | 'Centralized' | 'Unknown'
+  protocol?: ProtocolType
   owner?: string // Doesn't exist for cryptopunks
   metadata: { [key: string]: any }
 
+  permanenceColor: string
   permanenceGrade: string
   permanenceDescription: string
 }

@@ -50,7 +50,12 @@ const permanenceDetails: {
   ['Pinata (IPFS)']: defaultPerformanceDetails,
   Centralized: defaultPerformanceDetails,
   Unknown: defaultPerformanceDetails,
-  Data: defaultPerformanceDetails,
+  Data: {
+    metadata: `This NFT's metadata is stored 100% on-chain. This is the best possible scenario!
+    As long as the smart contract is not mutated, you can be sure that this data is permanent.
+    Furthermore, other smart contracts can access this data to create derivative projects.`,
+    image: '',
+  },
 }
 
 export async function getTokenData(contract_address: string, token_id: string): Promise<ITokenData> {
@@ -97,11 +102,65 @@ export async function getTokenData(contract_address: string, token_id: string): 
     const permanenceColor = permanenceGradeToColor(permanenceGrade)
 
     if (metadata?.image) {
-      const { protocol } = await getURLFromURI(metadata.image)
-      if (protocol === 'IPFS' || protocol === 'Pinata (IPFS)' || protocol === 'Arweave' || protocol === 'Data') {
+      const { protocol: imageProtocol } = await getURLFromURI(metadata.image)
+      if (
+        imageProtocol === 'IPFS' ||
+        imageProtocol === 'Pinata (IPFS)' ||
+        imageProtocol === 'Arweave' ||
+        imageProtocol === 'Data'
+      ) {
         permanenceGrade += '+'
       } else {
         permanenceGrade += '-'
+      }
+
+      const obj = {
+        tokenURI,
+        tokenURL,
+        owner,
+        metadata,
+        protocol,
+        permanenceColor,
+        permanenceGrade,
+      }
+
+      // Special cases
+
+      // Both image and metadata are on IPFS
+      if (protocol === 'IPFS' || imageProtocol === 'IPFS') {
+        return {
+          ...obj,
+          permanenceDescription: `Both the NFT metadata and image are stored on IPFS. IPFS is indeed a decentralized data provider, so this data cannot change. 
+          However, the data isn\t guaranteed to always be persistently available. Read more about it here: https://docs.ipfs.io/concepts/persistence/#persistence-versus-permanence.`,
+        }
+      }
+
+      // Both image and metadata are on IPFS, pinned by Pinata
+      if (protocol === 'Pinata (IPFS)' && imageProtocol === 'Pinata (IPFS)') {
+        return {
+          ...obj,
+          permanenceDescription: `Both the NFT metadata and image are stored on IPFS, and pinned using Pinata. While IPFS alone can't guarantee 
+          that the data remains available, Pinata will keep the data pinned (available) as long as Pinata\'s pinning service is paid for.`,
+        }
+      }
+
+      // Both image and metadata are on Arweave
+      if (protocol === 'Arweave' && imageProtocol === 'Arweave') {
+        return {
+          ...obj,
+          permanenceDescription: `Both the NFT metadata and image are stored on Arweave. 
+          This is the best permanent solution for hosting data long term, so you can rest assured. Ape away!`,
+        }
+      }
+
+      // Both image and metadata are on chain
+      if (protocol === 'Data' && imageProtocol === 'Data') {
+        return {
+          ...obj,
+          permanenceDescription: `Both the NFT metadata AND image are stored 100% on-chain. This is the best possible scenario!
+          As long as the smart contract is not mutated, you can be sure that this data is permanent.
+          Furthermore, other smart contracts can access this data to create derivative projects.`,
+        }
       }
     }
 

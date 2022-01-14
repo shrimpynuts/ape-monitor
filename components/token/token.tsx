@@ -161,7 +161,7 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
             ) : (
               <div>
                 <span className="text-red-400">
-                  Experienced error fetching metadata. Likely a CORS issue due to the NFT's data being stored on a
+                  Experienced error fetching metadata. Likely a CORS issue due to the NFT metadata being stored on a
                   centralized server.
                 </span>
               </div>

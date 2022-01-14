@@ -20,14 +20,8 @@ const permanenceGradeToColor = (permanenceGrade: string) => {
       return 'green'
     case 'B':
       return 'yellow'
-    case 'C':
-      return 'red'
-    case 'D':
-      return 'red'
-    case 'F':
-      return 'red'
     default:
-      return 'white'
+      return 'red'
   }
 }
 
@@ -35,7 +29,7 @@ const defaultPerformanceDetails = {
   metadata: `This asset is either stored on a centralized provider or there might not be a link between your NFT and the asset on chain. 
 Your asset is at great risk of loss if the provider goes out of business, if the issuer stops payment to the storage provider or if the link between
 your NFT and the assets breaks (for example, if the link is stored on a centralized website).`,
-  image: 'fuck',
+  image: '',
 }
 
 const permanenceDetails: {
@@ -47,9 +41,12 @@ const permanenceDetails: {
   IPFS: {
     metadata: `This NFT's metadata is stored safely on IPFS, a decentralized data provider. This is good!
     However, long term permanence of the asset is not guaranteed. The asset requires ongoing renewal and payment of the storage contract or it will be permanently lost.`,
-    image: "This NFT's image is stored safely on IPFS.",
+    image: '',
   },
-  Arweave: defaultPerformanceDetails,
+  Arweave: {
+    metadata: `This NFT's metadata is stored safely on Arweave. Arweave is the best long term solution for hosting your data.`,
+    image: '',
+  },
   ['Pinata (IPFS)']: defaultPerformanceDetails,
   Centralized: defaultPerformanceDetails,
   Unknown: defaultPerformanceDetails,

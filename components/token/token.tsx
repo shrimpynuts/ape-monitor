@@ -89,6 +89,8 @@ const Token = ({ tokenData, collection }: IProps) => {
   const value = tokenData?.metadata?.image
   const imageURL = value?.includes('ipfs://') ? ipfsURItoURL(value) : value
   const openseaLink = `https://opensea.io/assets/${contract_address}/${token_id}`
+  const checkmynftLink = `https://checkmynft.com/?address=${contract_address}&id=${token_id}`
+  const etherscanLink = `https://etherscan.io/address/${contract_address}#code`
 
   // localhost:3000/assets/0xa406489360a47af2c74fc1004316a64e469646a5/9691
   // localhost:3000/assets/0x57a204aa1042f6e66dd7730813f4024114d74f37/4723
@@ -105,17 +107,29 @@ const Token = ({ tokenData, collection }: IProps) => {
                 <img src={imageURL} className="rounded object-contain h-64" />
               </div>
             </div>
-            <div className="space-y-2">
-              <h1 className="text-4xl">{tokenData.metadata?.name || `Token #${token_id}`}</h1>
-              <h3 className="text-xl font-extrabold tracking-wide">{collection?.name}</h3>
-              <h3 className="text-sm">{tokenData.metadata?.description}</h3>
-              <h3 className="text-sm">
-                <Link href={openseaLink} passHref>
-                  <a target="_blank" rel="noreferrer">
-                    View on Opensea
-                  </a>
-                </Link>
-              </h3>
+            <div>
+              <div className="space-y-2">
+                <h1 className="text-4xl">{tokenData.metadata?.name || `Token #${token_id}`}</h1>
+                <h3 className="text-xl font-extrabold tracking-wide">{collection?.name}</h3>
+                <h3 className="text-sm">{tokenData.metadata?.description}</h3>
+              </div>
+
+              <div className="mt-2">
+                <h3 className="text-sm italic">
+                  <Link href={openseaLink} passHref>
+                    <a target="_blank" rel="noreferrer">
+                      View on Opensea
+                    </a>
+                  </Link>
+                </h3>
+                <h3 className="text-sm italic">
+                  <Link href={checkmynftLink} passHref>
+                    <a target="_blank" rel="noreferrer">
+                      View on Check My NFT
+                    </a>
+                  </Link>
+                </h3>
+              </div>
             </div>
           </div>
 
@@ -126,25 +140,15 @@ const Token = ({ tokenData, collection }: IProps) => {
 
           <h2 className={sectionTitleStyles}>Details</h2>
           <div className={containerStyles}>
-            <DisplayKeyValue left="Token URI" right={tokenData.tokenURI} link={tokenData.tokenURL} />
-            <DisplayKeyValue left="Protocol" right={tokenData.protocol} />
-            <DisplayKeyValue
-              left="Contract Address"
-              right={contract_address}
-              link={`https://etherscan.io/address/${contract_address}#code`}
-              copy
-            />
+            <DisplayKeyValue left="Token URI" right={tokenData.tokenURI} link={tokenData.tokenURL} copy />
+            <DisplayKeyValue left="Metadata Storage Protocol" right={tokenData.protocol} />
+            <DisplayKeyValue left="Contract Address" right={contract_address} link={etherscanLink} copy />
             <DisplayKeyValue left="Token ID" right={token_id} />
             <DisplayKeyValue
               left="Owner"
               link={`https://apemonitor.com/${tokenData.owner}`}
               right={tokenData.owner}
               copy
-            />
-            <DisplayKeyValue
-              left="Check My NFT"
-              link={`https://checkmynft.com/?address=${contract_address}&id=${token_id}`}
-              right={'...'}
             />
           </div>
 
@@ -154,11 +158,8 @@ const Token = ({ tokenData, collection }: IProps) => {
               <div className="space-y-2">
                 {Object.entries(tokenData.metadata).map((entry, i) => {
                   const [key, value] = entry
-                  const valueURL = value.toString().slice(0, 7) === 'ipfs://' ? ipfsURItoURL(value) : value
-                  const isObject = typeof valueURL === 'object'
-                  return (
-                    <DisplayKeyValueData key={i} left={key} right={isObject ? JSON.stringify(valueURL) : valueURL} />
-                  )
+                  const isObject = typeof value === 'object'
+                  return <DisplayKeyValueData key={i} left={key} right={isObject ? JSON.stringify(value) : value} />
                 })}
               </div>
             ) : (

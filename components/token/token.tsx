@@ -81,7 +81,7 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
   border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
   p-4 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
   md:flex-row md:items-center md:divide-y divide-gray-200 dark:divide-gray-700`
-  const containerStylesColumn = `mt-8 md:w-1/2 mx-4 md:mx-auto overflow-hidden space-y-4
+  const containerStylesColumn = `mt-8 md:max-w-5xl mx-4 md:mx-auto overflow-hidden space-y-4
   border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
   p-8 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
   flex-col md:items-center `

@@ -36,7 +36,7 @@ const AssetPage: NextPage = () => {
   }, [contract_address, token_id])
 
   const metadataTitle = tokenData?.metadata
-    ? `${tokenData.metadata.name || token_id} - ${collection && collection.name}`
+    ? `${tokenData.metadata.name || token_id}${collection ? ` - ${collection.name}` : ''}`
     : 'Ape Monitor'
 
   return (

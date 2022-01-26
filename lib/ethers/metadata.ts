@@ -20,11 +20,11 @@ export const contractIsOpensea = (contract_address: string) => contract_address 
 export const permanenceGradeToColor = (permanenceGrade: string) => {
   switch (permanenceGrade.slice(0, 1)) {
     case 'A':
-      return 'green-500'
+      return 'text-green-500'
     case 'B':
-      return 'yellow-500'
+      return 'text-yellow-500'
     default:
-      return 'red-500'
+      return 'text-red-500'
   }
 }
 

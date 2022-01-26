@@ -96,6 +96,7 @@ export interface ITokenData {
   tokenURI?: string // Doesn't exist for cryptopunks
   tokenURL?: string
   protocol?: ProtocolType
+  imageProtocol?: ProtocolType
   owner?: string // Doesn't exist for cryptopunks
   metadata: { [key: string]: any }
 

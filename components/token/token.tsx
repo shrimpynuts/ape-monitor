@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { ipfsURItoURL, contractIsOpensea } from '../../lib/ethers/metadata'
 import { ICollection, ITokenData } from '../../frontend/types'
 import Placeholder from '../../public/placeholder.jpeg'
+import { permanenceGradeToColor } from '../../lib/ethers/metadata'
 
 function DisplayKeyValue({
   left,
@@ -140,7 +141,9 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
 
           <h2 className={sectionTitleStyles}>
             Permanence Grade:{' '}
-            <span className={`text-${tokenData.permanenceColor}-500`}>{tokenData.permanenceGrade}</span>
+            <span className={`text-${permanenceGradeToColor(tokenData.permanenceGrade)}`}>
+              {tokenData.permanenceGrade}
+            </span>
           </h2>
           <div className={containerStyles}>{tokenData.permanenceDescription}</div>
 

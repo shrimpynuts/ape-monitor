@@ -18,7 +18,6 @@ export const contractIsCryptoPunks = (contract_address: string) => contract_addr
 export const contractIsOpensea = (contract_address: string) => contract_address === OpenseaAddress
 
 export const permanenceGradeToColor = (permanenceGrade: string) => {
-  console.log({ permanenceGrade })
   switch (permanenceGrade.slice(0, 1)) {
     case 'A':
       return 'green-500'

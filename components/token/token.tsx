@@ -181,9 +181,9 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
             )}
           </div>
           <div className="mt-2 italic text-sm">
-            If there seems to be a mistake with this tool, please reach out{' '}
+            For bug reports or feature requests please tweet me:{' '}
             <a className="underline" target="_blank" rel="noreferrer" href="https://twitter.com/jonathanmcai">
-              on Twitter
+              @jonathanmcai
             </a>
             .
           </div>

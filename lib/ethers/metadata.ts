@@ -31,7 +31,7 @@ export const permanenceGradeToColor = (permanenceGrade: string) => {
 export const protocolToColor = (protocol: ProtocolType) => {
   switch (protocol) {
     case 'IPFS':
-      return 'uppercase text-yellow-500'
+      return 'text-yellow-500'
     case 'Arweave':
       return 'text-yellow-500'
     case 'On-Chain':

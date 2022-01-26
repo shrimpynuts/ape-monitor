@@ -140,7 +140,7 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
           </div>
           <h2 className={sectionTitleStyles}>
             Permanence Grade:{' '}
-            <span className={`${permanenceGradeToColor(tokenData.permanenceGrade)}`}>{tokenData.permanenceGrade}</span>
+            <span className={permanenceGradeToColor(tokenData.permanenceGrade)}>{tokenData.permanenceGrade}</span>
           </h2>
           <div className={containerStyles}>{tokenData.permanenceDescription}</div>
           <h2 className={sectionTitleStyles}>Details</h2>

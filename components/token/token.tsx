@@ -151,9 +151,14 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
             <span className={permanenceGradeToColor(tokenData.permanenceGrade)}>{tokenData.permanenceGrade}</span>
           </h2>
           <div className={containerStylesNoDivide}>
-            <div className="flex space-x-4 font-bold text-lg">
-              <span className="font-bold">Metadata: {tokenData.protocol}</span>
-              <span className="font-bold">Image: {tokenData.imageProtocol}</span>
+            <div className="flex space-x-2 font-bold text-lg">
+              <span className="">
+                Metadata Storage: <span className="uppercase">{tokenData.protocol}</span>
+              </span>
+              ,
+              <span className="">
+                Image Storage: <span className="uppercase">{tokenData.imageProtocol}</span>
+              </span>
             </div>
             <p className="">{tokenData.permanenceDescription}</p>
           </div>

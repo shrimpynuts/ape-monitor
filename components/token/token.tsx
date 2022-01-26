@@ -82,7 +82,7 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
   border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
   p-4 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
   md:flex-row md:items-center md:divide-y divide-gray-200 dark:divide-gray-700`
-  const containerStylesColumn = `mt-8 md:max-w-5xl mx-4 md:mx-auto overflow-hidden space-y-4
+  const containerStylesColumn = `mt-8 md:max-w-5xl mx-4 md:mx-auto overflow-hidden space-y-2
   border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
   p-8 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
   flex-col md:items-center `
@@ -138,7 +138,6 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
               </div>
             </div>
           </div>
-
           <h2 className={sectionTitleStyles}>
             Permanence Grade:{' '}
             <span className={`text-${permanenceGradeToColor(tokenData.permanenceGrade)}`}>
@@ -146,7 +145,6 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
             </span>
           </h2>
           <div className={containerStyles}>{tokenData.permanenceDescription}</div>
-
           <h2 className={sectionTitleStyles}>Details</h2>
           <div className={containerStyles}>
             <DisplayKeyValue left="Token URI" right={tokenData.tokenURI} link={tokenData.tokenURL} copy />
@@ -160,7 +158,6 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
               copy
             />
           </div>
-
           <h2 className={sectionTitleStyles}>Metadata</h2>
           <div className={containerStyles}>
             {tokenData.metadata ? (
@@ -179,6 +176,13 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
                 </span>
               </div>
             )}
+          </div>
+          <div className="mt-2 italic text-sm">
+            If there seems to be a mistake with this tool, please reach out{' '}
+            <a className="underline" target="_blank" rel="noreferrer" href="https://twitter.com/jonathanmcai">
+              on Twitter
+            </a>
+            .
           </div>
         </div>
       )}

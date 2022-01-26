@@ -150,7 +150,7 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
             <span className={permanenceGradeToColor(tokenData.permanenceGrade)}>{tokenData.permanenceGrade}</span>
           </h2>
           <div className={containerStylesNoDivide}>
-            <div className="flex space-x-2 font-bold text-lg">
+            <div className="flex flex-col md:flex-row md:space-x-2 font-bold text-lg">
               <span className="">
                 Metadata Storage:{' '}
                 {tokenData.protocol ? (
@@ -159,7 +159,7 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
                   'Unknown'
                 )}
               </span>
-              ,
+              <span className="hidden md:block">,</span>
               <span className="">
                 Image Storage:{' '}
                 {tokenData.imageProtocol ? (

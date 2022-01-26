@@ -8,6 +8,7 @@ import { ipfsURItoURL, contractIsOpensea } from '../../lib/ethers/metadata'
 import { ICollection, ITokenData } from '../../frontend/types'
 import Placeholder from '../../public/placeholder.jpeg'
 import { permanenceGradeToColor } from '../../lib/ethers/metadata'
+import { middleEllipses } from '../../lib/util'
 
 function DisplayKeyValue({
   left,
@@ -25,7 +26,7 @@ function DisplayKeyValue({
   //   if (isCopied) toast.success('Copied to clipboard!')
   // }, [isCopied])
   return (
-    <div className="flex justify-between space-x-8 pt-2 overflow-x-hidden">
+    <div className="flex justify-between pt-2 overflow-x-hidden">
       <span>{left}:</span>
       <div className="flex items-center space-x-2">
         <div className="max-w-md overflow-hidden truncate">
@@ -114,13 +115,16 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
             <div>
               <div className="space-y-2">
                 <h1 className="text-4xl truncate max-w-md">{tokenData.metadata?.name || `Token #${token_id}`}</h1>
-                <h3 className="text-xl font-extrabold tracking-wide">
+                {tokenData.metadata?.name && <h2 className="text-lg italic leading-none">{`Token #${token_id}`}</h2>}
+                <h3 className="text-xl font-extrabold tracking-wide leading-none">
                   {contractIsOpensea(contract_address) ? 'Opensea Storefront' : collection?.name}
                 </h3>
-                <h3 className="text-sm line-clamp-6 hover:line-clamp-none">{tokenData.metadata?.description}</h3>
+                <h3 className="text-sm pt-2 md:pt-0 line-clamp-5 hover:line-clamp-none">
+                  {tokenData.metadata?.description}
+                </h3>
               </div>
 
-              <div className="mt-2">
+              <div className="mt-4 md:flex md:space-x-4">
                 <h3 className="text-sm italic">
                   <Link href={openseaLink} passHref>
                     <a target="_blank" rel="noreferrer">
@@ -145,10 +149,8 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
           <div className={containerStyles}>{tokenData.permanenceDescription}</div>
           <h2 className={sectionTitleStyles}>Details</h2>
           <div className={containerStyles}>
-            <DisplayKeyValue left="Token URI" right={tokenData.tokenURI} link={tokenData.tokenURL} copy />
-            <DisplayKeyValue left="Metadata Storage Protocol" right={tokenData.protocol} />
+            <DisplayKeyValue left="Metadata (Token URI)" right={tokenData.tokenURI} link={tokenData.tokenURL} copy />
             <DisplayKeyValue left="Contract Address" right={contract_address} link={etherscanLink} copy />
-            <DisplayKeyValue left="Token ID" right={token_id} />
             <DisplayKeyValue
               left="Owner"
               link={`https://apemonitor.com/${tokenData.owner}`}
@@ -156,7 +158,10 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
               copy
             />
           </div>
-          <h2 className={sectionTitleStyles}>Metadata</h2>
+          <div className="flex items-center space-x-2">
+            <h2 className={sectionTitleStyles}>Metadata</h2>
+            {/* <div className="max-w-sm hover:max-w-lg overflow-hidden truncate">{tokenData.tokenURI}</div> */}
+          </div>
           <div className={containerStyles}>
             {tokenData.metadata ? (
               <div className="space-y-2">

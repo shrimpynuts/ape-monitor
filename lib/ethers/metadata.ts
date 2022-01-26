@@ -84,7 +84,7 @@ function getTokenDataPermanenceDescription(tokenData: Pick<ITokenData, 'protocol
           As long as the smart contract is not mutated, you can be sure that this data is permanent.
           Furthermore, other smart contracts can access this data to create derivative projects.`
   }
-  return ''
+  return protocol ? permanenceDetails[protocol].metadata : ''
 }
 
 export async function getTokenData(contract_address: string, token_id: string): Promise<ITokenData> {
@@ -115,6 +115,7 @@ export async function getTokenData(contract_address: string, token_id: string): 
       Even after they've sold the item! The NFT\'s data is stored on Opensea servers, so it's completely dependent on Opensea.`,
     }
   } else {
+    // All other smart contracts
     const contract = new ethers.Contract(contract_address, ERC721ABI, alchemyProvider)
     const tokenURI = await contract.tokenURI(token_id)
     const owner = await contract.ownerOf(token_id)

@@ -83,6 +83,10 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
   border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
   p-4 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
   md:flex-row md:items-center md:divide-y divide-gray-200 dark:divide-gray-700`
+  const containerStylesNoDivide = `mt-2 md:mx-auto overflow-hidden space-y-4
+  border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
+  p-4 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
+  md:flex-row md:items-center `
   const containerStylesColumn = `mt-8 md:max-w-5xl mx-4 md:mx-auto overflow-hidden space-y-2
   border border-solid border-gray-300 dark:border-darkblue drop-shadow-md
   p-8 shadow sm:rounded-lg text-gray-500 dark:text-gray-100
@@ -146,7 +150,13 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
             Permanence Grade:{' '}
             <span className={permanenceGradeToColor(tokenData.permanenceGrade)}>{tokenData.permanenceGrade}</span>
           </h2>
-          <div className={containerStyles}>{tokenData.permanenceDescription}</div>
+          <div className={containerStylesNoDivide}>
+            <div className="flex space-x-4 font-bold text-lg">
+              <span className="font-bold">Metadata: {tokenData.protocol}</span>
+              <span className="font-bold">Image: {tokenData.imageProtocol}</span>
+            </div>
+            <p className="">{tokenData.permanenceDescription}</p>
+          </div>
           <h2 className={sectionTitleStyles}>Details</h2>
           <div className={containerStyles}>
             <DisplayKeyValue left="Metadata (Token URI)" right={tokenData.tokenURI} link={tokenData.tokenURL} copy />

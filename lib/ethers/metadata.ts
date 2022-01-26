@@ -31,7 +31,7 @@ export const permanenceGradeToColor = (permanenceGrade: string) => {
 const defaultPerformanceDetails = {
   metadata: `This asset is either stored on a centralized provider or there might not be a link between your NFT and the asset on chain. 
 Your asset is at great risk of loss if the provider goes out of business, if the issuer stops payment to the storage provider or if the link between
-your NFT and the assets breaks (for example, if the link is stored on a centralized website).`,
+your NFT and the assets breaks in any way.`,
   image: '',
 }
 

@@ -32,6 +32,8 @@ export const protocolToColor = (protocol: ProtocolType) => {
   switch (protocol) {
     case 'IPFS':
       return 'text-yellow-500'
+    case 'Pinata (IPFS)':
+      return 'text-yellow-500'
     case 'Arweave':
       return 'text-yellow-500'
     case 'On-Chain':

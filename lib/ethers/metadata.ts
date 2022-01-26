@@ -28,6 +28,19 @@ export const permanenceGradeToColor = (permanenceGrade: string) => {
   }
 }
 
+export const protocolToColor = (protocol: ProtocolType) => {
+  switch (protocol) {
+    case 'IPFS':
+      return 'uppercase text-yellow-500'
+    case 'Arweave':
+      return 'text-yellow-500'
+    case 'On-Chain':
+      return 'text-green-500'
+    default:
+      return 'text-red-500'
+  }
+}
+
 const defaultPerformanceDetails = {
   metadata: `This asset is either stored on a centralized provider or there might not be a link between your NFT and the asset on chain. 
 Your asset is at great risk of loss if the provider goes out of business, if the issuer stops payment to the storage provider or if the link between

@@ -7,8 +7,7 @@ import Link from 'next/link'
 import { ipfsURItoURL, contractIsOpensea } from '../../lib/ethers/metadata'
 import { ICollection, ITokenData } from '../../frontend/types'
 import Placeholder from '../../public/placeholder.jpeg'
-import { permanenceGradeToColor } from '../../lib/ethers/metadata'
-import { middleEllipses } from '../../lib/util'
+import { permanenceGradeToColor, protocolToColor } from '../../lib/ethers/metadata'
 
 function DisplayKeyValue({
   left,
@@ -153,11 +152,21 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
           <div className={containerStylesNoDivide}>
             <div className="flex space-x-2 font-bold text-lg">
               <span className="">
-                Metadata Storage: <span className="uppercase">{tokenData.protocol}</span>
+                Metadata Storage:{' '}
+                {tokenData.protocol ? (
+                  <span className={protocolToColor(tokenData.protocol)}>{tokenData.protocol}</span>
+                ) : (
+                  'Unknown'
+                )}
               </span>
               ,
               <span className="">
-                Image Storage: <span className="uppercase">{tokenData.imageProtocol}</span>
+                Image Storage:{' '}
+                {tokenData.imageProtocol ? (
+                  <span className={protocolToColor(tokenData.imageProtocol)}>{tokenData.imageProtocol}</span>
+                ) : (
+                  'Unknown'
+                )}
               </span>
             </div>
             <p className="">{tokenData.permanenceDescription}</p>

@@ -101,6 +101,9 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
 
   return (
     <div className="pb-4 md:pb-12">
+      {/* To exclude yellow-500 from css purges */}
+      <div className="hidden text-yellow-500"></div>
+
       {tokenData && typeof contract_address === 'string' && typeof token_id === 'string' && (
         <div className={containerStylesColumn}>
           <div className="flex flex-col space-y-4 space-x-0 md:flex-row md:space-y-0">

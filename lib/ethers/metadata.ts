@@ -148,8 +148,10 @@ export async function getTokenData(contract_address: string, token_id: string): 
     let permanenceGrade
     if (protocol === 'IPFS' || protocol === 'Pinata (IPFS)') {
       permanenceGrade = 'B'
-    } else if (protocol === 'Arweave' || protocol === 'On-Chain') {
+    } else if (protocol === 'On-Chain') {
       permanenceGrade = 'A'
+    } else if (protocol === 'Arweave') {
+      permanenceGrade = 'B'
     } else if (protocol === 'Centralized') {
       permanenceGrade = 'F'
     } else {

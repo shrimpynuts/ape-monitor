@@ -108,7 +108,7 @@ const Token = ({ tokenData, collection, contract_address, token_id }: IProps) =>
         <div className={containerStylesColumn}>
           <div className="flex flex-col space-y-4 space-x-0 md:flex-row md:space-y-0">
             <div>
-              <div className="w-72">
+              <div className="w-64 mr-4">
                 {imageURL ? (
                   <img src={imageURL} className="rounded object-contain h-64" />
                 ) : (

@@ -23,6 +23,8 @@ export const permanenceGradeToColor = (permanenceGrade: string) => {
       return 'text-green-500'
     case 'B':
       return 'text-yellow-500'
+    case 'C':
+      return 'text-yellow-500'
     default:
       return 'text-red-500'
   }
@@ -147,7 +149,7 @@ export async function getTokenData(contract_address: string, token_id: string): 
 
     let permanenceGrade
     if (protocol === 'IPFS' || protocol === 'Pinata (IPFS)') {
-      permanenceGrade = 'B'
+      permanenceGrade = 'C'
     } else if (protocol === 'On-Chain') {
       permanenceGrade = 'A'
     } else if (protocol === 'Arweave') {

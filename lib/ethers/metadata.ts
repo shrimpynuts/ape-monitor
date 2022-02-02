@@ -3,6 +3,7 @@ import { ethers } from 'ethers'
 
 import { alchemyProvider } from '../ethersProvider'
 import ERC721ABI from '../../lib/ERC721ABI.json'
+import ERC1155ABI from '../../lib/ERC1155ABI.json'
 import CryptopunksAttributesABI from '../../lib/CryptopunksAttributesABI.json'
 import { ITokenData, ProtocolType } from '../../frontend/types'
 
@@ -104,6 +105,11 @@ function getTokenDataPermanenceDescription(tokenData: Pick<ITokenData, 'protocol
   return protocol ? permanenceDetails[protocol].metadata : ''
 }
 
+const contractIsERC1155 = async (contract_address: string) => {
+  const contract = new ethers.Contract(contract_address, ERC721ABI, alchemyProvider)
+  return await contract.supportsInterface('0xd9b67a26')
+}
+
 export async function getTokenData(contract_address: string, token_id: string): Promise<ITokenData> {
   // Cryptopunks
   if (contractIsCryptoPunks(contract_address)) {
@@ -134,8 +140,16 @@ export async function getTokenData(contract_address: string, token_id: string): 
   } else {
     // All other smart contracts
     const contract = new ethers.Contract(contract_address, ERC721ABI, alchemyProvider)
-    const tokenURI = await contract.tokenURI(token_id)
-    const owner = await contract.ownerOf(token_id)
+
+    // Determine tokenURI and owner (different based on 721 vs. 1155)
+    let tokenURI, owner
+    if (await contractIsERC1155(contract_address)) {
+      const ERC1155Contract = new ethers.Contract(contract_address, ERC1155ABI, alchemyProvider)
+      tokenURI = await ERC1155Contract.uri(token_id)
+    } else {
+      tokenURI = await contract.tokenURI(token_id)
+      owner = await contract.ownerOf(token_id)
+    }
 
     let { tokenURL, protocol } = await getURLFromURI(tokenURI)
 

@@ -179,8 +179,6 @@ function CollectionsTable({ collectionsWithAssets, loading }: IProps) {
     },
   )
 
-  console.log({ sortedCollections })
-
   return (
     <div className="w-full">
       <Table columns={columns} data={sortedCollections} isMobile={isMobile} replaceTableBody={loading && <Spinner />} />

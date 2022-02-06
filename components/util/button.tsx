@@ -38,7 +38,7 @@ const Button: React.FC<IButtonProps> = ({
           'text-xs': size === 'sm',
           'text-md': size === 'md',
           'text-xl': size === 'lg',
-          'bg-yellow-600 hover:bg-yellow-800': !isLoading,
+          [`bg-${bgColor && 'yellow'}-600 hover:bg-${bgColor && 'yellow'}-800`]: !isLoading,
           'bg-gray-400 cursor-not-allowed': isLoading || disabled,
           [`${classOverrides}`]: classOverrides?.length && classOverrides?.length > 0,
         },
@@ -48,12 +48,16 @@ const Button: React.FC<IButtonProps> = ({
       <div className="relative">
         <div
           className={classnames('', {
-            'opacity-0 h-0': isLoading,
+            'opacity-0': isLoading,
           })}
         >
           {children}
         </div>
-        {isLoading && <Spinner />}
+        {isLoading && (
+          <div className="absolute right-0 left-0 bottom-0 top-1">
+            <Spinner />
+          </div>
+        )}
       </div>
     </button>
   )

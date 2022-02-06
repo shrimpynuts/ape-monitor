@@ -94,7 +94,9 @@ const Home: NextPage = () => {
                   <Searchbar autoFocus />
                 </div>
                 <span>or</span>
-                <Button onClick={onConnectClick}>Connect to Wallet</Button>
+                <Button bgColor="gray" onClick={onConnectClick}>
+                  Connect to Wallet
+                </Button>
               </>
             )}
           </div>

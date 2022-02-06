@@ -10,6 +10,7 @@ import AddressPill from '../util/addressPill'
 import Button from '../util/button'
 import ConnectModal from './connectWalletModal'
 import Searchbar from '../searchbar'
+import MintModal from '../token-pass/mintModal'
 import DarkModeToggle from '../util/darkModeToggle'
 import Emoji from '../util/emoji'
 import { addressIsAdmin, getServer } from '../../lib/util'
@@ -36,6 +37,7 @@ const Navbar = ({
   const { wallet, ensName } = useWeb3Container.useContainer()
   const { status, reset, networkName, account, balance } = wallet
   const [connectModalIsOpen, setConnectModalIsOpen] = useState(false)
+  const [mintModalIsOpen, setMintModalIsOpen] = useState(false)
   const router = useRouter()
   const { formatUnits } = utils
   const modalIsOpen = customState ? customState.modalIsOpen : connectModalIsOpen
@@ -54,6 +56,10 @@ const Navbar = ({
 
   const handleLogout = () => {
     reset()
+  }
+
+  const handleMint = () => {
+    setMintModalIsOpen(true)
   }
 
   /**
@@ -82,9 +88,14 @@ const Navbar = ({
   const formattedETH = parseFloat(formatUnits(balance)).toFixed(2)
 
   const isAdmin = wallet.account ? addressIsAdmin(wallet.account) : false
-  console.log({ isAdmin })
   return (
     <>
+      <MintModal
+        isOpen={mintModalIsOpen}
+        setIsOpen={(isOpen) => {
+          setMintModalIsOpen(isOpen)
+        }}
+      />
       <nav className="w-full px-4 pt-8 md:py-8 items-center">
         <div className="flex justify-between">
           {/* Logo */}
@@ -104,6 +115,9 @@ const Navbar = ({
 
           {/* Connect to web3, dark mode toggle */}
           <div className="flex items-center space-x-2">
+            <Button classOverrides="bg-blue-500 dark:bg-blue-700 hover:bg-blue-500 shadow" onClick={handleMint}>
+              Buy Premium
+            </Button>
             {status === 'connected' ? (
               <div className="flex items-center space-x-2">
                 <span
@@ -164,7 +178,11 @@ const Navbar = ({
                 </Button>
               </div>
             ) : (
-              displayConnectButton !== false && <Button onClick={onConnectClick}>Connect</Button>
+              displayConnectButton !== false && (
+                <Button classOverrides="shadow" onClick={onConnectClick}>
+                  Connect
+                </Button>
+              )
             )}
             <DarkModeToggle />
           </div>

@@ -25,7 +25,7 @@ const CollectionsUpdateEmail = ({ title, address, collectionsWithAssets, ensDoma
       <h2 style={{ marginLeft: '4rem', fontWeight: 'bold', textAlign: 'left' }}>{`${
         ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)
       }`}</h2>
-      <p style={{ marginLeft: '4rem', textAlign: 'left' }}>Here's how your NFT's are doing:</p>
+      <p style={{ marginLeft: '4rem', textAlign: 'left' }}>Here&apos;s how your NFT's are doing:</p>
       <CollectionsTable collectionsWithAssets={collectionsWithAssets} />
       <input type="radio" name="collapse" id="handle1" checked={true} />
       <h2 className="handle">

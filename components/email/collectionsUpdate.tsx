@@ -76,8 +76,8 @@ function CollectionsUpdateTable({ collectionsWithAssets }: IProps) {
         disableFilters: true,
       },
       {
-        Header: `Volume`,
-        accessor: `collection.total_volume`,
+        Header: `24hr Volume`,
+        accessor: `collection.one_day_volume`,
         id: 'Volume',
         Cell: ({ cell: { value } }: CellProps<any>) => {
           return (

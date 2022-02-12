@@ -84,12 +84,12 @@ const Table = ({ columns, data }: IProps) => {
                         // {...column.getHeaderProps(column.getSortByToggleProps())}
                         style={{
                           display: 'inline-block',
+                          // textAlign: 'left',
                           boxSizing: 'border-box',
                           width: style?.width || '100px',
                           position: 'relative',
                           cursor: 'pointer',
                           padding: '0.25rem 0 0.25rem 0',
-                          // padding: '2rem 3rem 2rem 3rem',
                         }}
                         key={key}
                       >

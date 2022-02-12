@@ -96,6 +96,8 @@ async function getUsers(): Promise<IUser[]> {
 const request = async (req: NextApiRequest, res: NextApiResponse) => {
   const { key } = req.query
 
+  console.log({ key })
+
   // Verify the key for the request
   if (key !== process.env.SEND_EMAIL_KEY) {
     const error = 'Bad request: missing correct key parameter'

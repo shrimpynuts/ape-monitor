@@ -1,21 +1,39 @@
 import React from 'react'
 import { Email, renderEmail } from 'react-html-email'
-import Button from '../util/button'
+import { ICollectionsWithAssets } from '../../frontend/types'
+import CollectionsTable from './collectionsUpdate'
 
-interface HtmlEmailProps {
+interface CollectionsUpdateEmailProps {
   title: string
+  collectionsWithAssets: ICollectionsWithAssets
 }
 
-const HtmlEmail = ({ title }: HtmlEmailProps) => (
-  <Email title={title}>
-    Title mane
-    <Button>This is a button</Button>
-    <Test />
-  </Email>
-)
+const CollectionsUpdateEmail = ({ title, collectionsWithAssets }: CollectionsUpdateEmailProps) => {
+  const css = `
+    @media only screen and (max-device-width: 480px) {
+      font-size: 20px !important;
+      font-size: 20px !important;
+    }
+    .outer-table {
+      @apply bg-red-500 sm:rounded-lg mb-2 shadow border border-solid border-gray-300 dark:border-darkblue;
+    }
+    .collection-image {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 9999px;
+    }
+    .collection-link {
+      font-weight: inherit; 
+      color: inherit;
+      text-decoration: none;
+    } 
+  `.trim()
 
-export const Test = () => {
-  return <div style={{ background: 'red' }}>this is great style brtoher</div>
+  return (
+    <Email title={title} headCSS={css}>
+      <CollectionsTable collectionsWithAssets={collectionsWithAssets} />
+    </Email>
+  )
 }
 
 export const WithDebug = (props: any) => {
@@ -23,10 +41,11 @@ export const WithDebug = (props: any) => {
 
   return (
     <>
-      <HtmlEmail {...rest} />
-      <code>{debug && renderEmail(<HtmlEmail {...rest} />)}</code>
+      {/* <CollectionsUpdateEmail {...rest} /> */}
+      <div dangerouslySetInnerHTML={{ __html: renderEmail(<CollectionsUpdateEmail {...rest} />) }} />
+      {/* <code>{debug && renderEmail(<CollectionsUpdateEmail {...rest} />)}</code> */}
     </>
   )
 }
 
-export default HtmlEmail
+export default CollectionsUpdateEmail

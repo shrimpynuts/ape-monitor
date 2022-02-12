@@ -3,7 +3,10 @@ import sgMail from '@sendgrid/mail'
 import moment from 'moment'
 import React from 'react'
 import { renderEmail } from 'react-html-email'
-import HtmlEmail from '../../../components/email/template'
+import CollectionsUpdateEmail from '../../../components/email/template'
+
+import { ICollectionsWithAssets } from '../../../frontend/types'
+import { fetchAllCollections, groupAssetsWithCollections } from '../../../lib/util'
 
 const sendgridAPIKey = process.env.SENDGRID_API_KEY
 if (!sendgridAPIKey) {
@@ -12,10 +15,25 @@ if (!sendgridAPIKey) {
 }
 sgMail.setApiKey(sendgridAPIKey)
 
-function createMessage(toAddress: string, fromAddress: string, ethAddress: string) {
+async function createMessage(toAddress: string, fromAddress: string, ethAddress: string) {
   const date = moment().format('MM/DD h:mma')
 
-  const reactElement = React.createElement(HtmlEmail, { title: 'hello' })
+  const server = 'http://localhost:3000'
+
+  // Get user's assets
+  const result = await fetch(`${server}/api/opensea/assets/${ethAddress}`).then((res) => res.json())
+  const { assets, error } = result
+
+  // Fetch all corresponding collections for the given assets
+  const collections = await fetchAllCollections(server, assets)
+
+  // Group the assets together with their collections
+  const collectionsWithAssets: ICollectionsWithAssets = groupAssetsWithCollections(assets, collections)
+
+  const reactElement = React.createElement(CollectionsUpdateEmail, {
+    title: 'this is update text',
+    collectionsWithAssets,
+  })
   const emailHTML = renderEmail(reactElement)
 
   const msg = {
@@ -35,7 +53,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   const fromAddress = 'caimjonathan@gmail.com'
   const toAddress = 'jonathan@alias.co'
   const ethAddress = '0xf725a0353dbB6aAd2a4692D49DDa0bE241f45fD0'
-  const msg = createMessage(fromAddress, toAddress, ethAddress)
+  const msg = await createMessage(fromAddress, toAddress, ethAddress)
 
   console.log({ msg })
 

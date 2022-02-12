@@ -62,7 +62,7 @@ const Table = ({ columns, data }: IProps) => {
           // className="bg-gray-100 dark:bg-blackPearl"
         >
           <tr>
-            {headerGroups.map((headerGroup, i) => {
+            {headerGroups.map((headerGroup) => {
               const { key, style } = headerGroup.getHeaderGroupProps()
               return (
                 <th
@@ -75,7 +75,7 @@ const Table = ({ columns, data }: IProps) => {
                   role="row"
                   key={key}
                 >
-                  {headerGroup.headers.map((c, ii) => {
+                  {headerGroup.headers.map((c) => {
                     const column = c as unknown as TableColumn<Data>
                     const { key, style } = column.getHeaderProps(column.getSortByToggleProps())
                     return (
@@ -106,7 +106,7 @@ const Table = ({ columns, data }: IProps) => {
           style={{ backgroundColor: 'white' }}
           className="bg-white -mb-2 text-gray-500 dark:text-gray-100 dark:bg-blackPearl dark:divide-darkblue"
         >
-          {rows.map((row, i) => {
+          {rows.map((row) => {
             prepareRow(row)
             const { key, style } = row.getRowProps()
             return (
@@ -120,7 +120,7 @@ const Table = ({ columns, data }: IProps) => {
                 }}
                 key={key}
               >
-                {row.cells.map((cell, ii) => {
+                {row.cells.map((cell) => {
                   const { key, style } = cell.getCellProps()
                   return (
                     <td

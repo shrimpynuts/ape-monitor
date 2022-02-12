@@ -4,9 +4,20 @@ import Moment from 'react-moment'
 
 import { convertNumberToRoundedString } from '../../lib/util'
 import { ICollectionsWithAssets } from '../../frontend/types'
-import DeltaDisplay from '../util/deltaDisplay'
 import Table from './collectionsUpdateTable'
 import EthLogo from '../svg/eth-logo'
+
+const DeltaDisplay = ({ delta, denomination }: { delta: number | undefined; denomination: string }) => {
+  const hasNoDelta = delta === 0 || delta === undefined
+  const color = hasNoDelta ? '' : delta > 0 ? 'green' : 'red'
+  const charge = delta && delta > 0 ? '+' : ''
+  const deltaString = `${charge}${convertNumberToRoundedString(delta)}${denomination}`
+  return (
+    <span>
+      {hasNoDelta ? <span style={{ color: 'white' }}>-</span> : <span style={{ color }}>{`${deltaString}`}</span>}
+    </span>
+  )
+}
 
 interface IProps {
   collectionsWithAssets: ICollectionsWithAssets
@@ -18,17 +29,29 @@ function CollectionsUpdateTable({ collectionsWithAssets }: IProps) {
       {
         Header: `Collection`,
         accessor: 'collection.name',
-        Cell: ({ cell: { value, row } }: CellProps<any>) => (
-          <div
-            className="flex items-center space-x-3 overflow-ellipsis"
-            style={{ display: 'flex', alignItems: 'center' }}
-          >
-            <img src={row.original.collection.image_url} className="collection-image" />
-            <span className="overflow-ellipsis overflow-hidden" style={{ marginLeft: 3 }}>
-              {value}
-            </span>
-          </div>
-        ),
+        Cell: ({ cell: { value, row } }: CellProps<any>) => {
+          const slug = row.original.collection.slug
+          return (
+            <div
+              // className="flex items-center space-x-3 overflow-ellipsis"
+              style={{ display: 'flex', alignItems: 'center', overflow: 'clip' }}
+            >
+              <img
+                src={row.original.collection.image_url}
+                style={{ height: '2rem', width: '2rem', borderRadius: '9999px' }}
+                className="collection-image"
+              />
+              <span
+                // className="overflow-ellipsis overflow-hidden"
+                style={{ marginLeft: 3 }}
+              >
+                <a href={`https://opensea.io/collection/${slug}`} target="_blank" rel="noreferrer">
+                  {value}
+                </a>
+              </span>
+            </div>
+          )
+        },
         width: 200,
       },
       {
@@ -39,9 +62,12 @@ function CollectionsUpdateTable({ collectionsWithAssets }: IProps) {
           return (
             <div>
               {value !== null && (
-                <span className="flex items-center justify-start space-x-2">
+                <span
+                  // className="flex items-center justify-start space-x-2"
+                  style={{ display: 'flex', flexShrink: 0, alignItems: 'center' }}
+                >
                   <EthLogo style={{ height: '1rem', width: '1rem' }} />
-                  <span>{convertNumberToRoundedString(value)}</span>
+                  <span style={{ marginLeft: 3 }}>{convertNumberToRoundedString(value)}</span>
                 </span>
               )}
             </div>
@@ -57,9 +83,12 @@ function CollectionsUpdateTable({ collectionsWithAssets }: IProps) {
           return (
             <div>
               {value !== null && (
-                <span className="flex justify-start space-x-2">
+                <span
+                  style={{ display: 'flex', flexShrink: 0, alignItems: 'center', justifyContent: 'start' }}
+                  // className="flex justify-start space-x-2"
+                >
                   <EthLogo style={{ height: '1rem', width: '1rem' }} />
-                  <span>{convertNumberToRoundedString(value)}</span>
+                  <span style={{ marginLeft: 3 }}>{convertNumberToRoundedString(value)}</span>
                 </span>
               )}
             </div>
@@ -72,7 +101,10 @@ function CollectionsUpdateTable({ collectionsWithAssets }: IProps) {
         accessor: `collection.one_day_change`,
         Cell: ({ cell: { value } }: CellProps<any>) => {
           return (
-            <div className="flex justify-start">
+            <div
+              // className="flex justify-start"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}
+            >
               <span>{value && <DeltaDisplay delta={value} denomination="%" />}</span>
             </div>
           )
@@ -80,17 +112,20 @@ function CollectionsUpdateTable({ collectionsWithAssets }: IProps) {
         disableFilters: true,
       },
       {
-        Header: '# Owned',
+        Header: '#',
         accessor: 'assets.length',
         disableFilters: true,
         Cell: ({ cell: { value } }: CellProps<any>) => {
           return (
-            <div className="flex justify-start space-x-2">
+            <div
+              // className="flex justify-start"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}
+            >
               <span className="text-left">{`${value}x`}</span>
             </div>
           )
         },
-        width: 70,
+        width: 40,
       },
       {
         Header: 'Since',
@@ -98,7 +133,10 @@ function CollectionsUpdateTable({ collectionsWithAssets }: IProps) {
         disableFilters: true,
         Cell: ({ cell: { value } }: CellProps<any>) => {
           return (
-            <div className="flex justify-start space-x-2">
+            <div
+              // className="flex justify-start"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}
+            >
               <Moment fromNow>{value}</Moment>
             </div>
           )

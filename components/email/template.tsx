@@ -14,19 +14,6 @@ const CollectionsUpdateEmail = ({ title, collectionsWithAssets }: CollectionsUpd
       font-size: 20px !important;
       font-size: 20px !important;
     }
-    .outer-table {
-      @apply bg-red-500 sm:rounded-lg mb-2 shadow border border-solid border-gray-300 dark:border-darkblue;
-    }
-    .collection-image {
-      width: 2rem;
-      height: 2rem;
-      border-radius: 9999px;
-    }
-    .collection-link {
-      font-weight: inherit; 
-      color: inherit;
-      text-decoration: none;
-    } 
   `.trim()
 
   return (

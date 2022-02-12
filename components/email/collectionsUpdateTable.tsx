@@ -10,7 +10,6 @@ import {
   useBlockLayout,
   useResizeColumns,
 } from 'react-table'
-import { ExternalLinkIcon } from '@heroicons/react/solid'
 
 type Data = object
 
@@ -27,12 +26,12 @@ interface TableColumn<D extends object = {}>
 }
 
 const Table = ({ columns, data }: IProps) => {
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable<Data>(
+  const { headerGroups, rows, prepareRow } = useTable<Data>(
     {
       columns,
       defaultColumn: {
         minWidth: 20,
-        width: 100,
+        width: 90,
       },
       data,
     },
@@ -41,80 +40,110 @@ const Table = ({ columns, data }: IProps) => {
     useBlockLayout,
     useResizeColumns,
   ) as TableInstance<any>
-
   return (
-    <div className="outer-table">
-      <div className="sm:rounded-lg overflow-x-scroll">
-        <table {...getTableProps()} className="min-w-full">
-          <thead className="bg-gray-100 dark:bg-blackPearl">
-            <tr>
-              {headerGroups.map((headerGroup, i) => (
+    <div
+    // className="sm:rounded-lg mb-2 shadow border border-solid border-gray-300 dark:border-darkblue"
+    >
+      <table
+        style={{
+          borderRadius: '0.5rem',
+          marginBottom: '0.5rem',
+          borderWidth: '1px',
+          borderStyle: 'solid',
+          borderColor: 'rgba(209, 213, 219, .9)',
+          boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+          margin: '2rem',
+        }}
+        role="table"
+        // className="min-w-full"
+      >
+        <thead
+          style={{ backgroundColor: '#F3F4F6' }}
+          // className="bg-gray-100 dark:bg-blackPearl"
+        >
+          <tr>
+            {headerGroups.map((headerGroup, i) => {
+              const { key, style } = headerGroup.getHeaderGroupProps()
+              return (
                 <th
-                  className="flex text-left border-b border-gray-300 dark:border-darkblue text-xs font-bold uppercase text-gray-500 dark:text-white"
-                  {...headerGroup.getHeaderGroupProps()}
-                  key={i}
+                  // className="flex text-left border-b border-gray-300 dark:border-darkblue text-xs font-bold uppercase text-gray-500 dark:text-white"
+                  // {...headerGroup.getHeaderGroupProps()}
+                  style={{
+                    display: 'flex',
+                    width: style?.width || '630px',
+                  }}
+                  role="row"
+                  key={key}
                 >
                   {headerGroup.headers.map((c, ii) => {
                     const column = c as unknown as TableColumn<Data>
+                    const { key, style } = column.getHeaderProps(column.getSortByToggleProps())
                     return (
                       <div
-                        className="p-2 md:px-4 md:py-3"
-                        {...column.getHeaderProps(column.getSortByToggleProps())}
-                        // style={{
-                        //   display: 'inline-block',
-                        //   boxSizing: 'border-box',
-                        //   width: '100px',
-                        //   // padding: '0.5rem',
-                        //   padding: '0.75rem 1rem 0.75rem 1rem',
-                        // }}
-                        key={ii}
+                        // className="p-2 md:px-4 md:py-3"
+                        // {...column.getHeaderProps(column.getSortByToggleProps())}
+                        style={{
+                          display: 'inline-block',
+                          boxSizing: 'border-box',
+                          width: style?.width || '100px',
+                          position: 'relative',
+                          cursor: 'pointer',
+                          padding: '0.25rem 0 0.25rem 0',
+                          // padding: '2rem 3rem 2rem 3rem',
+                        }}
+                        key={key}
                       >
                         {column.render('Header')}
                       </div>
                     )
                   })}
                 </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody
-            style={{ backgroundColor: 'white' }}
-            className="bg-white -mb-2 text-gray-500 dark:text-gray-100 dark:bg-blackPearl dark:divide-darkblue"
-          >
-            {rows.map((row, i) => {
-              prepareRow(row)
-              const slug = row.original.collection.slug
-              console.log(slug)
-              return (
-                <a
-                  className="collection-link"
-                  href={`https://opensea.io/collection/${slug}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <tr
-                    className="relative flex select-none hover:bg-gray-100 dark:hover:bg-black transition-all cursor-pointer"
-                    {...row.getRowProps()}
-                    style={{
-                      width: '100%',
-                      display: 'flex',
-                    }}
-                    key={i}
-                  >
-                    {row.cells.map((cell, ii) => {
-                      return (
-                        <td className="p-2 md:p-4 text-center whitespace-nowrap" {...cell.getCellProps()} key={ii}>
-                          {cell.render('Cell')}
-                        </td>
-                      )
-                    })}
-                  </tr>
-                </a>
               )
             })}
-          </tbody>
-        </table>
-      </div>
+          </tr>
+        </thead>
+        <tbody
+          style={{ backgroundColor: 'white' }}
+          className="bg-white -mb-2 text-gray-500 dark:text-gray-100 dark:bg-blackPearl dark:divide-darkblue"
+        >
+          {rows.map((row, i) => {
+            prepareRow(row)
+            const { key, style } = row.getRowProps()
+            return (
+              <tr
+                // className="relative flex select-none hover:bg-gray-100 dark:hover:bg-black transition-all cursor-pointer"
+                // {...row.getRowProps()}
+                role="row"
+                style={{
+                  width: style?.width || '100%',
+                  display: 'flex',
+                }}
+                key={key}
+              >
+                {row.cells.map((cell, ii) => {
+                  const { key, style } = cell.getCellProps()
+                  return (
+                    <td
+                      // className="p-2 md:p-4 text-center whitespace-nowrap"
+                      key={key}
+                      role="cell"
+                      style={{
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis',
+                        overflowX: 'hidden',
+                        padding: '0.75rem 1rem 0.75rem 1rem',
+                        width: style?.width || '100%',
+                      }}
+                    >
+                      {cell.render('Cell')}
+                    </td>
+                  )
+                })}
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
     </div>
   )
 }

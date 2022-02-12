@@ -1,15 +1,18 @@
 import React from 'react'
 import { Email, renderEmail } from 'react-html-email'
 import { ICollectionsWithAssets } from '../../frontend/types'
+import { middleEllipses } from '../../lib/util'
 import CollectionsTable from './collectionsUpdate'
 // import TopCollections from '../../components/topCollections'
 
 interface CollectionsUpdateEmailProps {
   title: string
   collectionsWithAssets: ICollectionsWithAssets
+  address: string
+  ensDomain?: string
 }
 
-const CollectionsUpdateEmail = ({ title, collectionsWithAssets }: CollectionsUpdateEmailProps) => {
+const CollectionsUpdateEmail = ({ title, address, collectionsWithAssets, ensDomain }: CollectionsUpdateEmailProps) => {
   const css = `
     @media only screen and (max-device-width: 480px) {
       font-size: 20px !important;
@@ -19,7 +22,10 @@ const CollectionsUpdateEmail = ({ title, collectionsWithAssets }: CollectionsUpd
 
   return (
     <Email title={title} headCSS={css}>
-      {/* <TopCollections /> */}
+      <h2 style={{ marginLeft: '4rem', fontWeight: 'bold', textAlign: 'left' }}>{`${
+        ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)
+      }`}</h2>
+      <p style={{ marginLeft: '4rem', textAlign: 'left' }}>Here's how your NFT's are doing:</p>
       <CollectionsTable collectionsWithAssets={collectionsWithAssets} />
       <input type="radio" name="collapse" id="handle1" checked={true} />
       <h2 className="handle">

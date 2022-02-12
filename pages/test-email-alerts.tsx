@@ -50,7 +50,11 @@ const TestPage: NextPage = () => {
             <Button onClick={onSendEmail}>Send Email</Button>
           </div>
           <div className="shadow border p-8">
-            <CollectionsUpdateEmail title="test" collectionsWithAssets={collectionsWithAssets} />
+            <CollectionsUpdateEmail
+              title="test"
+              collectionsWithAssets={collectionsWithAssets}
+              address={'0xd6CB70a88bB0D8fB1be377bD3E48e603528AdB54'}
+            />
             {/* <WithDebug debug title="test" collectionsWithAssets={collectionsWithAssets} /> */}
           </div>
         </div>

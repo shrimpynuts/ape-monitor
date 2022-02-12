@@ -37,7 +37,8 @@ async function createAlertMessage(
   address: string,
   ensDomain?: string,
 ) {
-  const date = moment().format('MM/DD h:mma')
+  // const date = moment().format('MM/DD h:mma')
+  const date = moment().format('MM/DD')
   const collectionsWithAssets = await getAlertData(server, address)
 
   const reactElement = React.createElement(CollectionsUpdateEmail, {
@@ -83,12 +84,18 @@ async function getUsers(): Promise<IUser[]> {
     ensDomain: 'jonathancai.eth',
   }
   const faraaz = {
-    // email: 'faraaznishtar@gmail.com',
-    email: 'caimjonathan@gmail.com',
+    email: 'faraaznishtar@gmail.com',
+    // email: 'caimjonathan@gmail.com',
     address: '0xd6CB70a88bB0D8fB1be377bD3E48e603528AdB54',
     ensDomain: 'faraaz.eth',
   }
-  return [johnny, faraaz]
+  const rahul = {
+    email: 'rahulushah@gmail.com',
+    // email: 'caimjonathan@gmail.com',
+    address: '0x87b3c0057e8A82b14c3BeF2914FCE915Fe1F4c01',
+    // ensDomain: 'faraaz.eth',
+  }
+  return [johnny, faraaz, rahul]
 }
 
 /**

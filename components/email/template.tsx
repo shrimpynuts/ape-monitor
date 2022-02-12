@@ -25,7 +25,7 @@ const CollectionsUpdateEmail = ({ title, address, collectionsWithAssets, ensDoma
       <h2 style={{ marginLeft: '4rem', fontWeight: 'bold', textAlign: 'left' }}>{`${
         ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)
       }`}</h2>
-      <p style={{ marginLeft: '4rem', textAlign: 'left' }}>Here&apos;s how your NFT&apos;s are doing today:</p>
+      <p style={{ marginLeft: '4rem', textAlign: 'left' }}>Gm. Here&apos;s how your NFT&apos;s are doing today:</p>
       <CollectionsTable collectionsWithAssets={collectionsWithAssets} />
     </Email>
   )

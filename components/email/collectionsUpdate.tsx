@@ -128,7 +128,7 @@ function CollectionsUpdateTable({ collectionsWithAssets }: IProps) {
         width: 40,
       },
       {
-        Header: 'Since',
+        Header: 'Updated',
         accessor: 'collection.updated_at',
         disableFilters: true,
         Cell: ({ cell: { value } }: CellProps<any>) => {

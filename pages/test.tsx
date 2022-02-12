@@ -10,7 +10,7 @@ import Navbar from '../components/layout/navbar'
 
 const TestPage: NextPage = () => {
   const onSendEmail = () => {
-    fetch(`${getServer()}/api/jobs/send-email`)
+    fetch(`${getServer()}/api/jobs/send-email-alerts`)
       .then((resp) => JSON.stringify(resp.json()))
       .then(() => toast.success('Sent email!'))
       .catch(toast.error)

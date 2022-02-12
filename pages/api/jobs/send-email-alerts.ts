@@ -69,16 +69,23 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   const toAddress = 'jonathan@alias.co'
   const ethAddress = '0xf725a0353dbB6aAd2a4692D49DDa0bE241f45fD0'
 
-  try {
-    console.log(req.headers.host)
-    // const server = req.headers.location || 'https://www.apemonitor.com/'
-    const server = getServer()
-    const msg = await createAlertMessage(server, fromAddress, toAddress, ethAddress)
-    await sgMail.send(msg)
-    return res.status(200).json({ success: true })
-  } catch (error: any) {
+  const { key } = req.query
+  if (key === process.env.SEND_EMAIL_KEY) {
+    try {
+      console.log(req.headers.host)
+      // const server = req.headers.location || 'https://www.apemonitor.com/'
+      const server = getServer()
+      const msg = await createAlertMessage(server, fromAddress, toAddress, ethAddress)
+      await sgMail.send(msg)
+      return res.status(200).json({ success: true })
+    } catch (error: any) {
+      console.error(error)
+      return res.status(400).json({ error, fromAddress })
+    }
+  } else {
+    const error = 'Bad request: missing correct key parameter'
     console.error(error)
-    return res.status(400).json({ error, fromAddress })
+    return res.status(400).json({ error })
   }
 }
 

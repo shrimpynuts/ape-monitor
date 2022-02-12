@@ -14,11 +14,12 @@ const TestPage: NextPage = () => {
   const isAdmin = wallet.account ? addressIsAdmin(wallet.account) : false
 
   const onSendEmail = () => {
-    const endpoint = `${getServer()}/api/jobs/send-email-alerts?key=${process.env.SEND_EMAIL_KEY}`
-    fetch(endpoint)
-      .then((resp) => JSON.stringify(resp.json()))
-      .then(() => toast.success('Sent email!'))
-      .catch(toast.error)
+    toast('Not using this page anymore, use the direct URL.')
+    // const endpoint = `${getServer()}/api/jobs/send-email-alerts?key=${process.env.SEND_EMAIL_KEY}`
+    // fetch(endpoint)
+    //   .then((resp) => JSON.stringify(resp.json()))
+    //   .then(() => toast.success('Sent email!'))
+    //   .catch(toast.error)
   }
   const isConnected = wallet.isConnected()
   const onConnectClick = () => {

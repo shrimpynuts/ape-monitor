@@ -27,13 +27,6 @@ const CollectionsUpdateEmail = ({ title, address, collectionsWithAssets, ensDoma
       }`}</h2>
       <p style={{ marginLeft: '4rem', textAlign: 'left' }}>Here&apos;s how your NFT&apos;s are doing:</p>
       <CollectionsTable collectionsWithAssets={collectionsWithAssets} />
-      <input type="radio" name="collapse" id="handle1" checked={true} />
-      <h2 className="handle">
-        <label title="handle1">The Visible Short Heading</label>
-      </h2>
-      <div className="content">
-        <p>Your detailed contents...</p>
-      </div>
     </Email>
   )
 }

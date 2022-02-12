@@ -41,7 +41,7 @@ export interface IOpenseaAsset {
 }
 
 export interface IAsset {
-  name: string
+  name?: string
   contract_address: string
   token_id: string
   description?: string

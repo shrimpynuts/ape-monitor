@@ -30,7 +30,7 @@ export const UPSERT_COLLECTION_WITH_STATS = gql`
           total_volume
           market_cap
           is_stats_fetched
-          updated_at
+          # updated_at
           one_day_volume
           one_day_sales
           one_day_average_price

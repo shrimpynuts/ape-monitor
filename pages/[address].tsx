@@ -109,13 +109,15 @@ const ProfilePage: NextPage<IAddressData> = (addressData) => {
       }
 
       // Fetch all corresponding collections for the given assets
-      const collections = await fetchAllCollections(assets)
+      const collections = await fetchAllCollections(getServer(), assets)
 
       // Group the assets together with their collections
       const collectionsWithAssets = groupAssetsWithCollections(assets, collections)
 
       // Update the state accordingly
       setCollectionsWithAssets(collectionsWithAssets)
+
+      console.log({ collectionsWithAssets })
 
       setLoading(false)
     }

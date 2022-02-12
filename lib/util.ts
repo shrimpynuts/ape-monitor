@@ -142,7 +142,7 @@ export const groupAssetsByContractAddress: (assets: IAsset[]) => IAssetsGroupedB
 /**
  * Hits our own /api/collections endpoint for all collections
  */
-export const fetchAllCollections = async (assets: IAsset[]): Promise<ICollection[]> => {
+export const fetchAllCollections = async (server: string, assets: IAsset[]): Promise<ICollection[]> => {
   // Group the assets by their contract address
   const assetsGroupedByContractAddress: IAssetsGroupedByContract = groupAssetsByContractAddress(assets)
 
@@ -153,7 +153,7 @@ export const fetchAllCollections = async (assets: IAsset[]): Promise<ICollection
         // Just take the first asset in the group to get the contract address
         const asset = assetGroup[0]
         // Hit our own /api/collections endpoint for the collections data
-        const collection = fetch(`${getServer()}/api/collection/${asset.contract_address}`)
+        const collection = fetch(`${server}/api/collection/${asset.contract_address}`)
           .then((r) => r.json())
           .catch((error) => {
             return { error }

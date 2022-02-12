@@ -15,11 +15,7 @@ if (!sendgridAPIKey) {
 }
 sgMail.setApiKey(sendgridAPIKey)
 
-async function createMessage(toAddress: string, fromAddress: string, ethAddress: string) {
-  const date = moment().format('MM/DD h:mma')
-
-  const server = 'http://localhost:3000'
-
+async function getAlertData(server: string, ethAddress: string) {
   // Get user's assets
   const result = await fetch(`${server}/api/opensea/assets/${ethAddress}`).then((res) => res.json())
   const { assets, error } = result
@@ -28,10 +24,17 @@ async function createMessage(toAddress: string, fromAddress: string, ethAddress:
   const collections = await fetchAllCollections(server, assets)
 
   // Group the assets together with their collections
+
   const collectionsWithAssets: ICollectionsWithAssets = groupAssetsWithCollections(assets, collections)
+  return collectionsWithAssets
+}
+
+async function createAlertMessage(server: string, toAddress: string, fromAddress: string, ethAddress: string) {
+  const date = moment().format('MM/DD h:mma')
+  const collectionsWithAssets = await getAlertData(server, ethAddress)
 
   const reactElement = React.createElement(CollectionsUpdateEmail, {
-    title: 'this is update text',
+    title: 'this is alert text',
     collectionsWithAssets,
   })
   const emailHTML = renderEmail(reactElement)
@@ -46,6 +49,18 @@ async function createMessage(toAddress: string, fromAddress: string, ethAddress:
   return msg
 }
 
+function getServer() {
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:3000'
+  } else if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`
+  } else {
+    console.error(`Failed to get server. 
+    VERCEL_URL: ${process.env.VERCEL_URL}, NODE_ENV: ${process.env.NODE_ENV}, VERCEL_: ${process.env.VERCEL_} `)
+    process.exit(1)
+  }
+}
+
 /**
  * Fetches the data for a single collection by its contract address from our database
  */
@@ -55,8 +70,10 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   const ethAddress = '0xf725a0353dbB6aAd2a4692D49DDa0bE241f45fD0'
 
   try {
-    const msg = await createMessage(fromAddress, toAddress, ethAddress)
-    console.log({ msg })
+    console.log(req.headers.host)
+    // const server = req.headers.location || 'https://www.apemonitor.com/'
+    const server = getServer()
+    const msg = await createAlertMessage(server, fromAddress, toAddress, ethAddress)
     await sgMail.send(msg)
     return res.status(200).json({ success: true })
   } catch (error: any) {

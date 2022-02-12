@@ -21,6 +21,13 @@ const CollectionsUpdateEmail = ({ title, collectionsWithAssets }: CollectionsUpd
     <Email title={title} headCSS={css}>
       {/* <TopCollections /> */}
       <CollectionsTable collectionsWithAssets={collectionsWithAssets} />
+      <input type="radio" name="collapse" id="handle1" checked={true} />
+      <h2 className="handle">
+        <label title="handle1">The Visible Short Heading</label>
+      </h2>
+      <div className="content">
+        <p>Your detailed contents...</p>
+      </div>
     </Email>
   )
 }

@@ -83,7 +83,8 @@ async function getUsers(): Promise<IUser[]> {
     ensDomain: 'jonathancai.eth',
   }
   const faraaz = {
-    email: 'faraaznishtar@gmail.com',
+    // email: 'faraaznishtar@gmail.com',
+    email: 'caimjonathan@gmail.com',
     address: '0xd6CB70a88bB0D8fB1be377bD3E48e603528AdB54',
     ensDomain: 'faraaz.eth',
   }
@@ -111,7 +112,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
       users.map(({ email, address, ensDomain }) => {
         const fromAddress = 'jonathan@alias.co'
         const server = getServer()
-        const messagePromise = createAlertMessage(server, 'caimjonathan@gmail.com', fromAddress, address, ensDomain)
+        const messagePromise = createAlertMessage(server, email, fromAddress, address, ensDomain)
         return messagePromise
       }),
     )

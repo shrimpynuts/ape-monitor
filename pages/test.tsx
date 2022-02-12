@@ -1,10 +1,12 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import toast, { Toaster } from 'react-hot-toast'
+
 import CollectionsUpdateEmail, { WithDebug } from '../components/email/template'
 import Button from '../components/util/button'
 import { getServer } from '../lib/util'
 import { collectionsWithAssets } from '../mock/collections-with-assets.json'
+import Navbar from '../components/layout/navbar'
 
 const TestPage: NextPage = () => {
   const onSendEmail = () => {
@@ -15,8 +17,9 @@ const TestPage: NextPage = () => {
   }
   return (
     <div className="max-w-screen-xl m-auto pb-4 md:pb-12">
+      <Navbar displaySearchbar={false} />
       <Head>
-        <title>Admin</title>
+        <title>Testing Email Alerts</title>
       </Head>
       <Toaster />
       <div className="flex flex-col space-y-4 mt-4">

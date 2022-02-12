@@ -53,11 +53,10 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   const fromAddress = 'caimjonathan@gmail.com'
   const toAddress = 'jonathan@alias.co'
   const ethAddress = '0xf725a0353dbB6aAd2a4692D49DDa0bE241f45fD0'
-  const msg = await createMessage(fromAddress, toAddress, ethAddress)
-
-  console.log({ msg })
 
   try {
+    const msg = await createMessage(fromAddress, toAddress, ethAddress)
+    console.log({ msg })
     await sgMail.send(msg)
     return res.status(200).json({ success: true })
   } catch (error: any) {

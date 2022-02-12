@@ -2,6 +2,7 @@ import React from 'react'
 import { Email, renderEmail } from 'react-html-email'
 import { ICollectionsWithAssets } from '../../frontend/types'
 import CollectionsTable from './collectionsUpdate'
+// import TopCollections from '../../components/topCollections'
 
 interface CollectionsUpdateEmailProps {
   title: string
@@ -18,6 +19,7 @@ const CollectionsUpdateEmail = ({ title, collectionsWithAssets }: CollectionsUpd
 
   return (
     <Email title={title} headCSS={css}>
+      {/* <TopCollections /> */}
       <CollectionsTable collectionsWithAssets={collectionsWithAssets} />
     </Email>
   )

@@ -27,7 +27,10 @@ export async function getAlertData(server: string, address: string) {
   // Filter out zero floor/volume collections
   const filteredCollections = collections.filter(
     (collection) =>
-      collection.floor_price && collection.total_volume && collection.floor_price > 0 && collection.total_volume > 0,
+      collection.floor_price &&
+      collection.total_volume &&
+      collection.floor_price > 0.009 &&
+      collection.total_volume > 1,
   )
 
   // Group the assets together with their collections

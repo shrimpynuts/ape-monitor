@@ -57,7 +57,7 @@ const CollectionsUpdateEmail = ({ title, address, collectionsWithAssets, ensDoma
         </p>
       </div>
       <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
-        <img style={{ width: '400px', margin: '0px auto' }} src={apeGIF} />
+        <img style={{ width: '400px', margin: '0px auto', display: 'flex' }} src={apeGIF} />
       </div>
     </Email>
   )

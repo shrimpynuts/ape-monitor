@@ -16,7 +16,7 @@ if (!sendgridAPIKey) {
 }
 sgMail.setApiKey(sendgridAPIKey)
 
-async function getAlertData(server: string, address: string) {
+export async function getAlertData(server: string, address: string) {
   // Get user's assets
   const result = await fetch(`${server}/api/opensea/assets/${address}`).then((res) => res.json())
   const { assets, error } = result
@@ -24,13 +24,18 @@ async function getAlertData(server: string, address: string) {
   // Fetch all corresponding collections for the given assets
   const collections = await fetchAllCollections(server, assets)
 
-  // Group the assets together with their collections
+  // Filter out zero floor/volume collections
+  const filteredCollections = collections.filter(
+    (collection) =>
+      collection.floor_price && collection.total_volume && collection.floor_price > 0 && collection.total_volume > 0,
+  )
 
-  const collectionsWithAssets: ICollectionsWithAssets = groupAssetsWithCollections(assets, collections)
+  // Group the assets together with their collections
+  const collectionsWithAssets: ICollectionsWithAssets = groupAssetsWithCollections(assets, filteredCollections)
   return collectionsWithAssets
 }
 
-async function createAlertMessage(
+export async function createAlertMessage(
   server: string,
   toAddress: string,
   fromAddress: string,
@@ -59,7 +64,7 @@ async function createAlertMessage(
   return msg
 }
 
-function getServer() {
+export function getServer() {
   if (process.env.NODE_ENV === 'development') {
     return 'http://localhost:3000'
   } else if (process.env.VERCEL_URL) {
@@ -123,6 +128,8 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
         return messagePromise
       }),
     )
+
+    return res.status(200).json({ messages })
 
     // Send all messages
     await Promise.all(messages.map((message) => sgMail.send(message)))

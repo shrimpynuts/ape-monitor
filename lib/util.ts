@@ -139,6 +139,10 @@ export const groupAssetsByContractAddress: (assets: IAsset[]) => IAssetsGroupedB
   }, {})
 }
 
+export function getRandomInt(max: number) {
+  return Math.floor(Math.random() * max) + 1
+}
+
 /**
  * Hits our own /api/collections endpoint for all collections
  */

@@ -104,7 +104,7 @@ const Table = ({ columns, data }: IProps) => {
         </thead>
         <tbody
           style={{ backgroundColor: 'white' }}
-          className="bg-white -mb-2 text-gray-500 dark:text-gray-100 dark:bg-blackPearl dark:divide-darkblue"
+          // className="bg-white -mb-2 text-gray-500 dark:text-gray-100 dark:bg-blackPearl dark:divide-darkblue"
         >
           {rows.map((row) => {
             prepareRow(row)
@@ -118,6 +118,7 @@ const Table = ({ columns, data }: IProps) => {
                   width: style?.width || '100%',
                   display: 'flex',
                 }}
+                className="collection-row"
                 key={key}
               >
                 {row.cells.map((cell) => {

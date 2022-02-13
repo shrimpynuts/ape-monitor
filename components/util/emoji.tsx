@@ -1,9 +1,10 @@
 import React from 'react'
-const Emoji = (props: { label: string; symbol: string; className: string }) => (
+const Emoji = (props: { style?: any; label: string; symbol: string; className?: string }) => (
   <span
     className={props.className}
     role="img"
     aria-label={props.label ? props.label : ''}
+    style={props.style}
     aria-hidden={props.label ? 'false' : 'true'}
   >
     {props.symbol}

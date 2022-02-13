@@ -53,7 +53,7 @@ const CollectionsUpdateEmail = ({ title, address, collectionsWithAssets, ensDoma
           <a href="https://twitter.com/jonathanmcai" target="_blank" rel="noreferrer">
             shoot me a DM
           </a>{' '}
-          for bug reports, feature requests, or to unsubscribe if these get annoying. No hard feelings.
+          if you have ideas on how to make this more useful, or to unsubscribe if these get annoying. No hard feelings.
         </p>
       </div>
       <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>

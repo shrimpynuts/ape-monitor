@@ -104,7 +104,7 @@ export const GET_TOP_COLLECTIONS_ALERT = gql`
   query GetTopCollections {
     totalVolume: collections(
       order_by: { total_volume: desc_nulls_last }
-      where: { floor_price: { _is_null: false } }
+      where: { floor_price: { _is_null: false }, one_day_volume: { _gt: 10 } }
       limit: 20
     ) {
       ...CoreCollectionFields

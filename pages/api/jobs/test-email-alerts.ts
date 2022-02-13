@@ -1,13 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import sgMail from '@sendgrid/mail'
 
-import { createAlertMessage, getServer, runAlerts } from './send-email-alerts'
+import { sendgridAPIKey } from '../../../lib/alerts/util'
+import { runAlerts } from './send-email-alerts'
 
-const sendgridAPIKey = process.env.SENDGRID_API_KEY
-if (!sendgridAPIKey) {
-  console.error("Couldn't fetch SENDGRID_API_KEY")
-  process.exit(1)
-}
 sgMail.setApiKey(sendgridAPIKey)
 
 /**

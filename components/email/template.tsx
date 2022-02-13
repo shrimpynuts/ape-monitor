@@ -73,12 +73,12 @@ const CollectionsUpdateEmail = ({
         </p>
 
         <h2 style={{ marginLeft: '2rem', fontWeight: 'bold', textAlign: 'left' }}>Top Collections</h2>
-        <p style={{ marginLeft: '2rem', textAlign: 'left' }}>Here&apos;s how the blue chips are doing:</p>
+        <p style={{ marginLeft: '2rem', textAlign: 'left' }}>Here&apos;s how some of the blue chips are doing:</p>
         <TopCollectionsUpdate topCollections={topCollectionsByTotalVolume} />
 
         <h2 style={{ marginLeft: '2rem', fontWeight: 'bold', textAlign: 'left' }}>Trending Collections</h2>
         <p style={{ marginLeft: '2rem', textAlign: 'left' }}>
-          Some NFT collections on the rise that you might want to watch out for:
+          Some NFT collections on the rise that you might want to watch out for (low market cap, high 24hr volume):
         </p>
         <TopCollectionsUpdate topCollections={topCollectionsByOneDayVolume} />
         <p style={{ marginLeft: '2rem', textAlign: 'left' }}>
@@ -86,7 +86,8 @@ const CollectionsUpdateEmail = ({
           <a href="https://twitter.com/jonathanmcai" target="_blank" rel="noreferrer">
             shoot me a DM
           </a>{' '}
-          if you have ideas on how to make this more useful, or to unsubscribe if these get annoying. No hard feelings.
+          if you have ideas on how to make this report more useful, or to unsubscribe if these get annoying. No hard
+          feelings.
         </p>
       </div>
       <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>

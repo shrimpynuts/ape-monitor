@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import sgMail from '@sendgrid/mail'
 
-import { createAlertMessage, getServer } from './send-email-alerts'
+import { createAlertMessage, getServer, runAlerts } from './send-email-alerts'
 
 const sendgridAPIKey = process.env.SENDGRID_API_KEY
 if (!sendgridAPIKey) {
@@ -29,21 +29,9 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
       address: '0xf725a0353dbB6aAd2a4692D49DDa0bE241f45fD0',
       ensDomain: 'jonathancai.eth',
     }
+
     const users = [johnny]
-
-    // Construct all messages
-    const messages = await Promise.all(
-      users.map(({ email, address, ensDomain }) => {
-        const fromAddress = 'jonathan@alias.co'
-        const server = getServer()
-        const messagePromise = createAlertMessage(server, email, fromAddress, address, ensDomain)
-        return messagePromise
-      }),
-    )
-
-    // Send all messages
-    await Promise.all(messages.map((message) => sgMail.send(message)))
-
+    await runAlerts(users)
     return res.status(200).json({ success: true })
   } catch (error: any) {
     console.error(error)

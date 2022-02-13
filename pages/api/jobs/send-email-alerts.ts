@@ -3,11 +3,13 @@ import sgMail from '@sendgrid/mail'
 import moment from 'moment'
 import React from 'react'
 import { renderEmail } from 'react-html-email'
-import CollectionsUpdateEmail from '../../../components/email/template'
 
-import { ICollectionsWithAssets } from '../../../frontend/types'
 import { fetchAllCollections, groupAssetsWithCollections } from '../../../lib/util'
+import CollectionsUpdateEmail from '../../../components/email/template'
+import { ICollectionsWithAssets } from '../../../frontend/types'
+import client from '../../../backend/graphql-client'
 import { middleEllipses } from '../../../lib/util'
+import { GET_TOP_COLLECTIONS_ALERT } from '../../../graphql/queries'
 
 const sendgridAPIKey = process.env.SENDGRID_API_KEY
 if (!sendgridAPIKey) {
@@ -15,6 +17,24 @@ if (!sendgridAPIKey) {
   process.exit(1)
 }
 sgMail.setApiKey(sendgridAPIKey)
+
+export async function getTopCollections() {
+  const { data } = await client.query({
+    query: GET_TOP_COLLECTIONS_ALERT,
+  })
+  return data
+}
+
+const removeDuplicatesSlug = (arr: any) => {
+  return arr.reduce((arr: any, item: any) => {
+    let exists = !!arr.find((x: any) => x.slug === item.slug)
+    if (!exists) {
+      arr.push(item)
+    } else {
+    }
+    return arr
+  }, [])
+}
 
 export async function getAlertData(server: string, address: string) {
   // Get user's assets
@@ -24,7 +44,7 @@ export async function getAlertData(server: string, address: string) {
   // Fetch all corresponding collections for the given assets
   const collections = await fetchAllCollections(server, assets)
 
-  // Filter out zero floor/volume collections
+  // Filter out zero floor/volume collections and duplicate collections
   const filteredCollections = collections.filter(
     (collection) =>
       collection.floor_price &&
@@ -45,13 +65,16 @@ export async function createAlertMessage(
   address: string,
   ensDomain?: string,
 ) {
-  // const date = moment().format('MM/DD h:mma')
+  const { totalVolume, trendingCollections } = await getTopCollections()
+
   const date = moment().format('MM/DD')
   const collectionsWithAssets = await getAlertData(server, address)
 
   const reactElement = React.createElement(CollectionsUpdateEmail, {
     title: 'this is alert text',
     collectionsWithAssets,
+    topCollectionsByTotalVolume: removeDuplicatesSlug(totalVolume),
+    topCollectionsByOneDayVolume: removeDuplicatesSlug(trendingCollections),
     address,
     ensDomain,
   })
@@ -60,7 +83,7 @@ export async function createAlertMessage(
   const msg = {
     to: toAddress,
     from: fromAddress,
-    subject: `Ape Monitor Update - ${date} ${ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}`,
+    subject: `Ape Monitor Report ${date} - ${ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}`,
     text: `and easy to do anywhere, even with Node.js ${address}`,
     html: `${emailHTML}`,
   }
@@ -92,8 +115,8 @@ async function getUsers(): Promise<IUser[]> {
     ensDomain: 'jonathancai.eth',
   }
   const faraaz = {
-    email: 'faraaznishtar@gmail.com',
-    // email: 'caimjonathan@gmail.com',
+    // email: 'faraaznishtar@gmail.com',
+    email: 'caimjonathan@gmail.com',
     address: '0xd6CB70a88bB0D8fB1be377bD3E48e603528AdB54',
     ensDomain: 'faraaz.eth',
   }
@@ -103,7 +126,25 @@ async function getUsers(): Promise<IUser[]> {
     address: '0x87b3c0057e8A82b14c3BeF2914FCE915Fe1F4c01',
     // ensDomain: 'faraaz.eth',
   }
-  return [johnny, faraaz, rahul]
+  return [
+    johnny,
+    faraaz,
+    // rahul
+  ]
+}
+
+export const runAlerts = async (users: IUser[]) => {
+  const messages = await Promise.all(
+    users.map(({ email, address, ensDomain }) => {
+      const fromAddress = 'jonathan@alias.co'
+      const server = getServer()
+      const messagePromise = createAlertMessage(server, email, fromAddress, address, ensDomain)
+      return messagePromise
+    }),
+  )
+
+  // Send all messages
+  await Promise.all(messages.map((message) => sgMail.send(message)))
 }
 
 /**
@@ -121,22 +162,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const users = await getUsers()
-
-    // Construct all messages
-    const messages = await Promise.all(
-      users.map(({ email, address, ensDomain }) => {
-        const fromAddress = 'jonathan@alias.co'
-        const server = getServer()
-        const messagePromise = createAlertMessage(server, email, fromAddress, address, ensDomain)
-        return messagePromise
-      }),
-    )
-
-    return res.status(200).json({ messages })
-
-    // Send all messages
-    await Promise.all(messages.map((message) => sgMail.send(message)))
-
+    await runAlerts(users)
     return res.status(200).json({ success: true })
   } catch (error: any) {
     console.error(error)

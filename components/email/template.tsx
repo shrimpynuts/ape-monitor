@@ -1,19 +1,42 @@
 import React from 'react'
 import { Email, renderEmail } from 'react-html-email'
-import { ICollectionsWithAssets } from '../../frontend/types'
+import { ICollection, ICollectionsWithAssets } from '../../frontend/types'
 import { middleEllipses, getRandomInt } from '../../lib/util'
 import Emoji from '../util/emoji'
 import CollectionsTable from './collectionsUpdate'
-// import TopCollections from '../../components/topCollections'
+import TopCollectionsUpdate from './topCollectionsUpdate'
 
 interface CollectionsUpdateEmailProps {
   title: string
   collectionsWithAssets: ICollectionsWithAssets
+  topCollectionsByTotalVolume: ICollection[]
+  topCollectionsByOneDayVolume: ICollection[]
   address: string
   ensDomain?: string
 }
 
-const CollectionsUpdateEmail = ({ title, address, collectionsWithAssets, ensDomain }: CollectionsUpdateEmailProps) => {
+const signatures = [
+  'See ya tomorrow',
+  'xoxo',
+  'Cya',
+  'Make it a good one',
+  'Protect your seed phrase',
+  'Later',
+  'Ape together, strong',
+  '',
+  '',
+  '',
+  '',
+]
+
+const CollectionsUpdateEmail = ({
+  title,
+  address,
+  collectionsWithAssets,
+  topCollectionsByTotalVolume,
+  topCollectionsByOneDayVolume,
+  ensDomain,
+}: CollectionsUpdateEmailProps) => {
   const css = `
     @media only screen and (max-device-width: 480px) {
       font-size: 20px !important;
@@ -48,6 +71,16 @@ const CollectionsUpdateEmail = ({ title, address, collectionsWithAssets, ensDoma
             your entire portfolio here.
           </a>
         </p>
+
+        <h2 style={{ marginLeft: '2rem', fontWeight: 'bold', textAlign: 'left' }}>Top Collections</h2>
+        <p style={{ marginLeft: '2rem', textAlign: 'left' }}>Here&apos;s how the blue chips are doing:</p>
+        <TopCollectionsUpdate topCollections={topCollectionsByTotalVolume} />
+
+        <h2 style={{ marginLeft: '2rem', fontWeight: 'bold', textAlign: 'left' }}>Trending Collections</h2>
+        <p style={{ marginLeft: '2rem', textAlign: 'left' }}>
+          Some NFT collections on the rise that you might want to watch out for:
+        </p>
+        <TopCollectionsUpdate topCollections={topCollectionsByOneDayVolume} />
         <p style={{ marginLeft: '2rem', textAlign: 'left' }}>
           Reply to this email or{' '}
           <a href="https://twitter.com/jonathanmcai" target="_blank" rel="noreferrer">
@@ -59,6 +92,8 @@ const CollectionsUpdateEmail = ({ title, address, collectionsWithAssets, ensDoma
       <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
         <img style={{ width: '400px', margin: '0px auto', display: 'flex' }} src={apeGIF} />
       </div>
+      <p style={{ marginLeft: '2rem', textAlign: 'left' }}>{signatures[getRandomInt(signatures.length - 1)]}</p>
+      <p style={{ marginLeft: '2rem', textAlign: 'left' }}>- Johnny</p>
     </Email>
   )
 }

@@ -99,6 +99,27 @@ export const GET_TOP_COLLECTIONS = gql`
   }
 `
 
+export const GET_TOP_COLLECTIONS_ALERT = gql`
+  ${CORE_COLLECTION_FIELDS}
+  query GetTopCollections {
+    totalVolume: collections(
+      order_by: { total_volume: desc_nulls_last }
+      where: { floor_price: { _is_null: false } }
+      limit: 20
+    ) {
+      ...CoreCollectionFields
+    }
+
+    trendingCollections: collections(
+      where: { market_cap: { _lt: 10000 }, floor_price: { _gt: 0.05 } }
+      order_by: { one_day_volume: desc_nulls_last }
+      limit: 10
+    ) {
+      ...CoreCollectionFields
+    }
+  }
+`
+
 export const GET_COLLECTIONS_ADMIN_STATS = gql`
   ${COLLECTIONS_AGGREGATE_COUNT}
   query GetCollectionsAdminStats(

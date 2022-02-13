@@ -2,9 +2,9 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import toast, { Toaster } from 'react-hot-toast'
 
-import CollectionsUpdateEmail, { WithDebug } from '../components/email/template'
+import CollectionsUpdateEmail from '../components/email/template'
 import { collectionsWithAssets } from '../mock/collections-with-assets.json'
-import { getServer, addressIsAdmin } from '../lib/util'
+import { addressIsAdmin } from '../lib/util'
 import Navbar from '../components/layout/navbar'
 import useWeb3Container from '../hooks/useWeb3User'
 import Button from '../components/util/button'
@@ -53,6 +53,8 @@ const TestPage: NextPage = () => {
           <div className="shadow border p-8">
             <CollectionsUpdateEmail
               title="test"
+              topCollectionsByTotalVolume={[]}
+              topCollectionsByOneDayVolume={[]}
               collectionsWithAssets={collectionsWithAssets}
               address={'0xd6CB70a88bB0D8fB1be377bD3E48e603528AdB54'}
             />

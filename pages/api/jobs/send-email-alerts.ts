@@ -19,11 +19,13 @@ async function getUsers(): Promise<IUser[]> {
   }
   const faraaz = {
     email: 'faraaznishtar@gmail.com',
+    // email: 'caimjonathan@gmail.com',
     address: '0xd6CB70a88bB0D8fB1be377bD3E48e603528AdB54',
     ensDomain: 'faraaz.eth',
   }
   const rahul = {
     email: 'rahulushah@gmail.com',
+    // email: 'caimjonathan@gmail.com',
     address: '0x87b3c0057e8A82b14c3BeF2914FCE915Fe1F4c01',
   }
   return [johnny, faraaz, rahul]

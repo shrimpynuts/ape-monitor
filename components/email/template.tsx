@@ -88,7 +88,7 @@ const CollectionsUpdateEmail = ({
         </p>
         <TopCollectionsUpdate topCollections={topCollectionsByOneDayVolume} />
         <p style={{ marginLeft: '2rem', textAlign: 'left' }}>Let me know what you thought about this email!</p>
-        <p style={{ marginLeft: '2rem', textAlign: 'left' }}>Was it useful? Did anything look off?</p>
+        <p style={{ marginLeft: '2rem', textAlign: 'left' }}>Was it useful? Too noisey? Anything look weird?</p>
         <p style={{ marginLeft: '2rem', textAlign: 'left' }}>
           Reply to this email or{' '}
           <a href="https://twitter.com/jonathanmcai" target="_blank" rel="noreferrer">

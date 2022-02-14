@@ -62,6 +62,7 @@ export async function createAlertMessage(
   server: string,
   toAddress: string,
   fromAddress: string,
+  fromName: string,
   address: string,
   ensDomain?: string,
 ) {
@@ -71,7 +72,7 @@ export async function createAlertMessage(
   const collectionsWithAssets = await getAlertData(server, address)
 
   const reactElement = React.createElement(CollectionsUpdateEmail, {
-    title: 'this is alert text',
+    title: `Ape Monitor Report Body`,
     collectionsWithAssets,
     topCollectionsByTotalVolume: removeDuplicatesSlug(totalVolume),
     topCollectionsByOneDayVolume: removeDuplicatesSlug(trendingCollections),
@@ -82,7 +83,10 @@ export async function createAlertMessage(
 
   const msg = {
     to: toAddress,
-    from: fromAddress,
+    from: {
+      email: fromAddress,
+      name: fromName,
+    },
     subject: `Ape Monitor Report ${date} - ${ensDomain ? ensDomain : middleEllipses(address, 4, 5, 2)}`,
     text: `and easy to do anywhere, even with Node.js ${address}`,
     html: `${emailHTML}`,
@@ -108,37 +112,13 @@ interface IUser {
   ensDomain?: string
 }
 
-async function getUsers(): Promise<IUser[]> {
-  const johnny = {
-    email: 'caimjonathan@gmail.com',
-    address: '0xf725a0353dbB6aAd2a4692D49DDa0bE241f45fD0',
-    ensDomain: 'jonathancai.eth',
-  }
-  const faraaz = {
-    // email: 'faraaznishtar@gmail.com',
-    email: 'caimjonathan@gmail.com',
-    address: '0xd6CB70a88bB0D8fB1be377bD3E48e603528AdB54',
-    ensDomain: 'faraaz.eth',
-  }
-  const rahul = {
-    email: 'rahulushah@gmail.com',
-    // email: 'caimjonathan@gmail.com',
-    address: '0x87b3c0057e8A82b14c3BeF2914FCE915Fe1F4c01',
-    // ensDomain: 'faraaz.eth',
-  }
-  return [
-    johnny,
-    faraaz,
-    // rahul
-  ]
-}
-
 export const runAlerts = async (users: IUser[]) => {
   const messages = await Promise.all(
     users.map(({ email, address, ensDomain }) => {
       const fromAddress = 'jonathan@alias.co'
+      const fromName = 'Jonathan Cai'
       const server = getServer()
-      const messagePromise = createAlertMessage(server, email, fromAddress, address, ensDomain)
+      const messagePromise = createAlertMessage(server, email, fromAddress, fromName, address, ensDomain)
       return messagePromise
     }),
   )

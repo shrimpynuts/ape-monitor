@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import sgMail from '@sendgrid/mail'
 
-import { sendgridAPIKey } from '../../../lib/alerts/util'
-import { runAlerts } from './send-email-alerts'
+import { sendgridAPIKey, runAlerts } from '../../../lib/alerts/util'
 
 sgMail.setApiKey(sendgridAPIKey)
 

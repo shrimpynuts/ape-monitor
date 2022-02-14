@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import sgMail from '@sendgrid/mail'
 
-import { sendgridAPIKey, createAlertMessage, getServer } from '../../../lib/alerts/util'
+import { sendgridAPIKey, createAlertMessage, getServer, runAlerts } from '../../../lib/alerts/util'
 
 sgMail.setApiKey(sendgridAPIKey)
 
@@ -18,30 +18,15 @@ async function getUsers(): Promise<IUser[]> {
     ensDomain: 'jonathancai.eth',
   }
   const faraaz = {
-    // email: 'faraaznishtar@gmail.com',
-    email: 'caimjonathan@gmail.com',
+    email: 'faraaznishtar@gmail.com',
     address: '0xd6CB70a88bB0D8fB1be377bD3E48e603528AdB54',
     ensDomain: 'faraaz.eth',
   }
   const rahul = {
-    // email: 'rahulushah@gmail.com',
-    email: 'caimjonathan@gmail.com',
+    email: 'rahulushah@gmail.com',
     address: '0x87b3c0057e8A82b14c3BeF2914FCE915Fe1F4c01',
   }
   return [johnny, faraaz, rahul]
-}
-
-export const runAlerts = async (users: IUser[]) => {
-  const messages = await Promise.all(
-    users.map(({ email, address, ensDomain }) => {
-      const fromAddress = 'jonathan@alias.co'
-      const server = getServer()
-      const messagePromise = createAlertMessage(server, email, fromAddress, address, ensDomain)
-      return messagePromise
-    }),
-  )
-  // Send all messages
-  await Promise.all(messages.map((message) => sgMail.send(message)))
 }
 
 /**

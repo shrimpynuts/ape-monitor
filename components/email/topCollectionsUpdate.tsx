@@ -125,6 +125,7 @@ function CollectionsUpdateTable({ topCollections }: IProps) {
             </div>
           )
         },
+        width: 100,
       },
     ],
     [],

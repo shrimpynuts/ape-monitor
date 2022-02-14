@@ -117,6 +117,7 @@ const Table = ({ columns, data }: IProps) => {
                 style={{
                   width: style?.width || '100%',
                   display: 'flex',
+                  padding: '0rem 1rem 0rem 1rem',
                 }}
                 className="collection-row"
                 key={key}
@@ -132,7 +133,8 @@ const Table = ({ columns, data }: IProps) => {
                         whiteSpace: 'nowrap',
                         textOverflow: 'ellipsis',
                         overflowX: 'hidden',
-                        padding: '0.75rem 1rem 0.75rem 1rem',
+                        fontSize: '14px',
+                        padding: '0.75rem 0rem 0.75rem 0rem',
                         width: style?.width || '100%',
                       }}
                     >

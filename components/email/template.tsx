@@ -40,7 +40,6 @@ const CollectionsUpdateEmail = ({
   const css = `
     @media only screen and (max-device-width: 480px) {
       font-size: 20px !important;
-      font-size: 20px !important;
     }
     .collection-row:hover {
       background-color: #F3F4F6;
@@ -66,10 +65,11 @@ const CollectionsUpdateEmail = ({
         <p style={{ marginLeft: '2rem', textAlign: 'left' }}>Gm. Here&apos;s how your NFT&apos;s are doing today:</p>
         <CollectionsTable collectionsWithAssets={collectionsWithAssets} />
         <p style={{ marginLeft: '2rem', textAlign: 'left' }}>
-          P.S. these are your collections with a non-zero floor/volume. You can view{' '}
+          (These are your NFTs with a non-zero floor/volume. View your entire portfolio{' '}
           <a href={`https://apemonitor.com/${ensDomain ? ensDomain : address}`} target="_blank" rel="noreferrer">
-            your entire portfolio here.
+            here.
           </a>
+          )
         </p>
 
         <h2 style={{ marginLeft: '2rem', fontWeight: 'bold', textAlign: 'left' }}>Top Collections</h2>
@@ -81,13 +81,13 @@ const CollectionsUpdateEmail = ({
           Some NFT collections on the rise that you might want to watch out for (low market cap, high 24hr volume):
         </p>
         <TopCollectionsUpdate topCollections={topCollectionsByOneDayVolume} />
+        <p style={{ marginLeft: '2rem', textAlign: 'left' }}>Let me know what you thought about this email!</p>
+        <p style={{ marginLeft: '2rem', textAlign: 'left' }}>Was it useful? Did anything look off?</p>
         <p style={{ marginLeft: '2rem', textAlign: 'left' }}>
           Reply to this email or{' '}
           <a href="https://twitter.com/jonathanmcai" target="_blank" rel="noreferrer">
-            shoot me a DM
+            shoot me a DM for feedback, or to unsubscribe from this list. No hard feelings.
           </a>{' '}
-          if you have ideas on how to make this report more useful, or to unsubscribe if these get annoying. No hard
-          feelings.
         </p>
       </div>
       <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>

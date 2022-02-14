@@ -69,6 +69,11 @@ const users: IUser[] = [
     address: '0x3202419Bab4588ee3C8E6853105469a8a54EBE1c',
     ensDomain: 'j0hnny.eth',
   },
+  {
+    email: 'Dawolffy@gmail.com',
+    address: '0x8127d2e311619bdA01B45BeA3ab7C360eBb8362B',
+    ensDomain: 'Web3careers.eth',
+  },
 ]
 
 /**

@@ -59,6 +59,16 @@ const users: IUser[] = [
     address: '0x4d9a61cC5332C58929f173eE2913ff92fB076FFF',
     ensDomain: 'yashbora.eth',
   },
+  {
+    email: 'roy@digitalsociety.co',
+    address: '0x857B25fBd74cE11A7CEB540a7160004B84DcfB10',
+    ensDomain: 'roy3.eth',
+  },
+  {
+    email: 'jdamon96@gmail.com',
+    address: '0x3202419Bab4588ee3C8E6853105469a8a54EBE1c',
+    ensDomain: 'j0hnny.eth',
+  },
 ]
 
 /**

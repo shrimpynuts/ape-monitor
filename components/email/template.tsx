@@ -65,7 +65,7 @@ const CollectionsUpdateEmail = ({
         <p style={{ marginLeft: '2rem', textAlign: 'left' }}>Gm. Here&apos;s how your NFT&apos;s are doing today:</p>
         <CollectionsTable collectionsWithAssets={collectionsWithAssets} />
         <p style={{ marginLeft: '2rem', textAlign: 'left' }}>
-          (These are your NFTs with a non-zero floor/volume. View your entire portfolio{' '}
+          (These are only your NFTs with non-zero recent volume. View your entire portfolio{' '}
           <a href={`https://apemonitor.com/${ensDomain ? ensDomain : address}`} target="_blank" rel="noreferrer">
             here.
           </a>

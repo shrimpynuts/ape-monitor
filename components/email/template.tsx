@@ -86,8 +86,9 @@ const CollectionsUpdateEmail = ({
         <p style={{ marginLeft: '2rem', textAlign: 'left' }}>
           Reply to this email or{' '}
           <a href="https://twitter.com/jonathanmcai" target="_blank" rel="noreferrer">
-            shoot me a DM for feedback, or to unsubscribe from this list. No hard feelings.
+            shoot me a DM
           </a>{' '}
+          for feedback, or to unsubscribe from this list. No hard feelings.
         </p>
       </div>
       <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>

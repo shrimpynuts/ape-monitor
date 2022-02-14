@@ -113,7 +113,7 @@ function CollectionsUpdateTable({ topCollections }: IProps) {
       },
       {
         Header: 'Updated',
-        accessor: 'updated_at',
+        accessor: 'data_fetched_at',
         disableFilters: true,
         Cell: ({ cell: { value } }: CellProps<any>) => {
           return (

@@ -27,6 +27,7 @@ export const CORE_COLLECTION_FIELDS = gql`
 
     # default false
     is_stats_fetched
+    data_fetched_at
 
     # newly added stats
     one_day_volume

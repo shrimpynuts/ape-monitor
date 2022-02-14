@@ -16,6 +16,7 @@ export default function DataPanel({ data }: any) {
   const total = data.total.aggregate.count
 
   const {
+    data_fetched_at_null,
     slug_null,
     one_day_change_null,
     error_fetching_true,
@@ -62,6 +63,10 @@ export default function DataPanel({ data }: any) {
         <div className="flex justify-between p-4">
           <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded">one_day_volume_null == null</span>
           <SingleCollectionStatistic metric={one_day_volume_null.aggregate.count} total={total} />
+        </div>
+        <div className="flex justify-between p-4">
+          <span className="font-mono bg-gray-200 dark:bg-gray-800 p-1 rounded">data_fetched_at_null != null</span>
+          <SingleCollectionStatistic metric={data_fetched_at_null.aggregate.count} total={total} />
         </div>
       </div>
 

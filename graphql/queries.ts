@@ -29,7 +29,7 @@ export const GET_MOST_STALE_COLLECTIONS = gql`
   query GetMostStaleCollections($limit: Int!, $offset: Int = 0) {
     collections(
       where: { error_fetching: { _eq: false } }
-      order_by: { updated_at: asc }
+      order_by: { data_fetched_at: asc_nulls_first }
       limit: $limit
       offset: $offset
     ) {
@@ -43,7 +43,7 @@ export const GET_MOST_STALE_COLLECTIONS_WITHOUT_STATS = gql`
   query GetMostStaleCollectionsWithoutStats($limit: Int!, $offset: Int = 0) {
     collections(
       where: { error_fetching: { _eq: false }, _and: { is_stats_fetched: { _eq: false } } }
-      order_by: { updated_at: asc }
+      order_by: { data_fetched_at: asc_nulls_first }
       limit: $limit
       offset: $offset
     ) {
@@ -143,20 +143,23 @@ export const GET_COLLECTIONS_ADMIN_STATS = gql`
     one_day_volume_null: collections_aggregate(where: { one_day_volume: { _is_null: true } }) {
       ...CollectionsAggregateCount
     }
+    data_fetched_at_null: collections_aggregate(where: { data_fetched_at: { _is_null: false } }) {
+      ...CollectionsAggregateCount
+    }
 
     slug_null: collections_aggregate(where: { slug: { _is_null: true } }) {
       ...CollectionsAggregateCount
     }
-    stale1: collections_aggregate(where: { updated_at: { _gte: $lastUpdated1 } }) {
+    stale1: collections_aggregate(where: { data_fetched_at: { _gte: $lastUpdated1 } }) {
       ...CollectionsAggregateCount
     }
-    stale2: collections_aggregate(where: { updated_at: { _gte: $lastUpdated2 } }) {
+    stale2: collections_aggregate(where: { data_fetched_at: { _gte: $lastUpdated2 } }) {
       ...CollectionsAggregateCount
     }
-    stale3: collections_aggregate(where: { updated_at: { _gte: $lastUpdated3 } }) {
+    stale3: collections_aggregate(where: { data_fetched_at: { _gte: $lastUpdated3 } }) {
       ...CollectionsAggregateCount
     }
-    stale4: collections_aggregate(where: { updated_at: { _gte: $lastUpdated4 } }) {
+    stale4: collections_aggregate(where: { data_fetched_at: { _gte: $lastUpdated4 } }) {
       ...CollectionsAggregateCount
     }
     total: collections_aggregate {

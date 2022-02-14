@@ -38,9 +38,9 @@ const CollectionsUpdateEmail = ({
   ensDomain,
 }: CollectionsUpdateEmailProps) => {
   const css = `
-    @media only screen and (max-device-width: 480px) {
-      font-size: 20px !important;
-    }
+    // @media only screen and (max-device-width: 480px) {
+    //   font-size: 20px !important;
+    // }
     .collection-row:hover {
       background-color: #F3F4F6;
     }

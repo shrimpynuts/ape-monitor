@@ -24,16 +24,11 @@ async function getUsers(): Promise<IUser[]> {
     ensDomain: 'faraaz.eth',
   }
   const rahul = {
-    email: 'rahulushah@gmail.com',
-    // email: 'caimjonathan@gmail.com',
+    // email: 'rahulushah@gmail.com',
+    email: 'caimjonathan@gmail.com',
     address: '0x87b3c0057e8A82b14c3BeF2914FCE915Fe1F4c01',
-    // ensDomain: 'faraaz.eth',
   }
-  return [
-    johnny,
-    faraaz,
-    // rahul
-  ]
+  return [johnny, faraaz, rahul]
 }
 
 export const runAlerts = async (users: IUser[]) => {

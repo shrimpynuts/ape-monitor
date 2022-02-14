@@ -99,6 +99,7 @@ const updateCollection = async (givenCollection: ICollection) => {
       num_reports: stats.num_reports,
       // market_cap: stats.market_cap,
       // floor_price: stats.floor_price,
+      data_fetched_at: new Date(),
     }
 
     console.log('Saving collection with stats')
@@ -118,7 +119,7 @@ const request = async (req: NextApiRequest, res: NextApiResponse) => {
   const QUERY_LIMIT = 1000
 
   // Number of collections to query from opensea each run of this job
-  const JOB_LIMIT = 100
+  const JOB_LIMIT = 300
 
   // Fetch the collections object in our DB
   const {

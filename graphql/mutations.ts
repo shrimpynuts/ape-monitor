@@ -45,6 +45,7 @@ export const UPSERT_COLLECTION_WITH_STATS = gql`
           num_owners
           average_price
           num_reports
+          data_fetched_at
         ]
       }
     ) {

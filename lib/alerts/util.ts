@@ -1,4 +1,4 @@
-import sgMail from '@sendgrid/mail'
+import sendgridMail from '@sendgrid/mail'
 import moment from 'moment'
 import React from 'react'
 import { renderEmail } from 'react-html-email'
@@ -112,17 +112,30 @@ interface IUser {
   ensDomain?: string
 }
 
-export const runAlerts = async (users: IUser[]) => {
-  const messages = await Promise.all(
-    users.map(({ email, address, ensDomain }) => {
-      const fromAddress = 'jonathan@alias.co'
-      const fromName = 'Jonathan Cai'
-      const server = getServer()
-      const messagePromise = createAlertMessage(server, email, fromAddress, fromName, address, ensDomain)
-      return messagePromise
-    }),
-  )
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
-  // Send all messages
-  await Promise.all(messages.map((message) => sgMail.send(message)))
+export const runAlerts = async (users: IUser[]) => {
+  const fromAddress = 'jonathan@alias.co'
+  const fromName = 'Jonathan Cai'
+  const server = getServer()
+
+  // Construct each email
+  let emails = []
+  for (const user of users) {
+    const { email, address, ensDomain } = user
+    try {
+      // Wait 1 seconds to not bombard opensea server as much???
+      await delay(5000)
+      const message = await createAlertMessage(server, email, fromAddress, fromName, address, ensDomain)
+      emails.push(message)
+    } catch (error: any) {
+      console.error(error)
+    }
+  }
+
+  // Send emails
+  const isMultiple = true
+  await sendgridMail.send(emails, isMultiple)
 }

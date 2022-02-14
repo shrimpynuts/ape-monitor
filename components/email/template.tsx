@@ -72,11 +72,17 @@ const CollectionsUpdateEmail = ({
           )
         </p>
 
-        <h2 style={{ marginLeft: '2rem', fontWeight: 'bold', textAlign: 'left' }}>Top Collections</h2>
+        <h2 style={{ marginLeft: '2rem', fontWeight: 'bold', textAlign: 'left' }}>
+          <Emoji style={{ fontSize: '1.5rem', lineHeight: '2rem', marginRight: '1rem' }} label="logo" symbol="🏆" />
+          Top Collections
+        </h2>
         <p style={{ marginLeft: '2rem', textAlign: 'left' }}>Here&apos;s how some of the blue chips are doing:</p>
         <TopCollectionsUpdate topCollections={topCollectionsByTotalVolume} />
 
-        <h2 style={{ marginLeft: '2rem', fontWeight: 'bold', textAlign: 'left' }}>Trending Collections</h2>
+        <h2 style={{ marginLeft: '2rem', fontWeight: 'bold', textAlign: 'left' }}>
+          <Emoji style={{ fontSize: '1.5rem', lineHeight: '2rem', marginRight: '1rem' }} label="logo" symbol="👀" />
+          Trending Collections
+        </h2>
         <p style={{ marginLeft: '2rem', textAlign: 'left' }}>
           Some NFT collections on the rise that you might want to watch out for (low market cap, high 24hr volume):
         </p>

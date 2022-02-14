@@ -52,7 +52,7 @@ function CollectionsUpdateTable({ topCollections }: IProps) {
             </div>
           )
         },
-        width: 200,
+        width: 240,
       },
       {
         Header: `Floor Price`,

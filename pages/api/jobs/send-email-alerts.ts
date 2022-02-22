@@ -40,11 +40,11 @@ const users: IUser[] = [
     address: '0x578862011077c1cd95969452bd528b3ffd496d6C',
     ensDomain: 'Nyquist.eth',
   },
-  {
-    email: 'kenan.h.saleh@gmail.com',
-    address: '0x47B151D5fd0a023B839d5d65a2F13027B1F15DAD',
-    ensDomain: 'ksaleh.eth',
-  },
+  // {
+  //   email: 'kenan.h.saleh@gmail.com',
+  //   address: '0x47B151D5fd0a023B839d5d65a2F13027B1F15DAD',
+  //   ensDomain: 'ksaleh.eth',
+  // },
   {
     email: 'ksrai99@gmail.com',
     address: '0x403dbA6a7bb1643656F9b06e5066523aFEe85eFc',

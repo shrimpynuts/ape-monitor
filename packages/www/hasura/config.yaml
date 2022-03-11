@@ -1,0 +1,11 @@
+version: 3
+# production
+# endpoint: https://apemonitor-production.herokuapp.com/
+# admin_secret: XD410rlTAP6ysI
+# staging
+endpoint: https://apemonitor-staging.herokuapp.com/
+admin_secret: vvf84Zj42XCq2I
+metadata_directory: metadata
+actions:
+  kind: synchronous
+  handler_webhook_baseurl: http://localhost:3000

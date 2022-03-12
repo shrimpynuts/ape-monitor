@@ -1,3 +1,4 @@
+import 'react'
 const moment = require('moment')
 
 const run = async () => {

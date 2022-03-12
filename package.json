@@ -11,10 +11,12 @@
       "packages/*"
     ],
     "scripts": {
-      "www": "yarn workspace @ape-monitor/www"
+      "www": "yarn workspace @ape-monitor/www",
+      "alerts": "yarn workspace @ape-monitor/alerts"
     },
     "dependencies": {
-      "@ape-monitor/www": "1.0.0"
+      "@ape-monitor/www": "1.0.0",
+      "@ape-monitor/alerts": "1.0.0"
     }
   }
   

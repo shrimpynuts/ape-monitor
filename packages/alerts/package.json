@@ -1,0 +1,15 @@
+{
+    "name": "@ape-monitor/alerts",
+    "version": "1.0.0",
+    "description": "Alerts for Ape Monitor",
+    "main": "index.ts",
+    "repository": "https://github.com/shrimpynuts/ape-monitor.git",
+    "author": "Jonathan Cai <caimjonathan@gmail.com>",
+    "license": "MIT",
+    "private": true,
+    "scripts": {
+        "dev": "node index.ts",
+        "start": "node index.ts"
+    }
+}
+  

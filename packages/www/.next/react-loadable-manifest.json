@@ -1,0 +1,86 @@
+{
+  "../../../node_modules/@web3-react/fortmatic-connector/dist/fortmatic-connector.esm.js -> fortmatic": {
+    "id": "../../node_modules/fortmatic/lib/fortmatic.js",
+    "files": [
+      "static/chunks/node_modules_fortmatic_lib_fortmatic_js.js"
+    ]
+  },
+  "../../../node_modules/@web3-react/portis-connector/dist/portis-connector.esm.js -> @portis/web3": {
+    "id": "../../node_modules/@portis/web3/umd/index.js",
+    "files": [
+      "static/chunks/node_modules_portis_web3_umd_index_js.js"
+    ]
+  },
+  "../../../node_modules/@web3-react/torus-connector/dist/torus-connector.esm.js -> @toruslabs/torus-embed": {
+    "id": "../../node_modules/@toruslabs/torus-embed/dist/torus.cjs.js",
+    "files": [
+      "static/chunks/node_modules_toruslabs_torus-embed_dist_torus_cjs_js.js"
+    ]
+  },
+  "../../../node_modules/@web3-react/walletconnect-connector/dist/walletconnect-connector.esm.js -> @walletconnect/web3-provider": {
+    "id": "../../node_modules/@walletconnect/web3-provider/dist/esm/index.js",
+    "files": [
+      "static/chunks/node_modules_walletconnect_web3-provider_dist_esm_index_js.js"
+    ]
+  },
+  "../../../node_modules/@web3-react/walletlink-connector/dist/walletlink-connector.esm.js -> walletlink": {
+    "id": "../../node_modules/walletlink/dist/index.js",
+    "files": [
+      "static/chunks/node_modules_walletlink_dist_index_js.js"
+    ]
+  },
+  "../../../node_modules/use-wallet/dist/esm/index.js -> @aragon/provided-connector": {
+    "id": "../../node_modules/@aragon/provided-connector/dist/provided-connector.esm.js",
+    "files": [
+      "static/chunks/node_modules_aragon_provided-connector_dist_provided-connector_esm_js.js"
+    ]
+  },
+  "../../../node_modules/use-wallet/dist/esm/index.js -> @web3-react/fortmatic-connector": {
+    "id": "../../node_modules/@web3-react/fortmatic-connector/dist/fortmatic-connector.esm.js",
+    "files": [
+      "static/chunks/node_modules_web3-react_fortmatic-connector_dist_fortmatic-connector_esm_js.js"
+    ]
+  },
+  "../../../node_modules/use-wallet/dist/esm/index.js -> @web3-react/frame-connector": {
+    "id": "../../node_modules/@web3-react/frame-connector/dist/frame-connector.esm.js",
+    "files": [
+      "static/chunks/node_modules_web3-react_frame-connector_dist_frame-connector_esm_js.js"
+    ]
+  },
+  "../../../node_modules/use-wallet/dist/esm/index.js -> @web3-react/injected-connector": {
+    "id": "../../node_modules/@web3-react/injected-connector/dist/injected-connector.esm.js",
+    "files": [
+      "static/chunks/node_modules_web3-react_injected-connector_dist_injected-connector_esm_js.js"
+    ]
+  },
+  "../../../node_modules/use-wallet/dist/esm/index.js -> @web3-react/ledger-connector": {
+    "id": "../../node_modules/@web3-react/ledger-connector/dist/ledger-connector.esm.js",
+    "files": [
+      "static/chunks/node_modules_web3-react_ledger-connector_dist_ledger-connector_esm_js.js"
+    ]
+  },
+  "../../../node_modules/use-wallet/dist/esm/index.js -> @web3-react/portis-connector": {
+    "id": "../../node_modules/@web3-react/portis-connector/dist/portis-connector.esm.js",
+    "files": [
+      "static/chunks/node_modules_web3-react_portis-connector_dist_portis-connector_esm_js.js"
+    ]
+  },
+  "../../../node_modules/use-wallet/dist/esm/index.js -> @web3-react/torus-connector": {
+    "id": "../../node_modules/@web3-react/torus-connector/dist/torus-connector.esm.js",
+    "files": [
+      "static/chunks/node_modules_web3-react_torus-connector_dist_torus-connector_esm_js.js"
+    ]
+  },
+  "../../../node_modules/use-wallet/dist/esm/index.js -> @web3-react/walletconnect-connector": {
+    "id": "../../node_modules/@web3-react/walletconnect-connector/dist/walletconnect-connector.esm.js",
+    "files": [
+      "static/chunks/node_modules_web3-react_walletconnect-connector_dist_walletconnect-connector_esm_js.js"
+    ]
+  },
+  "../../../node_modules/use-wallet/dist/esm/index.js -> @web3-react/walletlink-connector": {
+    "id": "../../node_modules/@web3-react/walletlink-connector/dist/walletlink-connector.esm.js",
+    "files": [
+      "static/chunks/node_modules_web3-react_walletlink-connector_dist_walletlink-connector_esm_js.js"
+    ]
+  }
+}

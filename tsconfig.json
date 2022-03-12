@@ -22,7 +22,8 @@
     "include": [
       "next-env.d.ts",
       "**/*.ts",
-      "**/*.tsx"
+      "**/*.tsx",
+      "**/*.json"
   , "pages/assets/[contract_address]"  ],
     "exclude": [
       "node_modules"

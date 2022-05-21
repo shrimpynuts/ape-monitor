@@ -38,7 +38,9 @@ border-solid border-gray-100 dark:border-darkblue drop-shadow-md transform hover
           <Image className="rounded-lg" src={image || Placeholder} width={96} height={96} />
         </span>
         <div className="flex flex-col space-y-2">
-          <span className="text-right italic">{/* <Moment fromNow>{date}</Moment> */}</span>
+          <span className="text-right italic">
+            <Moment fromNow>{date}</Moment>
+          </span>
           <span className="font-semibold text-right">{bodyText}</span>
           <span className="text-right">{collectionName}</span>
         </div>

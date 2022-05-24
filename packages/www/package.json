@@ -59,7 +59,6 @@
     "tailwindcss": "^2.2.15",
     "unstated-next": "^1.1.0",
     "use-mobile-detect-hook": "^1.0.4",
-    "use-wallet": "^0.13.0",
     "yarn": "^1.22.17"
   },
   "devDependencies": {

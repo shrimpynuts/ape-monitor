@@ -163,7 +163,8 @@ const Navbar = ({
                 </Button>
               </div>
             ) : (
-              displayConnectButton !== false && <Button onClick={onConnectClick}>Connect</Button>
+              // displayConnectButton !== false && <Button onClick={onConnectClick}>Connect</Button>
+              <></>
             )}
             <DarkModeToggle />
           </div>

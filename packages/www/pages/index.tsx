@@ -93,8 +93,8 @@ const Home: NextPage = () => {
                 <div className="w-full">
                   <Searchbar autoFocus />
                 </div>
-                <span>or</span>
-                <Button onClick={onConnectClick}>Connect to Wallet</Button>
+                {/* <span>or</span>
+                <Button onClick={onConnectClick}>Connect to Wallet</Button> */}
               </>
             )}
           </div>
